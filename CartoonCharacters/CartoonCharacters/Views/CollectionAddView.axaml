@@ -1,0 +1,65 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CartoonCharacters.Views.CollectionAddView"
+             x:DataType="viewModels:CollectionAddViewModel">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border Background="LightGray"
+                BorderBrush="Black"
+                BorderThickness="2"
+                CornerRadius="3"
+                Padding="12"
+                Margin="10"
+                Width="380">
+
+            <StackPanel Spacing="8">
+
+                <TextBlock Text="Add a cartoon character"
+                           HorizontalAlignment="Center"
+                           FontWeight="Bold"
+                           FontSize="16"/>
+
+                <TextBlock Text="Name:" />
+                <TextBox Watermark="ex: Homer Simpson"
+                         Text="{Binding Name}" />
+
+                <TextBlock Text="Description:" />
+                <TextBox Watermark="ex: Loves donuts..."
+                         Text="{Binding Description}"
+                         AcceptsReturn="True"
+                         Height="70" />
+
+                <Button Content="Select Image"
+                        Command="{Binding SelectFilesCommand}" />
+                
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="4">
+                    <Image Source="{Binding Picture}"
+                           Height="150"
+                           Stretch="UniformToFill" />
+                </Border>
+                
+                <TextBlock Text="{Binding SelectedFiles[0]}"
+                           FontSize="11"
+                           Opacity="0.7" />
+
+                <Button Content="Add"
+                        Command="{Binding AddCartoonCharacterCommand}"
+                        HorizontalAlignment="Center"
+                        Margin="0,6,0,0"
+                        Width="120"/>                
+                
+                <Button Content="Cancel"
+                        Command="{Binding Path=CancelCommand}"
+                        HorizontalAlignment="Center"
+                        Margin="0,6,0,0"
+                        Width="120"/>
+
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

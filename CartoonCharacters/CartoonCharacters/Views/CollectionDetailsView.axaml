@@ -1,0 +1,31 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CartoonCharacters.Views.CollectionDetailsView"
+             x:DataType="viewModels:CollectionDetailsViewModel"> 
+    
+    <Design.DataContext>
+        <viewModels:CollectionDetailsViewModel/>
+    </Design.DataContext>
+    
+    <StackPanel VerticalAlignment="Top">
+        <Border Background="Pink" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <Panel>
+                    <Rectangle Height="100" Width="100" Fill="LightGray"></Rectangle>
+                    <Image Margin="20" Height="200" Width="200" 
+                           Stretch="UniformToFill"
+                           Source="{Binding MyCartoonCharacter.Picture}"  />
+                </Panel>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding MyCartoonCharacter.Name, StringFormat=Nom : {0}}"/>
+                    <TextBlock Text="{Binding MyCartoonCharacter.Description, StringFormat=Description : {0} }"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CartoonCharacters.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CartoonCharacters.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        x:Name="Main"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MyProjectBase">
+    
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    
+    <Grid RowDefinitions="80,*">
+        <Border Grid.Row="0" Background="DeepPink" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+            <StackPanel>
+                <TextBlock Text="{Binding Path=Version}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1" ColumnDefinitions="150,*" >
+            <Border Grid.Column="0" Grid.Row="0" Background="DarkBlue" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+                <StackPanel HorizontalAlignment="Center">
+                    <Button Background="AliceBlue" Command="{Binding BackToMainCommand}" HorizontalAlignment="Left"> Main </Button>
+                    <Button Background="AliceBlue" Command="{Binding Path=GoToAddCartoonCharactersCommand}" HorizontalAlignment="Left"> Add  </Button>
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Grid.Row="0" Background="ForestGreen" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+                <TransitioningContentControl Content="{Binding CurrentPage}" />
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

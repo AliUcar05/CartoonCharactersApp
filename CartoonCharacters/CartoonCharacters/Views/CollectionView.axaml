@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CartoonCharacters.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CartoonCharacters.Views.CollectionView"
+        x:DataType="viewModels:CollectionViewModel"
+        x:Name="Collection">
+    
+    <Design.DataContext>
+        <viewModels:CollectionViewModel/>
+    </Design.DataContext>
+    
+<DockPanel Margin="20">
+        <Border Background="AliceBlue" >
+            <ScrollViewer>
+                <ListBox x:Name="Animals" 
+                         ItemsSource="{Binding MyObservableCartoonCharacters}" 
+                         SelectedItem="{Binding SelectedCartoonCharacter}"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="Gainsboro" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+                                <Grid ColumnDefinitions="*,*,*">
+                                    <Panel >
+                                        <Rectangle Height="100" Width="100" Fill="LightGray"></Rectangle>
+                                        <Image Margin="20" Height="200" Width="200" 
+                                               Stretch="UniformToFill"
+                                               Source="{Binding Picture}"  />
+                                    </Panel>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding Id, StringFormat=I : {0}}"/>
+                                        <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"/>
+                                        <TextBlock Text="{Binding Description, StringFormat=Description : {0} }"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Content="Action"
+                                        Command="{Binding DataContext.FromParentCommand, ElementName=Collection}"
+                                        CommandParameter="{Binding Id}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
+</UserControl>

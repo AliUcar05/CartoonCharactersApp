@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartoonCharacters", "CartoonCharacters\CartoonCharacters.csproj", "{CFEE1293-73E1-4C1A-A777-4C62867B9306}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFEE1293-73E1-4C1A-A777-4C62867B9306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFEE1293-73E1-4C1A-A777-4C62867B9306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFEE1293-73E1-4C1A-A777-4C62867B9306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFEE1293-73E1-4C1A-A777-4C62867B9306}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
