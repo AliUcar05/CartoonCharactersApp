@@ -88,6 +88,9 @@ public partial class CollectionAddViewModel : ViewModelBase
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
         
+        // Sauvegarder automatiquement après ajout
+        MyGlobals.SaveData();
+        
         _goBack.Invoke();
     }
 

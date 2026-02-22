@@ -24,4 +24,10 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
         <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="cartoon_characters.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

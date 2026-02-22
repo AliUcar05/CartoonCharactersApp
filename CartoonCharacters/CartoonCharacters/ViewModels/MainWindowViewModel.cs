@@ -15,6 +15,7 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
+        /*
         for (var i = 0; i < 5; i++)
         {
             MyGlobals.MyCartoonCharacters.Add(new CartoonCharacter()
@@ -33,9 +34,11 @@ public partial class MainWindowViewModel : ViewModelBase
                 Picture = ImageHelper.LoadFromResource(new Uri("avares://CartoonCharacters/Assets/sponge_bob.png"))
             });
         }
-        
+        */
+        // Plus besoin d'ajouter les personnages ici, ils sont chargés depuis JSON
         CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand);
     }
+    
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
     {
         oldValue?.Dispose();

@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "699af996101929cfafbd1915",
+    "Name": "SpongeBob",
+    "Description": "A cartoon character from SpongeBob.",
+    "ImagePath": ""
+  },
+  {
+    "Id": "699af996101929cfafbd1917",
+    "Name": "PatrickStar",
+    "Description": "Loves donuts and beer.",
+    "ImagePath": ""
+  },
+  {
+    "Id": "699af9af101929cfafbd191d",
+    "Name": "test",
+    "Description": "test",
+    "ImagePath": ""
+  }
+]

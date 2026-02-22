@@ -13,7 +13,7 @@
     </Design.DataContext>
     
     <StackPanel VerticalAlignment="Top">
-        <Border Background="Pink" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
+        <Border Background="#34495E" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="10" Margin="10">
             <StackPanel Orientation="Horizontal">
                 <Panel>
                     <Rectangle Height="100" Width="100" Fill="LightGray"></Rectangle>
