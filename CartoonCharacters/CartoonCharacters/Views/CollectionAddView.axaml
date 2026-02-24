@@ -6,60 +6,100 @@
              xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CartoonCharacters.Views.CollectionAddView"
-             x:DataType="viewModels:CollectionAddViewModel">
+             x:DataType="viewModels:CollectionAddViewModel"
+             Background="#2C3E50">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Border Background="LightGray"
-                BorderBrush="Black"
-                BorderThickness="2"
-                CornerRadius="3"
-                Padding="12"
-                Margin="10"
-                Width="380">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Padding="20">
+        
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Background="#36393F"
+                    BorderBrush="#7289DA"
+                    BorderThickness="3"
+                    CornerRadius="8"
+                    Padding="16"
+                    Margin="10"
+                    Width="380">
 
-            <StackPanel Spacing="8">
+                <StackPanel Spacing="10">
 
-                <TextBlock Text="Add a cartoon character"
-                           HorizontalAlignment="Center"
-                           FontWeight="Bold"
-                           FontSize="16"/>
+                    <TextBlock Text="➕ Add a cartoon character"
+                               HorizontalAlignment="Center"
+                               FontWeight="Bold"
+                               FontSize="18"
+                               Foreground="White"
+                               Margin="0,0,0,5"/>
 
-                <TextBlock Text="Name:" />
-                <TextBox Watermark="ex: Homer Simpson"
-                         Text="{Binding Name}" />
+                    <TextBlock Text="📝 Name:" Foreground="#99AAB5"/>
+                    <TextBox Watermark="ex: Homer Simpson"
+                             Text="{Binding Name}"
+                             Background="#40444B"
+                             BorderBrush="#202225"
+                             Foreground="Black"
+                             CornerRadius="5"/>
 
-                <TextBlock Text="Description:" />
-                <TextBox Watermark="ex: Loves donuts..."
-                         Text="{Binding Description}"
-                         AcceptsReturn="True"
-                         Height="70" />
+                    <TextBlock Text="📖 Description:" Foreground="#99AAB5" Margin="0,5,0,0"/>
+                    <TextBox Watermark="ex: Loves donuts..."
+                             Text="{Binding Description}"
+                             AcceptsReturn="True"
+                             Height="60"
+                             Background="#40444B"
+                             BorderBrush="#202225"
+                             Foreground="Black"
+                             CornerRadius="5"/>
 
-                <Button Content="Select Image"
-                        Command="{Binding SelectFilesCommand}" />
-                
-                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Padding="4">
-                    <Image Source="{Binding Picture}"
-                           Height="150"
-                           Stretch="UniformToFill" />
-                </Border>
-                
-                <TextBlock Text="{Binding SelectedFiles[0]}"
-                           FontSize="11"
-                           Opacity="0.7" />
+                    <Button Content="🖼️ Select Image"
+                            Command="{Binding SelectFilesCommand}"
+                            Background="#4E5D94"
+                            BorderBrush="#3A4A7A"
+                            Foreground="White"
+                            CornerRadius="5"
+                            Padding="10,5"
+                            Margin="0,5,0,0"/>
+                    
+                    <Border BorderBrush="#7289DA" 
+                            BorderThickness="2" 
+                            CornerRadius="5" 
+                            Padding="4"
+                            Background="#40444B">
+                        <Image Source="{Binding Picture}"
+                               Height="100"
+                               MaxHeight="100"
+                               Stretch="UniformToFill" />
+                    </Border>
+                    
+                    <TextBlock Text="{Binding SelectedFiles[0]}"
+                               FontSize="11"
+                               Foreground="#99AAB5"
+                               Opacity="0.8"
+                               TextWrapping="Wrap"/>
 
-                <Button Content="Add"
-                        Command="{Binding AddCartoonCharacterCommand}"
-                        HorizontalAlignment="Center"
-                        Margin="0,6,0,0"
-                        Width="120"/>                
-                
-                <Button Content="Cancel"
-                        Command="{Binding Path=CancelCommand}"
-                        HorizontalAlignment="Center"
-                        Margin="0,6,0,0"
-                        Width="120"/>
+                    <Grid ColumnDefinitions="*,*,*" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Content="✅ Add"
+                                Command="{Binding AddCartoonCharacterCommand}"
+                                Background="#43B581"
+                                BorderBrush="#3CA374"
+                                Foreground="White"
+                                CornerRadius="5"
+                                Padding="10,5"
+                                Margin="0,0,5,0"/>
+                        
+                        <Button Grid.Column="2"
+                                Content="❌ Cancel"
+                                Command="{Binding CancelCommand}"
+                                Background="#F04747"
+                                BorderBrush="#D13A3A"
+                                Foreground="White"
+                                CornerRadius="5"
+                                Padding="10,5"
+                                Margin="5,0,0,0"/>
+                    </Grid>
 
-            </StackPanel>
-        </Border>
-    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -1,0 +1,14 @@
+﻿[
+  {
+    "Id": "67b9a5d3f1a2b4c6e8f7d9a1",
+    "Name": "SpongeBob SquarePants",
+    "Description": "A sea sponge who lives in a pineapple under the sea.",
+    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png"
+  },
+  {
+    "Id": "67b9a5d3f1a2b4c6e8f7d9a2",
+    "Name": "PatrickStar",
+    "Description": "A sea star who lives in a pineapple under the sea.",
+    "ImagePath": "avares://CartoonCharacters/Assets/patrick_star.jpeg"
+  }
+]
