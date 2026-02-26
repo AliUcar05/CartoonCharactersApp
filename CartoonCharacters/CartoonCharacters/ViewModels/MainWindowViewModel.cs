@@ -1,9 +1,6 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
-using CartoonCharacters.Helpers;
-using CartoonCharacters.Models;
     
 namespace CartoonCharacters.ViewModels;
 

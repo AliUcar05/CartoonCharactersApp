@@ -2,9 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="CartoonCharacters.App"
              xmlns:local="using:CartoonCharacters"
+             xmlns:converters="clr-namespace:CartoonCharacters.Converters"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+     <Application.Resources>
+         <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
+     </Application.Resources>
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>

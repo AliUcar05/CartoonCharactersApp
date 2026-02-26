@@ -1,6 +1,5 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CartoonCharacters.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
@@ -32,17 +31,16 @@
                                 <Grid ColumnDefinitions="*,*,*">
                                     <Panel>
                                         <Rectangle Height="100" Width="100" Fill="LightGray"/>
+                                        <!-- MODIFIER: Utiliser ImagePath avec convertisseur -->
                                         <Image Margin="20" 
                                                Height="200" 
                                                Width="200" 
                                                Stretch="UniformToFill"
-                                               Source="{Binding Picture}"/>
+                                               Source="{Binding ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                                     </Panel>
                                     <StackPanel Grid.Column="1" 
                                                 VerticalAlignment="Center" 
                                                 HorizontalAlignment="Center">
-                                        <!-- ID commenté pour ne pas l'afficher -->
-                                        <!-- <TextBlock Text="{Binding Id, StringFormat=I : {0}}"/> -->
                                         <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"
                                                    Foreground="Black"/>
                                         <TextBlock Text="{Binding Description, StringFormat=Description : {0}}"

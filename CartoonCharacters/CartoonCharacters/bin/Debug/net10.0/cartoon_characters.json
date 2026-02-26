@@ -1,20 +1,29 @@
 [
   {
-    "Id": "699af996101929cfafbd1915",
+    "Id": {
+      "Timestamp": 0,
+      "CreationTime": "1970-01-01T00:00:00Z"
+    },
     "Name": "SpongeBob",
     "Description": "A cartoon character from SpongeBob.",
-    "ImagePath": ""
+    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png"
   },
   {
-    "Id": "699af996101929cfafbd1917",
-    "Name": "PatrickStar",
-    "Description": "Loves donuts and beer.",
-    "ImagePath": ""
+    "Id": {
+      "Timestamp": 0,
+      "CreationTime": "1970-01-01T00:00:00Z"
+    },
+    "Name": "Uzun",
+    "Description": "Loves sarma",
+    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg"
   },
   {
-    "Id": "699af9af101929cfafbd191d",
-    "Name": "test",
-    "Description": "test",
-    "ImagePath": ""
+    "Id": {
+      "Timestamp": 1772096624,
+      "CreationTime": "2026-02-26T09:03:44Z"
+    },
+    "Name": "Huysuz",
+    "Description": "Nervous",
+    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"
   }
 ]

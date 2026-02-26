@@ -1,6 +1,5 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:CartoonCharacters.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
@@ -17,9 +16,10 @@
             <StackPanel Orientation="Horizontal">
                 <Panel>
                     <Rectangle Height="100" Width="100" Fill="LightGray"></Rectangle>
+                    <!-- MODIFIER: Utiliser ImagePath avec convertisseur -->
                     <Image Margin="20" Height="200" Width="200" 
                            Stretch="UniformToFill"
-                           Source="{Binding MyCartoonCharacter.Picture}"  />
+                           Source="{Binding MyCartoonCharacter.ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                 </Panel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="{Binding MyCartoonCharacter.Name, StringFormat=Nom : {0}}"/>

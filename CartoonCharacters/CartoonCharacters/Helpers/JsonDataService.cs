@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using CartoonCharacters.Models;
-using Avalonia.Media.Imaging;
-using Avalonia.Platform;
-using System.Linq;
-using CartoonCharacters.Models;
 
 namespace CartoonCharacters.Helpers;
 
@@ -32,13 +28,9 @@ public static class JsonDataService
             }
 
             string jsonString = File.ReadAllText(filePath);
-            var characters = JsonSerializer.Deserialize<List<CartoonCharacterJson>>(jsonString, _options);
+            var characters = JsonSerializer.Deserialize<List<CartoonCharacter>>(jsonString, _options);
             
-            if (characters == null || !characters.Any())
-                return GetDefaultCharacters();
-
-            // Convertir les données JSON en CartoonCharacter avec images
-            return ConvertToCartoonCharacters(characters);
+            return characters ?? GetDefaultCharacters();
         }
         catch (Exception ex)
         {
@@ -54,15 +46,7 @@ public static class JsonDataService
     {
         try
         {
-            var jsonCharacters = characters.Select(c => new CartoonCharacterJson
-            {
-                Id = c.Id.ToString(),
-                Name = c.Name,
-                Description = c.Description,
-                ImagePath = GetImagePathFromBitmap(c.Picture)
-            }).ToList();
-
-            string jsonString = JsonSerializer.Serialize(jsonCharacters, _options);
+            string jsonString = JsonSerializer.Serialize(characters, _options);
             File.WriteAllText(filePath, jsonString);
             
             Console.WriteLine($"Données sauvegardées dans {filePath}");
@@ -71,68 +55,6 @@ public static class JsonDataService
         {
             Console.WriteLine($"Erreur lors de la sauvegarde : {ex.Message}");
         }
-    }
-
-    /// <summary>
-    /// Convertit les données JSON en CartoonCharacter avec images
-    /// </summary>
-    private static List<CartoonCharacter> ConvertToCartoonCharacters(List<CartoonCharacterJson> jsonCharacters)
-    {
-        var characters = new List<CartoonCharacter>();
-        var defaultImage = ImageHelper.LoadFromResource(
-            new Uri("avares://CartoonCharacters/Assets/uzun.jpg"));
-            //new Uri("avares://CartoonCharacters/Assets/default_character.png"));
-
-        foreach (var jsonChar in jsonCharacters)
-        {
-            Bitmap? image = defaultImage;
-            
-            // Essayer de charger l'image si un chemin est spécifié
-            if (!string.IsNullOrEmpty(jsonChar.ImagePath))
-            {
-                try
-                {
-                    if (jsonChar.ImagePath.StartsWith("http"))
-                    {
-                        // Charger depuis une URL
-                        var task = ImageHelper.LoadFromWeb(new Uri(jsonChar.ImagePath));
-                        task.Wait();
-                        image = task.Result ?? defaultImage;
-                    }
-                    else if (File.Exists(jsonChar.ImagePath))
-                    {
-                        // Charger depuis un fichier local
-                        using var fs = File.OpenRead(jsonChar.ImagePath);
-                        image = new Bitmap(fs);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erreur chargement image {jsonChar.ImagePath}: {ex.Message}");
-                    image = defaultImage;
-                }
-            }
-
-            characters.Add(new CartoonCharacter
-            {
-                Id = MongoDB.Bson.ObjectId.Parse(jsonChar.Id),
-                Name = jsonChar.Name,
-                Description = jsonChar.Description,
-                Picture = image
-            });
-        }
-
-        return characters;
-    }
-
-    /// <summary>
-    /// Extrait le chemin de l'image depuis un Bitmap
-    /// </summary>
-    private static string GetImagePathFromBitmap(Bitmap? bitmap)
-    {
-        // Note: Cette méthode est simplifiée. Dans un cas réel,
-        // vous devriez stocker le chemin original lors de la sélection
-        return string.Empty;
     }
 
     /// <summary>
@@ -147,17 +69,8 @@ public static class JsonDataService
                 Id = MongoDB.Bson.ObjectId.GenerateNewId(),
                 Name = "SpongeBob",
                 Description = "A cartoon character from SpongeBob.",
-                Picture = ImageHelper.LoadFromResource(
-                    new Uri("avares://CartoonCharacters/Assets/sponge_bob.png"))
+                ImagePath = "avares://CartoonCharacters/Assets/sponge_bob.png"
             },
-            new()
-            {
-                Id = MongoDB.Bson.ObjectId.GenerateNewId(),
-                Name = "PatrickStar",
-                Description = "Loves donuts and beer.",
-                Picture = ImageHelper.LoadFromResource(
-                    new Uri("avares://CartoonCharacters/Assets/patrick_star.jpeg"))
-            }
         };
     }
 }

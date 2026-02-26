@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
-using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
 
 namespace CartoonCharacters.ViewModels;
@@ -24,13 +22,9 @@ public partial class CollectionViewModel: ViewModelBase
             
         foreach (var cartoonCharacter in MyGlobals.MyCartoonCharacters)
         {
-            MyObservableCartoonCharacters.Add(new CartoonCharacter()
-            {
-                Id = cartoonCharacter.Id,
-                Name = cartoonCharacter.Name,
-                Description = cartoonCharacter.Description,
-                Picture = cartoonCharacter.Picture
-            });
+            // MODIFIER: Ne plus créer de nouvelle instance, utiliser l'original
+            // et surtout, NE PAS copier Picture (qui n'existe plus)
+            MyObservableCartoonCharacters.Add(cartoonCharacter);  // ← Changé
         }
     }
 }
