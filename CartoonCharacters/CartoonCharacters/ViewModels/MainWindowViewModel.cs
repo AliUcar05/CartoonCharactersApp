@@ -1,6 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
+using CartoonCharacters.Helpers;
+using CartoonCharacters.Models;
     
 namespace CartoonCharacters.ViewModels;
 
@@ -9,31 +12,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ViewModelBase _currentPage;
     [ObservableProperty] private string _version = "Version : 1.0";
     
-    
     public MainWindowViewModel()
     {
-        /*
-        for (var i = 0; i < 5; i++)
-        {
-            MyGlobals.MyCartoonCharacters.Add(new CartoonCharacter()
-            {
-                Id = ObjectId.GenerateNewId(),
-                Name = "Sponge bob",
-                Description = "A cartoon character from sponge bob.",
-                Picture = ImageHelper.LoadFromResource(new Uri("avares://CartoonCharacters/Assets/sponge_bob.png"))
-            });
-            
-            MyGlobals.MyCartoonCharacters.Add(new CartoonCharacter()
-            {
-                Id = ObjectId.GenerateNewId(),
-                Name = "Sponge bob",
-                Description = "A cartoon character from sponge bob.",
-                Picture = ImageHelper.LoadFromResource(new Uri("avares://CartoonCharacters/Assets/sponge_bob.png"))
-            });
-        }
-        */
         // Plus besoin d'ajouter les personnages ici, ils sont chargés depuis JSON
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand);
+        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);  // ← MODIFIÉ: passer this
     }
     
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
@@ -53,9 +35,15 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentPage = new CollectionAddViewModel(BackToMain);
     }
     
+    // NOUVELLE méthode pour aller à l'édition
+    public void GoToEditCartoonCharacter(ObjectId id)
+    {
+        CurrentPage = new CollectionEditViewModel(id, BackToMain);
+    }
+    
     [RelayCommand]
     private void BackToMain()
     {
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand);
+        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);  // ← MODIFIÉ: passer this
     }
 }
