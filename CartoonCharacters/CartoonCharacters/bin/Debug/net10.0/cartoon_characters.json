@@ -1,29 +1,11 @@
 [
   {
     "Id": {
-      "Timestamp": 0,
-      "CreationTime": "1970-01-01T00:00:00Z"
-    },
-    "Name": "SpongeBobi",
-    "Description": "A cartoon character from SpongeBobbbb.",
-    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png"
-  },
-  {
-    "Id": {
-      "Timestamp": 0,
-      "CreationTime": "1970-01-01T00:00:00Z"
+      "Timestamp": 1772616768,
+      "CreationTime": "2026-03-04T09:32:48Z"
     },
     "Name": "Uzun",
-    "Description": "Loves sarma",
-    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg"
-  },
-  {
-    "Id": {
-      "Timestamp": 0,
-      "CreationTime": "1970-01-01T00:00:00Z"
-    },
-    "Name": "Huysuz",
-    "Description": "Nervous",
-    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"
+    "Description": "Uzun",
+    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpeg"
   }
 ]

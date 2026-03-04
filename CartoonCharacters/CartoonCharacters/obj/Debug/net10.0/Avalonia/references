@@ -41,6 +41,7 @@
 /home/helb/.nuget/packages/snappier/1.0.0/lib/net5.0/Snappier.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.AppContext.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Buffers.dll
+/home/helb/.nuget/packages/system.codedom/11.0.0-preview.1.26104.118/lib/net10.0/System.CodeDom.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Collections.Concurrent.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Collections.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Collections.Immutable.dll
@@ -92,12 +93,14 @@
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.IO.Pipelines.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.IO.Pipes.AccessControl.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.IO.Pipes.dll
+/home/helb/.nuget/packages/system.io.ports/11.0.0-preview.1.26104.118/lib/net10.0/System.IO.Ports.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.IO.UnmanagedMemoryStream.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Linq.AsyncEnumerable.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Linq.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Linq.Expressions.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Linq.Parallel.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Linq.Queryable.dll
+/home/helb/.nuget/packages/system.management/11.0.0-preview.1.26104.118/lib/net10.0/System.Management.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Memory.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Net.dll
 /home/helb/.dotnet/packs/Microsoft.NETCore.App.Ref/10.0.3/ref/net10.0/System.Net.Http.dll

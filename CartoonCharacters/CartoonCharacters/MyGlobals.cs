@@ -34,6 +34,11 @@ public static class MyGlobals
         }
     }
     
+    public static string GetDataFilePath()
+    {
+        return DataFilePath;
+    }
+    
     public static void SaveData()
     {
         if (_myCartoonCharacters != null)
