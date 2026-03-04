@@ -27,6 +27,7 @@
                           Foreground="#ECF0F1"
                           FontSize="14"
                           FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding QrCode}"></TextBlock>
             </StackPanel>
         </Border>
         
