@@ -15,19 +15,30 @@
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     
-    <Grid RowDefinitions="70,*">
-        <!-- Header - Version info -->
+    <Grid RowDefinitions="80,*">
+        <!-- Header - Title and Version -->
         <Border Grid.Row="0" 
                 Background="#2C3E50" 
                 BorderBrush="#34495E" 
                 BorderThickness="0,0,0,1" 
                 Padding="10">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
+                <!-- Titre principal -->
+                <TextBlock Text="Cartoon Characters Collection" 
+                          Foreground="White"
+                          FontSize="24"
+                          FontWeight="Bold"
+                          FontFamily="Segoe UI, Arial, sans-serif"
+                          LetterSpacing="0.5"
+                          HorizontalAlignment="Center"/>
+                
+                <!-- Version en dessous -->
                 <TextBlock Text="{Binding Path=Version}" 
-                          Foreground="#ECF0F1"
-                          FontSize="14"
-                          FontWeight="SemiBold"/>
-                <TextBlock Text="{Binding QrCode}"></TextBlock>
+                          Foreground="#BDC3C7"
+                          FontSize="12"
+                          FontWeight="Normal"
+                          FontFamily="Segoe UI, Arial, sans-serif"
+                          HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
         

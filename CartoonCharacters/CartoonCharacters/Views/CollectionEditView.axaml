@@ -9,6 +9,29 @@
              x:DataType="viewModels:CollectionEditViewModel"
              Background="#2C3E50">
 
+    <UserControl.Styles>
+        <!-- Style pour tous les TextBox -->
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <!-- Style pour TextBox en focus -->
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#7289DA"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <!-- Style pour les Watermark -->
+        <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
+            <Setter Property="Foreground" Value="#999999"/>
+        </Style>
+    </UserControl.Styles>
+
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto"
                   Padding="20">
@@ -32,23 +55,20 @@
                                Foreground="White"
                                Margin="0,0,0,5"/>
 
-                    <TextBlock Text="📝 Name:" Foreground="#99AAB5"/>
+                    <TextBlock Text="📝 Name:" 
+                               Foreground="#E0E0E0" 
+                               FontWeight="SemiBold"/>
                     <TextBox Watermark="ex: Homer Simpson"
-                             Text="{Binding Name}"
-                             Background="#40444B"
-                             BorderBrush="#202225"
-                             Foreground="Black"
-                             CornerRadius="5"/>
+                             Text="{Binding Name}"/>
 
-                    <TextBlock Text="📖 Description:" Foreground="#99AAB5" Margin="0,5,0,0"/>
+                    <TextBlock Text="📖 Description:" 
+                               Foreground="#E0E0E0" 
+                               Margin="0,5,0,0"
+                               FontWeight="SemiBold"/>
                     <TextBox Watermark="ex: Loves donuts..."
                              Text="{Binding Description}"
                              AcceptsReturn="True"
-                             Height="60"
-                             Background="#40444B"
-                             BorderBrush="#202225"
-                             Foreground="Black"
-                             CornerRadius="5"/>
+                             Height="80"/>
 
                     <Button Content="🖼️ Select Image"
                             Command="{Binding SelectFilesCommand}"
@@ -63,7 +83,7 @@
                             BorderThickness="2" 
                             CornerRadius="5" 
                             Padding="4"
-                            Background="#40444B">
+                            Background="White">
                         <Image Source="{Binding Picture}"
                                Height="100"
                                MaxHeight="100"
@@ -72,8 +92,8 @@
                     
                     <TextBlock Text="{Binding SelectedFiles[0]}"
                                FontSize="11"
-                               Foreground="#99AAB5"
-                               Opacity="0.8"
+                               Foreground="#CCCCCC"
+                               Opacity="0.9"
                                TextWrapping="Wrap"/>
 
                     <Grid ColumnDefinitions="*,*,*" Margin="0,10,0,0">

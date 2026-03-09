@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Threading.Tasks;
 
 namespace CartoonCharacters.Core;
@@ -32,3 +33,4 @@ public sealed class Interaction<TInput, TOutput>
         public void Dispose() { _dispose?.Invoke(); _dispose = null; }
     }
 }
+*/
