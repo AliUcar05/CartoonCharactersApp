@@ -13,10 +13,14 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ViewModelBase _currentPage;
     [ObservableProperty] private string _version = "Version : 1.0";    
     [ObservableProperty] private string _qrCode = "";
+    private readonly CsvServices _csvServices;
     
-    public MainWindowViewModel()
+    public MainWindowViewModel(CsvServices cscServices)
     {
         // Plus besoin d'ajouter les personnages ici, ils sont chargés depuis JSON
+
+        _csvServices = cscServices;
+        
         CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);  // ← MODIFIÉ: passer this
         try
         {

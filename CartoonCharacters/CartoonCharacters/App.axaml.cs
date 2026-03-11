@@ -6,6 +6,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using CartoonCharacters.ViewModels;
 using CartoonCharacters.Views;
+using MyProjectBase.Services;
 
 namespace CartoonCharacters;
 
@@ -23,10 +24,11 @@ public partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
+
+            var mainWindow = new MainWindow();
+            var viewModel = new MainWindowViewModel(new CsvServices(mainWindow));
+            mainWindow.DataContext = viewModel;
+            desktop.MainWindow = mainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();

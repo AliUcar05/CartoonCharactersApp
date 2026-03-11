@@ -11,10 +11,6 @@
         Title="Cartoon Characters Collection"
         Background="#F5F5F5">
     
-    <Window.DataContext>
-        <vm:MainWindowViewModel/>
-    </Window.DataContext>
-    
     <Grid RowDefinitions="80,*">
         <!-- Header - Title and Version -->
         <Border Grid.Row="0" 
