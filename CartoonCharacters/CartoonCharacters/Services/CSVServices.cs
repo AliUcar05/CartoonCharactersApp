@@ -9,7 +9,7 @@ using Avalonia.Platform.Storage;
 using MongoDB.Bson;
 using CartoonCharacters.Models;
 
-namespace MyProjectBase.Services;
+namespace CartoonCharacters.Services;
 
 public class CsvServices
 {

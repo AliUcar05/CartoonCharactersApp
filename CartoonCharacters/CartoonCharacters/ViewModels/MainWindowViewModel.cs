@@ -1,49 +1,62 @@
 ﻿using System;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MongoDB.Bson;
 using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
-using MyProjectBase.Services;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private ViewModelBase _currentPage;
-    [ObservableProperty] private string _version = "Version : 1.0";    
-    [ObservableProperty] private string _qrCode = "";
+    [ObservableProperty] private string _version = "Version : 1.0";
+    [ObservableProperty] private string _qrCode = "En attente d'un scan...";
+
     private readonly CsvServices _csvServices;
-    
+    private ScannerManager? _myScanner;
+
     public MainWindowViewModel(CsvServices cscServices)
     {
-        // Plus besoin d'ajouter les personnages ici, ils sont chargés depuis JSON
-
         _csvServices = cscServices;
-        
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);  // ← MODIFIÉ: passer this
+
+        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+
         try
         {
-            MyScanner = new ScannerManager();
-            MyScanner.SerialBuffer.Changed += QRCodeManager;
-            MyScanner.OpenPort();
+            _myScanner = new ScannerManager();
+            _myScanner.SerialBuffer.Changed += QRCodeManager;
+            _myScanner.OpenPort();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            QrCode = $"Erreur scanner : {e.Message}";
+            Console.WriteLine(e.ToString());
         }
     }
 
     private void QRCodeManager(object? sender, EventArgs e)
     {
-        QrCode = MyScanner.SerialBuffer.Dequeue().ToString();
+        if (_myScanner == null || _myScanner.SerialBuffer.Count == 0)
+            return;
+
+        var valeur = _myScanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            QrCode = valeur.Trim();
+        });
+
+        Console.WriteLine($"QR Code scanné : {valeur}");
     }
-    
+
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
     {
         oldValue?.Dispose();
     }
-    
+
     [RelayCommand]
     private void GoToDetailsFromChild(ObjectId animalId)
     {
@@ -55,16 +68,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = new CollectionAddViewModel(BackToMain);
     }
-    
-    // NOUVELLE méthode pour aller à l'édition
+
     public void GoToEditCartoonCharacter(ObjectId id)
     {
         CurrentPage = new CollectionEditViewModel(id, BackToMain);
     }
-    
+
     [RelayCommand]
     private void BackToMain()
     {
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);  // ← MODIFIÉ: passer this
+        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
     }
 }

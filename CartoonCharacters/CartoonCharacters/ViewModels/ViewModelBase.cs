@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using MyProjectBase.Services;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 

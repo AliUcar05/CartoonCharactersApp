@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 
-namespace MyProjectBase.Services;
+namespace CartoonCharacters.Services;
 
 public partial class ScannerManager
 {

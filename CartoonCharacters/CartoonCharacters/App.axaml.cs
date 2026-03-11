@@ -6,7 +6,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using CartoonCharacters.ViewModels;
 using CartoonCharacters.Views;
-using MyProjectBase.Services;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters;
 
