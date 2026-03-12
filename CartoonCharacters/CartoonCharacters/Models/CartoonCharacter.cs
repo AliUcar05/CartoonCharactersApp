@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-// ⚠️ SUPPRIMER: using Avalonia.Media.Imaging;
 
 namespace CartoonCharacters.Models;
 

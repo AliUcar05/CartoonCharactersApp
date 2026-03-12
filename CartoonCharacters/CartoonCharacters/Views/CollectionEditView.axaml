@@ -36,16 +36,19 @@
                   VerticalScrollBarVisibility="Auto"
                   Padding="20">
         
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel HorizontalAlignment="Center" 
+                    VerticalAlignment="Top"
+                    Margin="0,0,0,20">
+            
             <Border Background="#36393F"
                     BorderBrush="#7289DA"
                     BorderThickness="3"
                     CornerRadius="8"
-                    Padding="16"
+                    Padding="20"
                     Margin="10"
-                    Width="380">
+                    Width="400">
 
-                <StackPanel Spacing="10">
+                <StackPanel Spacing="12">
 
                     <!-- Titre modifié pour l'édition -->
                     <TextBlock Text="✏️ Edit cartoon character"
@@ -53,7 +56,7 @@
                                FontWeight="Bold"
                                FontSize="18"
                                Foreground="White"
-                               Margin="0,0,0,5"/>
+                               Margin="0,0,0,10"/>
 
                     <TextBlock Text="📝 Name:" 
                                Foreground="#E0E0E0" 
@@ -96,7 +99,9 @@
                                Opacity="0.9"
                                TextWrapping="Wrap"/>
 
-                    <Grid ColumnDefinitions="*,*,*" Margin="0,10,0,0">
+                    <Grid ColumnDefinitions="*,*,*" 
+                          Margin="0,15,0,5">
+                        
                         <Button Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Content="💾 Save Changes"
@@ -105,7 +110,7 @@
                                 BorderBrush="#3CA374"
                                 Foreground="White"
                                 CornerRadius="5"
-                                Padding="10,5"
+                                Padding="12,8"
                                 Margin="0,0,5,0"/>
                         
                         <Button Grid.Column="2"
@@ -115,9 +120,12 @@
                                 BorderBrush="#D13A3A"
                                 Foreground="White"
                                 CornerRadius="5"
-                                Padding="10,5"
+                                Padding="12,8"
                                 Margin="5,0,0,0"/>
                     </Grid>
+
+                    <!-- Espace supplémentaire en bas pour le scrolling -->
+                    <Border Height="10" Opacity="0"/>
 
                 </StackPanel>
             </Border>

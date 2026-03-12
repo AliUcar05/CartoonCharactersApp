@@ -11,7 +11,7 @@
         Title="Cartoon Characters Collection"
         Background="#F5F5F5">
 
-    <Grid RowDefinitions="80,Auto,*">
+    <Grid RowDefinitions="80,80,*">
         <!-- Header -->
         <Border Grid.Row="0"
                 Background="#2C3E50"
@@ -74,68 +74,121 @@
             </Grid>
         </Border>
 
-        <!-- Contenu principal -->
+        <!-- Contenu principal avec menu horizontal -->
         <Grid Grid.Row="2"
-              ColumnDefinitions="220,*"
+              RowDefinitions="Auto,*"
               Margin="10">
-            <!-- Sidebar -->
-            <Border Grid.Column="0"
-                    Background="#34495E"
-                    CornerRadius="8"
-                    Padding="10"
-                    Margin="0,0,10,0">
-                <StackPanel HorizontalAlignment="Stretch"
-                            VerticalAlignment="Top"
+            
+            <!-- Barre de navigation avec boutons à gauche et login à droite -->
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="*, Auto"
+                  Margin="0,0,0,10">
+                
+                <!-- Boutons de navigation à gauche -->
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
                             Spacing="8">
-                    <TextBlock Text="Navigation"
-                               Foreground="#ECF0F1"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               Margin="0,0,0,10"/>
-
-                    <Button Background="#3498DB"
+                    
+                    <Button Background="#2C3E50"
                             Foreground="White"
-                            BorderBrush="#2980B9"
+                            BorderBrush="#34495E"
                             BorderThickness="1"
                             CornerRadius="5"
-                            Padding="10"
-                            HorizontalContentAlignment="Center"
+                            Padding="8,6"
                             Command="{Binding BackToMainCommand}"
                             Cursor="Hand">
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="8"
+                                    Spacing="3"
                                     HorizontalAlignment="Center">
-                            <TextBlock Text="🏠" FontSize="16"/>
+                            <TextBlock Text="🏠" FontSize="12"/>
                             <TextBlock Text="Accueil"
-                                       FontSize="14"
+                                       FontSize="11"
                                        FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Background="#27AE60"
+                    <Button Background="#2C3E50"
                             Foreground="White"
-                            BorderBrush="#229954"
+                            BorderBrush="#34495E"
                             BorderThickness="1"
                             CornerRadius="5"
-                            Padding="10"
-                            HorizontalContentAlignment="Center"
+                            Padding="8,6"
                             Command="{Binding GoToAddCartoonCharactersCommand}"
                             Cursor="Hand">
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="8"
+                                    Spacing="3"
                                     HorizontalAlignment="Center">
-                            <TextBlock Text="➕" FontSize="16"/>
+                            <TextBlock Text="➕" FontSize="12"/>
                             <TextBlock Text="Ajouter"
-                                       FontSize="14"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- NOUVEAU : Bouton Importer CSV -->
+                    <Button Background="#2C3E50"
+                            Foreground="White"
+                            BorderBrush="#34495E"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Padding="8,6"
+                            Command="{Binding ImportCsvCommand}"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="3"
+                                    HorizontalAlignment="Center">
+                            <TextBlock Text="📥" FontSize="12"/>
+                            <TextBlock Text="Importer"
+                                       FontSize="11"
+                                       FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- NOUVEAU : Bouton Exporter CSV -->
+                    <Button Background="#2C3E50"
+                            Foreground="White"
+                            BorderBrush="#34495E"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Padding="8,6"
+                            Command="{Binding ExportCsvCommand}"
+                            Cursor="Hand">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="3"
+                                    HorizontalAlignment="Center">
+                            <TextBlock Text="📤" FontSize="12"/>
+                            <TextBlock Text="Exporter"
+                                       FontSize="11"
                                        FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
-            </Border>
+
+                <!-- Bouton Login à droite -->
+                <Button Grid.Column="1"
+                        Background="#2C3E50"
+                        Foreground="White"
+                        BorderBrush="#34495E"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Padding="8,6"
+                        Cursor="Hand">
+                    
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="3"
+                                HorizontalAlignment="Center">
+                        <TextBlock Text="🔑" FontSize="12"/>
+                        <TextBlock Text="Login"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
 
             <!-- Zone de contenu -->
-            <Border Grid.Column="1"
-                    Background="White"
+            <Border Grid.Row="1"
+                    Background="#2C3E50"
                     CornerRadius="8"
                     Padding="15">
                 <TransitioningContentControl Content="{Binding CurrentPage}" />
