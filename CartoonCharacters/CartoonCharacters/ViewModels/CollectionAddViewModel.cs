@@ -86,7 +86,7 @@ public partial class CollectionAddViewModel : ViewModelBase
     
         var cartoonCharacter = new CartoonCharacter
         {
-            Id = ObjectId.GenerateNewId(),
+            // Plus besoin de générer l'Id ici, le constructeur le fait automatiquement
             Name = Name,
             Description = Description,
             // Stocker en avares://

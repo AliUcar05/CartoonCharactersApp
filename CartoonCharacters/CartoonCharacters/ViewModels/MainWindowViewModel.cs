@@ -74,16 +74,33 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task ExportCsv()
     {
-        // TODO: Étape 3 - Implémenter la logique d'export
-        var csvService = new CsvServices(GetTopLevel());
+        try
+        {
+            var topLevel = GetTopLevel();
+            if (topLevel == null) return;
+
+            // Récupérer les personnages actuels depuis MyGlobals
+            var characters = MyGlobals.MyCartoonCharacters;
         
-        // Récupérer les personnages actuels (depuis votre service de stockage)
-        // var characters = await _storageService.LoadCharactersAsync();
+            if (!characters.Any())
+            {
+                Console.WriteLine("⚠️ Aucune donnée à exporter");
+                // TODO: Afficher message à l'utilisateur
+                return;
+            }
+
+            // Créer une copie des personnages avec les IDs en string (déjà le cas)
+            var csvService = new CsvServices(topLevel);
+            await csvService.SaveDataAsync(characters);
         
-        // Pour l'instant, commenté car on n'a pas encore les données
-        // await csvService.SaveDataAsync(characters);
-        
-        Console.WriteLine("📤 Export CSV déclenché");
+            Console.WriteLine($"✅ Export terminé : {characters.Count} personnages");
+            // TODO: Afficher message de succès
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur export CSV: {ex.Message}");
+            // TODO: Afficher message d'erreur
+        }
     }
 
     // Méthode utilitaire pour obtenir le TopLevel (nécessaire pour CsvServices)
@@ -104,7 +121,7 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void GoToDetailsFromChild(ObjectId animalId)
+    private void GoToDetailsFromChild(string animalId)
     {
         CurrentPage = new CollectionDetailsViewModel(animalId);
     }
@@ -115,7 +132,7 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentPage = new CollectionAddViewModel(BackToMain);
     }
 
-    public void GoToEditCartoonCharacter(ObjectId id)
+    public void GoToEditCartoonCharacter(string id)
     {
         CurrentPage = new CollectionEditViewModel(id, BackToMain);
     }

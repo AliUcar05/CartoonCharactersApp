@@ -61,8 +61,7 @@ public static class JsonDataService
     /// <summary>
     /// Supprime un personnage dans un fichier JSON
     /// </summary>
-
-    public static void DeleteRecordFromFile(string filePath, ObjectId id)
+    public static void DeleteRecordFromFile(string filePath, string id)
     {
         try
         {
@@ -93,7 +92,7 @@ public static class JsonDataService
         {
             new()
             {
-                Id = MongoDB.Bson.ObjectId.GenerateNewId(),
+                Id = ObjectId.GenerateNewId().ToString(),  // ← Ajout de .ToString()
                 Name = "SpongeBob",
                 Description = "A cartoon character from SpongeBob.",
                 ImagePath = "avares://CartoonCharacters/Assets/sponge_bob.png"

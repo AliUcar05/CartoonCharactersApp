@@ -29,12 +29,12 @@ public partial class CollectionEditViewModel : ViewModelBase
     private string[]? selectedFiles;
     
     [ObservableProperty]
-    private ObjectId id;
+    private string id;
     
     private readonly Action _goBack;
     private string? _originalImagePath;
 
-    public CollectionEditViewModel(ObjectId characterId, Action goBack)
+    public CollectionEditViewModel(string characterId, Action goBack)
     {
         Id = characterId;
         _goBack = goBack;
@@ -121,7 +121,9 @@ public partial class CollectionEditViewModel : ViewModelBase
             // Mettre à jour l'image si une nouvelle a été sélectionnée
             if (SelectedFiles != null && SelectedFiles.Length > 0)
             {
-                existingCharacter.ImagePath = SelectedFiles[0];
+                var fileName = Path.GetFileName(SelectedFiles[0]);
+                // Stocker en format avares://
+                existingCharacter.ImagePath = $"avares://CartoonCharacters/Assets/{fileName}";  // ← CORRECTION ICI
             }
             
             // Sauvegarder dans le JSON

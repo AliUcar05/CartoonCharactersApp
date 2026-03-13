@@ -9,7 +9,7 @@ public partial class CollectionDetailsViewModel : ViewModelBase
 {
     [ObservableProperty] private CartoonCharacter _myCartoonCharacter;
  
-    public CollectionDetailsViewModel(ObjectId id)
+    public CollectionDetailsViewModel(string id)
     {
         MyCartoonCharacter = MyGlobals.MyCartoonCharacters.First(cc => cc.Id == id);
     }

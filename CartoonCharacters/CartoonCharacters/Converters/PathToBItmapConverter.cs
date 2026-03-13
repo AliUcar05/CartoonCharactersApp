@@ -34,7 +34,7 @@ public class PathToBitmapConverter : IValueConverter
         try
         {
             return ImageHelper.LoadFromResource(
-                new Uri("avares://CartoonCharacters/Assets/uzun.jpg"));
+                new Uri("avares://CartoonCharacters/Assets/default.jpg"));
         }
         catch
         {

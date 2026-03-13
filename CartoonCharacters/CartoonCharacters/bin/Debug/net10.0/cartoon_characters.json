@@ -1,18 +1,12 @@
 [
   {
-    "Id": {
-      "Timestamp": 0,
-      "CreationTime": "1970-01-01T00:00:00Z"
-    },
-    "Name": "Uzun",
-    "Description": "Uzunnn",
-    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpeg"
+    "Id": "69b44715ee40ba27dc657bfe",
+    "Name": "K\u00FCf\u00FCrbaz Haydo",
+    "Description": "Hates notepad",
+    "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp"
   },
   {
-    "Id": {
-      "Timestamp": 1773071854,
-      "CreationTime": "2026-03-09T15:57:34Z"
-    },
+    "Id": "69b4475bee40ba27dc657bff",
     "Name": "Huysuz",
     "Description": "Loves money",
     "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"

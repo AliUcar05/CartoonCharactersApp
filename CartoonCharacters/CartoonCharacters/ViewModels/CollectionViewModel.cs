@@ -10,11 +10,10 @@ namespace CartoonCharacters.ViewModels;
 
 public partial class CollectionViewModel: ViewModelBase
 {
-    public IRelayCommand<ObjectId> FromParentCommand { get; set; }
-    
-    // MODIFIER: Changement de type ici
-    public IRelayCommand<ObjectId> EditCommand { get; }   
-    public IRelayCommand<ObjectId> DeleteCommand { get; }
+    // Changer tous les ObjectId en string
+    public IRelayCommand<string> FromParentCommand { get; set; }
+    public IRelayCommand<string> EditCommand { get; }   
+    public IRelayCommand<string> DeleteCommand { get; }
     
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
     
@@ -23,27 +22,24 @@ public partial class CollectionViewModel: ViewModelBase
     
     private readonly MainWindowViewModel _mainWindowViewModel;
     
-    public CollectionViewModel(IRelayCommand<ObjectId> fromParentCommand, MainWindowViewModel mainWindowViewModel)
+    public CollectionViewModel(IRelayCommand<string> fromParentCommand, MainWindowViewModel mainWindowViewModel)
     {
         FromParentCommand = fromParentCommand;
         _mainWindowViewModel = mainWindowViewModel;
         
-        // MODIFIER: Création correcte du RelayCommand
-        EditCommand = new RelayCommand<ObjectId>(GoToEdit);
-        DeleteCommand = new RelayCommand<ObjectId>(DeleteCartoonCharacter);
+        EditCommand = new RelayCommand<string>(GoToEdit);
+        DeleteCommand = new RelayCommand<string>(DeleteCartoonCharacter);
         
         MyObservableCartoonCharacters = [];
         UpdateList();
     }
     
-    // La méthode doit être en paramètre ObjectId, pas ObjectId?
-    private void GoToEdit(ObjectId id)
+    private void GoToEdit(string id)  // ← string
     {
         _mainWindowViewModel.GoToEditCartoonCharacter(id);
     }
 
-    // Méthode pour supprimer un cartoon character.
-    private void DeleteCartoonCharacter(ObjectId id)
+    private void DeleteCartoonCharacter(string id)  // ← string
     {
         for (int i = 0; i < MyGlobals.MyCartoonCharacters.Count; i++)
         {
@@ -66,11 +62,9 @@ public partial class CollectionViewModel: ViewModelBase
         MyGlobals.SaveData();
     }
     
-    // met à jour la liste.
     private void UpdateList()
     {
         MyObservableCartoonCharacters.Clear();
-
         foreach (var cartoonCharacter in MyGlobals.MyCartoonCharacters)
         {
             MyObservableCartoonCharacters.Add(cartoonCharacter);
