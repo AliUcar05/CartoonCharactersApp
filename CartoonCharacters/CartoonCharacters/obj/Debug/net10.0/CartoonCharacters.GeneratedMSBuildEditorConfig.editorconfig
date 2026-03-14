@@ -38,5 +38,11 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CollectionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CsvExportSelectionView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CsvImportPreviewView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

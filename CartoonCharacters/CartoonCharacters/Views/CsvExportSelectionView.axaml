@@ -1,0 +1,149 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:converters="clr-namespace:CartoonCharacters.Converters"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+             x:Class="CartoonCharacters.Views.CsvExportSelectionView"
+             x:DataType="vm:CsvExportSelectionViewModel"
+             Background="#2C3E50">
+
+    <UserControl.Resources>
+        <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="15" RowSpacing="10">
+        
+        <!-- En-tête -->
+        <Border Grid.Row="0"
+                Background="#36393F"
+                CornerRadius="6"
+                Padding="12">
+            
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                
+                <!-- Titre -->
+                <TextBlock Grid.Column="0"
+                           Text="📤 Exporter des personnages"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"/>
+
+                <!-- Tout sélectionner -->
+                <Border Grid.Column="2"
+                        Background="#2C3E50"
+                        CornerRadius="4"
+                        Padding="8,4">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <CheckBox IsChecked="{Binding AllSelected}"
+                                  Content="Tout"
+                                  Foreground="White"
+                                  FontSize="11"/>
+                        <TextBlock Text="(" 
+                                   Foreground="#7F8C8D"
+                                   FontSize="11"/>
+                        <TextBlock Text="{Binding SelectedCount}" 
+                                   Foreground="#3498DB" 
+                                   FontWeight="Bold"
+                                   FontSize="11"/>
+                        <TextBlock Text=")" 
+                                   Foreground="#7F8C8D"
+                                   FontSize="11"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Liste des personnages -->
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,0,0,10">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ExportItem">
+                        <Border Background="#36393F"
+                                CornerRadius="6"
+                                Padding="8"
+                                BorderThickness="1.5"
+                                BorderBrush="#2C3E50">
+                            
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="{Binding IsSelected}"
+                                          VerticalAlignment="Center"/>
+
+                                <!-- Image -->
+                                <Border Grid.Column="1"
+                                        CornerRadius="4"
+                                        Width="50"
+                                        Height="50"
+                                        Background="#2C3E50">
+                                    <Image Source="{Binding Character.ImagePath, Converter={StaticResource PathToBitmapConverter}}"
+                                           Stretch="UniformToFill"/>
+                                </Border>
+
+                                <!-- Infos -->
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{Binding Character.Name}"
+                                               Foreground="White"
+                                               FontWeight="Bold"
+                                               FontSize="14"/>
+                                    
+                                    <TextBlock Text="{Binding Character.Description}"
+                                               Foreground="#BDC3C7"
+                                               TextWrapping="Wrap"
+                                               FontSize="12"
+                                               Margin="0,3,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Boutons d'action -->
+        <Border Grid.Row="2"
+                Background="#36393F"
+                CornerRadius="6"
+                Padding="10">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                
+                <TextBlock Grid.Column="0"
+                           Foreground="#BDC3C7"
+                           FontSize="11"
+                           VerticalAlignment="Center">
+                    <Run Text="{Binding SelectedCount}"/>
+                    <Run Text=" sélectionné(s)"/>
+                </TextBlock>
+
+                <Button Grid.Column="1"
+                        Content="❌ Annuler"
+                        Command="{Binding CancelExportCommand}"
+                        Background="#F04747"
+                        Foreground="White"
+                        Padding="15,8"
+                        FontSize="12"
+                        CornerRadius="4"
+                        Margin="0,0,3,0"/>
+
+                <Button Grid.Column="2"
+                        Content="📤 Exporter"
+                        Command="{Binding ConfirmExportCommand}"
+                        Background="#43B581"
+                        Foreground="White"
+                        Padding="15,8"
+                        FontSize="12"
+                        CornerRadius="4"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,298 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:converters="clr-namespace:CartoonCharacters.Converters"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+             x:Class="CartoonCharacters.Views.CsvImportPreviewView"
+             x:DataType="vm:CsvImportPreviewViewModel"
+             Background="#2C3E50">
+
+    <UserControl.Resources>
+        <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        <converters:StatusToBackgroundConverter x:Key="StatusToBackgroundConverter"/>
+        <converters:StatusToTextConverter x:Key="StatusToTextConverter"/>
+        <converters:StatusToEnabledConverter x:Key="StatusToEnabledConverter"/>
+        <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="15" RowSpacing="10">
+        
+        <!-- En-tête -->
+        <Border Grid.Row="0"
+                Background="#36393F"
+                CornerRadius="6"
+                Padding="12">
+            
+            <StackPanel>
+                <!-- Ligne 1 : Titre + Stats alignées -->
+                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8">
+                    
+                    <!-- Titre -->
+                    <TextBlock Grid.Column="0"
+                               Text="📋 Import CSV"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               VerticalAlignment="Center"
+                               Margin="0,0,10,0"/>
+
+                    <!-- Tout sélectionner -->
+                    <Border Grid.Column="1"
+                            Background="#2C3E50"
+                            CornerRadius="4"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <CheckBox IsChecked="{Binding AllSelected}"
+                                      Content="Tout"
+                                      Foreground="White"
+                                      FontSize="11"/>
+                            <TextBlock Text="(" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding SelectedCount}" 
+                                       Foreground="#3498DB" 
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Nouveaux -->
+                    <Border Grid.Column="2"
+                            Background="#2C3E50"
+                            CornerRadius="4"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="🆕"
+                                       Foreground="#27AE60"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Nouv"
+                                       Foreground="White"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="(" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding NewCount}" 
+                                       Foreground="#27AE60" 
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Modifiés -->
+                    <Border Grid.Column="3"
+                            Background="#2C3E50"
+                            CornerRadius="4"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="✏️"
+                                       Foreground="#F39C12"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Mod"
+                                       Foreground="White"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="(" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ModifiedCount}" 
+                                       Foreground="#F39C12" 
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Inchangés -->
+                    <Border Grid.Column="4"
+                            Background="#2C3E50"
+                            CornerRadius="4"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="⏺️"
+                                       Foreground="#3498DB"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Inch"
+                                       Foreground="White"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="(" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding UnchangedCount}" 
+                                       Foreground="#3498DB" 
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Conflits -->
+                    <Border Grid.Column="5"
+                            Background="#2C3E50"
+                            CornerRadius="4"
+                            Padding="8,4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Text="⚠️"
+                                       Foreground="#E74C3C"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Conflits"
+                                       Foreground="White"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="(" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ConflictCount}" 
+                                       Foreground="#E74C3C" 
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text=")" 
+                                       Foreground="#7F8C8D" 
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Ligne 2 : Nom du fichier -->
+                <TextBlock Text="{Binding FileName}"
+                           Foreground="#BDC3C7"
+                           FontSize="11"
+                           Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Liste des personnages -->
+        <ScrollViewer Grid.Row="1"
+                      Margin="0,0,0,10">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="6"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#36393F"
+                                CornerRadius="6"
+                                Padding="8"
+                                BorderBrush="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                BorderThickness="1.5"
+                                Opacity="{Binding IsSelected, Converter={StaticResource BoolToOpacityConverter}}">
+                            
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="{Binding IsSelected}"
+                                          CommandParameter="{Binding .}"
+                                          IsEnabled="{Binding Status, Converter={StaticResource StatusToEnabledConverter}}"
+                                          VerticalAlignment="Center"/>
+
+                                <!-- Image -->
+                                <Border Grid.Column="1"
+                                        CornerRadius="4"
+                                        Width="50"
+                                        Height="50"
+                                        Background="#2C3E50">
+                                    <Image Source="{Binding CsvCharacter.ImagePath, Converter={StaticResource PathToBitmapConverter}}"
+                                           Stretch="UniformToFill"/>
+                                </Border>
+
+                                <!-- Infos -->
+                                <StackPanel Grid.Column="2">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="{Binding CsvCharacter.Name}"
+                                                   Foreground="White"
+                                                   FontWeight="Bold"
+                                                   FontSize="14"/>
+                                        <Border Background="{Binding Status, Converter={StaticResource StatusToBackgroundConverter}}"
+                                                CornerRadius="3"
+                                                Padding="4,1">
+                                            <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}"
+                                                       Foreground="White"
+                                                       FontSize="9"/>
+                                        </Border>
+                                    </StackPanel>
+                                    
+                                    <TextBlock Text="{Binding CsvCharacter.Description}"
+                                               Foreground="#BDC3C7"
+                                               TextWrapping="Wrap"
+                                               FontSize="12"
+                                               Margin="0,3,0,3"/>
+                                    
+                                    <!-- Modifications détectées -->
+                                    <ItemsControl ItemsSource="{Binding Changes}"
+                                                  Margin="0,3,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}"
+                                                           Foreground="#F39C12"
+                                                           FontSize="10"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Boutons d'action -->
+        <Border Grid.Row="2"
+                Background="#36393F"
+                CornerRadius="6"
+                Padding="10">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <TextBlock Grid.Column="0"
+                           Text=""
+                           Foreground="#BDC3C7"
+                           FontSize="11"
+                           VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1"
+                        Content="❌ Annuler"
+                        Command="{Binding CancelImportCommand}"
+                        Background="#F04747"
+                        Foreground="White"
+                        Padding="15,8"
+                        FontSize="12"
+                        CornerRadius="4"
+                        Margin="0,0,3,0"/>
+
+                <Button Grid.Column="2"
+                        Content="✅ Importer"
+                        Command="{Binding ConfirmImportCommand}"
+                        Background="#43B581"
+                        Foreground="White"
+                        Padding="15,8"
+                        FontSize="12"
+                        CornerRadius="4"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

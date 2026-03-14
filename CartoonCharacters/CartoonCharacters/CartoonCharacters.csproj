@@ -8,6 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <AvaloniaResource Include="**\*.xaml">
+            <SubType>Designer</SubType>
+        </AvaloniaResource>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
@@ -35,5 +38,11 @@
     
     <ItemGroup>
       <Folder Include="Core\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Views\CsvExportSelectionView.cs">
+        <DependentUpon>CsvExportSelectionView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

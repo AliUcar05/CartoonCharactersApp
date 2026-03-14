@@ -8,6 +8,10 @@
 
      <Application.Resources>
          <converters:PathToBitmapConverter x:Key="PathToBitmapConverter"/>
+         <converters:StatusToColorConverter x:Key="StatusToColorConverter"/>
+         <converters:StatusToBackgroundConverter x:Key="StatusToBackgroundConverter"/>
+         <converters:StatusToTextConverter x:Key="StatusToTextConverter"/>
+         <converters:StatusToEnabledConverter x:Key="StatusToEnabledConverter"/>
      </Application.Resources>
     <Application.DataTemplates>
         <local:ViewLocator/>
