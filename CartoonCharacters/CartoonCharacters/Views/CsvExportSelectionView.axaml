@@ -56,63 +56,63 @@
             </Grid>
         </Border>
 
-        <!-- Liste des personnages -->
+        <!-- Liste des personnages - ScrollViewer style CollectionDetailsView -->
         <ScrollViewer Grid.Row="1"
-                      Margin="0,0,0,10">
-            <ItemsControl ItemsSource="{Binding Items}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Spacing="6"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="10" Spacing="6">
+                <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="6"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:ExportItem">
-                        <Border Background="#36393F"
-                                CornerRadius="6"
-                                Padding="8"
-                                BorderThickness="1.5"
-                                BorderBrush="#2C3E50">
-                            
-                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ExportItem">
+                            <Border Background="#34495E"
+                                    BorderBrush="#2C3E50"
+                                    BorderThickness="2"
+                                    CornerRadius="3"
+                                    Padding="10"
+                                    Margin="0,0,0,5">
                                 
-                                <CheckBox Grid.Column="0"
-                                          IsChecked="{Binding IsSelected}"
-                                          VerticalAlignment="Center"/>
-
-                                <!-- Image -->
-                                <Border Grid.Column="1"
-                                        CornerRadius="4"
-                                        Width="50"
-                                        Height="50"
-                                        Background="#2C3E50">
-                                    <Image Source="{Binding Character.ImagePath, Converter={StaticResource PathToBitmapConverter}}"
-                                           Stretch="UniformToFill"/>
-                                </Border>
-
-                                <!-- Infos -->
-                                <StackPanel Grid.Column="2">
-                                    <TextBlock Text="{Binding Character.Name}"
-                                               Foreground="White"
-                                               FontWeight="Bold"
-                                               FontSize="14"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- Image -->
+                                    <Panel>
+                                        <Rectangle Height="100" Width="100" Fill="LightGray"/>
+                                        <Image Margin="20" 
+                                               Height="200" 
+                                               Width="200" 
+                                               Stretch="UniformToFill"
+                                               Source="{Binding Character.ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
+                                    </Panel>
                                     
-                                    <TextBlock Text="{Binding Character.Description}"
-                                               Foreground="#BDC3C7"
-                                               TextWrapping="Wrap"
-                                               FontSize="12"
-                                               Margin="0,3,0,0"/>
+                                    <!-- Infos avec checkbox intégrée -->
+                                    <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                                        <CheckBox IsChecked="{Binding IsSelected}"
+                                                  Content="{Binding Character.Name}"
+                                                  Foreground="White"
+                                                  FontWeight="Bold"/>
+                                        
+                                        <TextBlock Text="{Binding Character.Description}"
+                                                   Foreground="#BDC3C7"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,5,0,0"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </ScrollViewer>
 
-        <!-- Boutons d'action -->
+        <!-- Boutons d'action - Encadrés colorés sans fond -->
         <Border Grid.Row="2"
-                Background="#36393F"
+                Background="Transparent"
+                BorderBrush="#36393F"
+                BorderThickness="1"
                 CornerRadius="6"
                 Padding="10">
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
@@ -125,24 +125,44 @@
                     <Run Text=" sélectionné(s)"/>
                 </TextBlock>
 
+                <!-- Bouton Annuler - encadré rouge -->
                 <Button Grid.Column="1"
                         Content="❌ Annuler"
                         Command="{Binding CancelExportCommand}"
-                        Background="#F04747"
-                        Foreground="White"
+                        Background="Transparent"
+                        BorderBrush="#F04747"
+                        BorderThickness="2"
+                        Foreground="#F04747"
                         Padding="15,8"
                         FontSize="12"
                         CornerRadius="4"
-                        Margin="0,0,3,0"/>
+                        Margin="0,0,3,0">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="Background" Value="#33F04747"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
 
+                <!-- Bouton Exporter - encadré vert -->
                 <Button Grid.Column="2"
                         Content="📤 Exporter"
                         Command="{Binding ConfirmExportCommand}"
-                        Background="#43B581"
-                        Foreground="White"
+                        Background="Transparent"
+                        BorderBrush="#43B581"
+                        BorderThickness="2"
+                        Foreground="#43B581"
                         Padding="15,8"
                         FontSize="12"
-                        CornerRadius="4"/>
+                        CornerRadius="4">
+                    <Button.Styles>
+                        <Style Selector="Button:pointerover">
+                            <Setter Property="Background" Value="#3343B581"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Style>
+                    </Button.Styles>
+                </Button>
             </Grid>
         </Border>
     </Grid>

@@ -1,14 +1,14 @@
 [
   {
-    "Id": "69b44715ee40ba27dc657bfe",
-    "Name": "K\u00FCf\u00FCrbaz Haydo",
-    "Description": "Hates notepad",
-    "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp"
-  },
-  {
     "Id": "69b4475bee40ba27dc657bff",
     "Name": "Huysuz",
     "Description": "Loves money",
     "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"
+  },
+  {
+    "Id": "69b44715ee40ba27dc657bfe",
+    "Name": "K\u00FCf\u00FCrbaz Haydo",
+    "Description": "Hates notepad",
+    "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp"
   }
 ]

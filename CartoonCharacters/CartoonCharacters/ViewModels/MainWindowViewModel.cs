@@ -65,42 +65,9 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             var topLevel = GetTopLevel();
-            if (topLevel == null) 
-            {
-                // Attendre un peu et réessayer
-                await Task.Delay(100);
-                topLevel = GetTopLevel();
-                if (topLevel == null)
-                {
-                    await DialogService.ShowMessage("Erreur", "Impossible d'accéder à la fenêtre");
-                    return;
-                }
-            }
+            if (topLevel == null) return;
 
-            // Petit délai pour être sûr que tout est prêt
-            await Task.Delay(50);
-
-            // Sélection avec filtre .csv
-            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-            {
-                Title = "Sélectionnez un fichier CSV",
-                AllowMultiple = false,
-                FileTypeFilter = new[]
-                {
-                    new FilePickerFileType("Fichiers CSV")
-                    {
-                        Patterns = new[] { "*.csv" }
-                    }
-                }
-            });
-
-            if (files.Count == 0)
-                return;
-
-            var file = files[0];
-        
-            // Lire le CSV avec un nouveau service à chaque fois
-            var csvService = new CsvServices(topLevel); // Si CsvServices est IDisposable
+            var csvService = new CsvServices(topLevel);
             var importedCharacters = await csvService.LoadDataAsync();
 
             if (!importedCharacters.Any())
@@ -109,9 +76,12 @@ public partial class MainWindowViewModel : ViewModelBase
                 return;
             }
 
-            // Ouvrir la prévisualisation
+            // Récupérer le nom du fichier
+            var fileName = "Fichier sélectionné";
+        
+            // Ouvrir la page de prévisualisation
             var previewViewModel = new CsvImportPreviewViewModel(
-                file.Name,
+                fileName,
                 importedCharacters,
                 MyGlobals.MyCartoonCharacters,
                 OnImportConfirmed,
@@ -121,7 +91,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage("Erreur", $"❌ {ex.Message}");
+            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'import : {ex.Message}");
         }
     }
     

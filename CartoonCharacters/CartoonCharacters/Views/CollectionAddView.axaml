@@ -29,6 +29,18 @@
         <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
             <Setter Property="Foreground" Value="#999999"/>
         </Style>
+        
+        <!-- Style pour les boutons encadrés -->
+        <Style Selector="Button.encadre">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        
+        <Style Selector="Button.encadre:pointerover">
+            <Setter Property="Background" Value="#33FFFFFF"/>
+        </Style>
     </UserControl.Styles>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -49,29 +61,33 @@
 
                 <StackPanel Spacing="12">
 
-                    <TextBlock Text="➕ Add a cartoon character"
+                    <!-- Titre en français -->
+                    <TextBlock Text="➕ Ajouter un personnage"
                                HorizontalAlignment="Center"
                                FontWeight="Bold"
                                FontSize="18"
                                Foreground="White"
                                Margin="0,0,0,10"/>
 
-                    <TextBlock Text="📝 Name:" 
+                    <!-- Nom en français -->
+                    <TextBlock Text="📝 Nom :" 
                                Foreground="#E0E0E0" 
                                FontWeight="SemiBold"/>
                     <TextBox Watermark="ex: Homer Simpson"
                              Text="{Binding Name}"/>
 
-                    <TextBlock Text="📖 Description:" 
+                    <!-- Description en français -->
+                    <TextBlock Text="📖 Description :" 
                                Foreground="#E0E0E0" 
                                Margin="0,5,0,0"
                                FontWeight="SemiBold"/>
-                    <TextBox Watermark="ex: Loves donuts..."
+                    <TextBox Watermark="ex: Aime les donuts..."
                              Text="{Binding Description}"
                              AcceptsReturn="True"
                              Height="80"/>
 
-                    <Button Content="🖼️ Select Image"
+                    <!-- Bouton Select Image en français -->
+                    <Button Content="🖼️ Choisir une image"
                             Command="{Binding SelectFilesCommand}"
                             Background="#4E5D94"
                             BorderBrush="#3A4A7A"
@@ -97,29 +113,46 @@
                                Opacity="0.9"
                                TextWrapping="Wrap"/>
 
+                    <!-- Boutons d'action encadrés -->
                     <Grid ColumnDefinitions="*,*,*" 
                           Margin="0,15,0,5">
                         
+                        <!-- Bouton Ajouter - encadré vert -->
                         <Button Grid.Column="0"
                                 Grid.ColumnSpan="2"
-                                Content="✅ Add"
+                                Content="✅ Ajouter"
                                 Command="{Binding AddCartoonCharacterCommand}"
-                                Background="#43B581"
-                                BorderBrush="#3CA374"
-                                Foreground="White"
+                                Classes="encadre"
+                                BorderBrush="#43B581"
+                                Foreground="#43B581"
                                 CornerRadius="5"
                                 Padding="12,8"
-                                Margin="0,0,5,0"/>
+                                Margin="0,0,5,0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#3343B581"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
                         
+                        <!-- Bouton Annuler - encadré rouge -->
                         <Button Grid.Column="2"
-                                Content="❌ Cancel"
+                                Content="❌ Annuler"
                                 Command="{Binding CancelCommand}"
-                                Background="#F04747"
-                                BorderBrush="#D13A3A"
-                                Foreground="White"
+                                Classes="encadre"
+                                BorderBrush="#F04747"
+                                Foreground="#F04747"
                                 CornerRadius="5"
                                 Padding="12,8"
-                                Margin="5,0,0,0"/>
+                                Margin="5,0,0,0">
+                            <Button.Styles>
+                                <Style Selector="Button:pointerover">
+                                    <Setter Property="Background" Value="#33F04747"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Style>
+                            </Button.Styles>
+                        </Button>
                     </Grid>
 
                     <!-- Espace supplémentaire en bas pour le scrolling -->
