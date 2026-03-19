@@ -8,7 +8,6 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MongoDB.Bson;
 using CartoonCharacters.Models;
 
 namespace CartoonCharacters.ViewModels;
@@ -22,18 +21,18 @@ public partial class CollectionAddViewModel : ViewModelBase
     private string description = "";
 
     [ObservableProperty]
-    private Bitmap? picture;  // Garder pour l'aperçu
+    private Bitmap? picture;
 
     [ObservableProperty]
     private string[]? selectedFiles;
-    
+
     private readonly Action _goBack;
 
     public CollectionAddViewModel(Action goBack)
     {
         _goBack = goBack;
     }
-    
+
     [RelayCommand]
     private async Task SelectFilesAsync()
     {
@@ -59,11 +58,9 @@ public partial class CollectionAddViewModel : ViewModelBase
             return;
 
         SelectedFiles = new[] { path };
-    
+
         await using var fs = File.OpenRead(path);
-        Picture = new Bitmap(fs);  // Pour l'aperçu
-    
-        // On garde le chemin pour l'ajout, mais on le traitera dans AddCartoonCharacter
+        Picture = new Bitmap(fs);
     }
 
     private static IStorageProvider? GetStorageProvider()
@@ -75,26 +72,23 @@ public partial class CollectionAddViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void AddCartoonCharacter()
+    private async Task AddCartoonCharacter()
     {
-        if (SelectedFiles == null || SelectedFiles.Length == 0) return;
+        if (SelectedFiles == null || SelectedFiles.Length == 0)
+            return;
 
-        // Obtenir le nom du fichier
         var fileName = Path.GetFileName(SelectedFiles[0]);
-    
-        // TODO: Copier le fichier vers Assets/ (à faire manuellement pour l'instant)
-    
+
         var cartoonCharacter = new CartoonCharacter
         {
-            // Plus besoin de générer l'Id ici, le constructeur le fait automatiquement
             Name = Name,
             Description = Description,
-            // Stocker en avares://
             ImagePath = $"avares://CartoonCharacters/Assets/{fileName}"
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
-        MyGlobals.SaveData();
+        await MyGlobals.SaveDataAsync();
+
         _goBack.Invoke();
     }
 

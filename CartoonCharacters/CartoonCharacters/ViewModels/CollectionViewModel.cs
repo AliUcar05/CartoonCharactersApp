@@ -1,45 +1,42 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MongoDB.Bson;
-using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
 
 namespace CartoonCharacters.ViewModels;
 
-public partial class CollectionViewModel: ViewModelBase
+public partial class CollectionViewModel : ViewModelBase
 {
-    // Changer tous les ObjectId en string
     public IRelayCommand<string> FromParentCommand { get; set; }
-    public IRelayCommand<string> EditCommand { get; }   
-    public IRelayCommand<string> DeleteCommand { get; }
-    
+    public IRelayCommand<string> EditCommand { get; }
+    public IAsyncRelayCommand<string> DeleteCommand { get; }
+
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
-    
-    [ObservableProperty] 
+
+    [ObservableProperty]
     private CartoonCharacter? _selectedCartoonCharacter;
-    
+
     private readonly MainWindowViewModel _mainWindowViewModel;
-    
+
     public CollectionViewModel(IRelayCommand<string> fromParentCommand, MainWindowViewModel mainWindowViewModel)
     {
         FromParentCommand = fromParentCommand;
         _mainWindowViewModel = mainWindowViewModel;
-        
+
         EditCommand = new RelayCommand<string>(GoToEdit);
-        DeleteCommand = new RelayCommand<string>(DeleteCartoonCharacter);
-        
-        MyObservableCartoonCharacters = [];
+        DeleteCommand = new AsyncRelayCommand<string>(DeleteCartoonCharacterAsync);
+
+        MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         UpdateList();
     }
-    
-    private void GoToEdit(string id)  // ← string
+
+    private void GoToEdit(string id)
     {
         _mainWindowViewModel.GoToEditCartoonCharacter(id);
     }
 
-    private void DeleteCartoonCharacter(string id)  // ← string
+    private async Task DeleteCartoonCharacterAsync(string id)
     {
         for (int i = 0; i < MyGlobals.MyCartoonCharacters.Count; i++)
         {
@@ -59,9 +56,9 @@ public partial class CollectionViewModel: ViewModelBase
             }
         }
 
-        MyGlobals.SaveData();
+        await MyGlobals.SaveDataAsync();
     }
-    
+
     private void UpdateList()
     {
         MyObservableCartoonCharacters.Clear();

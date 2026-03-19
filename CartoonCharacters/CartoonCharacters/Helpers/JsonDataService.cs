@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using CartoonCharacters.Models;
 using MongoDB.Bson;
 
@@ -15,88 +20,171 @@ public static class JsonDataService
         WriteIndented = true
     };
 
-    /// <summary>
-    /// Charge les personnages depuis un fichier JSON
-    /// </summary>
-    public static List<CartoonCharacter> LoadFromFile(string filePath)
+    private static readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+    });
+
+    private const string BaseUrl = "http://185.157.245.38:8080/json";
+    private const string RemoteFileName = "cartoon_characters.json";
+
+    private static readonly SemaphoreSlim _syncLock = new(1, 1);
+
+    public static async Task<List<CartoonCharacter>> LoadFromFileAsync(string filePath)
     {
         try
         {
             if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Fichier {filePath} introuvable, chargement des données par défaut");
-                return GetDefaultCharacters();
+                var defaults = GetDefaultCharacters();
+                await SaveToFileAsync(filePath, defaults);
+                return defaults;
             }
 
-            string jsonString = File.ReadAllText(filePath);
-            var characters = JsonSerializer.Deserialize<List<CartoonCharacter>>(jsonString, _options);
-            
-            return characters ?? GetDefaultCharacters();
+            await using var stream = File.OpenRead(filePath);
+            var characters = await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(stream, _options);
+
+            return characters ?? new List<CartoonCharacter>();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erreur lors du chargement du JSON : {ex.Message}");
+            Console.WriteLine($"Erreur lecture JSON local : {ex.Message}");
             return GetDefaultCharacters();
         }
     }
 
-    /// <summary>
-    /// Sauvegarde les personnages dans un fichier JSON
-    /// </summary>
-    public static void SaveToFile(string filePath, List<CartoonCharacter> characters)
+    public static async Task SaveToFileAsync(string filePath, List<CartoonCharacter> characters)
     {
         try
         {
-            string jsonString = JsonSerializer.Serialize(characters, _options);
-            File.WriteAllText(filePath, jsonString);
-            
-            Console.WriteLine($"Données sauvegardées dans {filePath}");
+            await using var stream = File.Create(filePath);
+            await JsonSerializer.SerializeAsync(stream, characters, _options);
+            await stream.FlushAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Erreur lors de la sauvegarde : {ex.Message}");
-        }
-    }
-    
-    /// <summary>
-    /// Supprime un personnage dans un fichier JSON
-    /// </summary>
-    public static void DeleteRecordFromFile(string filePath, string id)
-    {
-        try
-        {
-            // recupère tout le json. 
-            var json = File.ReadAllText(filePath);
-            // remplie la liste de character avec le json.
-            var characterList = JsonSerializer.Deserialize<List<CartoonCharacter>>(json) ?? new List<CartoonCharacter>();
-            // retire le character pas désirée.
-            characterList.RemoveAll(c => c.Id == id);
-            // reécrit le fichier en entier
-            File.WriteAllText(filePath, JsonSerializer.Serialize(characterList));
-            
-            Console.WriteLine($"Données supprimées dans {filePath}");
-            MyGlobals.MyCartoonCharacters = LoadFromFile(MyGlobals.GetDataFilePath());
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur lors de la suppression : {ex.Message}");
+            Console.WriteLine($"Erreur écriture JSON local : {ex.Message}");
         }
     }
 
-    /// <summary>
-    /// Données par défaut si le fichier JSON n'existe pas
-    /// </summary>
+    public static async Task<List<CartoonCharacter>> LoadFromServerAsync()
+    {
+        try
+        {
+            var url = $"{BaseUrl}?FileName={RemoteFileName}";
+
+            using var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Serveur indisponible : {response.StatusCode}");
+                return new List<CartoonCharacter>();
+            }
+
+            await using var contentStream = await response.Content.ReadAsStreamAsync();
+            return await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(contentStream, _options)
+                   ?? new List<CartoonCharacter>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur lecture JSON serveur : {ex.Message}");
+            return new List<CartoonCharacter>();
+        }
+    }
+
+    public static async Task SaveToServerAsync(List<CartoonCharacter> characters)
+    {
+        await _syncLock.WaitAsync();
+
+        try
+        {
+            await using var memoryStream = new MemoryStream();
+            await JsonSerializer.SerializeAsync(memoryStream, characters, _options);
+            memoryStream.Position = 0;
+
+            using var fileContent = new StreamContent(memoryStream);
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            using var content = new MultipartFormDataContent
+            {
+                { fileContent, "file", RemoteFileName }
+            };
+
+            using var response = await _httpClient.PostAsync(BaseUrl, content);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur écriture JSON serveur : {ex.Message}");
+        }
+        finally
+        {
+            _syncLock.Release();
+        }
+    }
+
+    public static async Task<List<CartoonCharacter>> InitializeAsync(string filePath)
+    {
+        var localData = await LoadFromFileAsync(filePath);
+
+        var remoteData = await LoadFromServerAsync();
+        if (remoteData.Count > 0)
+        {
+            await SaveToFileAsync(filePath, remoteData);
+            return remoteData;
+        }
+
+        return localData;
+    }
+
+    public static async Task PersistAsync(string filePath, List<CartoonCharacter> characters)
+    {
+        await SaveToFileAsync(filePath, characters);
+        await SaveToServerAsync(characters);
+    }
+
+    public static async Task AddCharacterAsync(string filePath, CartoonCharacter character)
+    {
+        var list = (await LoadFromFileAsync(filePath)).ToList();
+
+        if (string.IsNullOrWhiteSpace(character.Id))
+        {
+            character.Id = ObjectId.GenerateNewId().ToString();
+        }
+
+        list.Add(character);
+        await PersistAsync(filePath, list);
+    }
+
+    public static async Task UpdateCharacterAsync(string filePath, CartoonCharacter updatedCharacter)
+    {
+        var list = (await LoadFromFileAsync(filePath)).ToList();
+        var index = list.FindIndex(c => c.Id == updatedCharacter.Id);
+
+        if (index >= 0)
+        {
+            list[index] = updatedCharacter;
+            await PersistAsync(filePath, list);
+        }
+    }
+
+    public static async Task DeleteRecordAsync(string filePath, string id)
+    {
+        var list = (await LoadFromFileAsync(filePath)).ToList();
+        list.RemoveAll(c => c.Id == id);
+        await PersistAsync(filePath, list);
+    }
+
     private static List<CartoonCharacter> GetDefaultCharacters()
     {
         return new List<CartoonCharacter>
         {
-            new()
+            new CartoonCharacter
             {
-                Id = ObjectId.GenerateNewId().ToString(),  // ← Ajout de .ToString()
+                Id = ObjectId.GenerateNewId().ToString(),
                 Name = "SpongeBob",
                 Description = "A cartoon character from SpongeBob.",
                 ImagePath = "avares://CartoonCharacters/Assets/sponge_bob.png"
-            },
+            }
         };
     }
 }

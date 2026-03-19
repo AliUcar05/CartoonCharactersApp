@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Threading.Tasks;
 using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
 
@@ -7,43 +7,41 @@ namespace CartoonCharacters;
 
 public static class MyGlobals
 {
-    // Récupère le dossier où se trouve l'exécutable
-    private static readonly string AppFolder = 
-        Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) 
-        ?? Directory.GetCurrentDirectory();
-    
-    private static readonly string DataFilePath = 
-        Path.Combine(AppFolder, "cartoon_characters.json");
-    
+    private static readonly string _dataFilePath = "cartoon_characters.json";
+
     private static List<CartoonCharacter>? _myCartoonCharacters;
-    
+
     public static List<CartoonCharacter> MyCartoonCharacters
     {
         get
         {
             if (_myCartoonCharacters == null)
             {
-                _myCartoonCharacters = JsonDataService.LoadFromFile(DataFilePath);
+                _myCartoonCharacters = new List<CartoonCharacter>();
             }
+
             return _myCartoonCharacters;
         }
         set
         {
-            _myCartoonCharacters = value;
-            JsonDataService.SaveToFile(DataFilePath, _myCartoonCharacters);
+            _myCartoonCharacters = value ?? new List<CartoonCharacter>();
         }
     }
-    
-    public static string GetDataFilePath()
+
+    public static string DataFilePath => _dataFilePath;
+
+    public static async Task InitializeAsync()
     {
-        return DataFilePath;
+        MyCartoonCharacters = await JsonDataService.InitializeAsync(_dataFilePath);
     }
-    
-    public static void SaveData()
+
+    public static async Task SaveDataAsync()
     {
-        if (_myCartoonCharacters != null)
-        {
-            JsonDataService.SaveToFile(DataFilePath, _myCartoonCharacters);
-        }
+        await JsonDataService.PersistAsync(_dataFilePath, MyCartoonCharacters);
+    }
+
+    public static async Task DeleteDataAsync(string id)
+    {
+        await JsonDataService.DeleteRecordAsync(_dataFilePath, id);
     }
 }

@@ -9,7 +9,6 @@ using Avalonia.Platform.Storage;
 using CartoonCharacters.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MongoDB.Bson;
 using CartoonCharacters.Models;
 
 namespace CartoonCharacters.ViewModels;
@@ -27,10 +26,10 @@ public partial class CollectionEditViewModel : ViewModelBase
 
     [ObservableProperty]
     private string[]? selectedFiles;
-    
+
     [ObservableProperty]
     private string id;
-    
+
     private readonly Action _goBack;
     private string? _originalImagePath;
 
@@ -38,16 +37,14 @@ public partial class CollectionEditViewModel : ViewModelBase
     {
         Id = characterId;
         _goBack = goBack;
-        
-        // Charger les données existantes
+
         var existingCharacter = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == Id);
         if (existingCharacter != null)
         {
             Name = existingCharacter.Name;
             Description = existingCharacter.Description;
             _originalImagePath = existingCharacter.ImagePath;
-            
-            // Charger l'image pour l'aperçu
+
             if (!string.IsNullOrEmpty(_originalImagePath))
             {
                 try
@@ -69,7 +66,7 @@ public partial class CollectionEditViewModel : ViewModelBase
             }
         }
     }
-    
+
     [RelayCommand]
     private async Task SelectFilesAsync()
     {
@@ -95,7 +92,7 @@ public partial class CollectionEditViewModel : ViewModelBase
             return;
 
         SelectedFiles = new[] { path };
-        
+
         await using var fs = File.OpenRead(path);
         Picture = new Bitmap(fs);
     }
@@ -109,27 +106,23 @@ public partial class CollectionEditViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void SaveChanges()
+    private async Task SaveChanges()
     {
         var existingCharacter = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == Id);
         if (existingCharacter != null)
         {
-            // Mettre à jour les propriétés
             existingCharacter.Name = Name;
             existingCharacter.Description = Description;
-            
-            // Mettre à jour l'image si une nouvelle a été sélectionnée
+
             if (SelectedFiles != null && SelectedFiles.Length > 0)
             {
                 var fileName = Path.GetFileName(SelectedFiles[0]);
-                // Stocker en format avares://
-                existingCharacter.ImagePath = $"avares://CartoonCharacters/Assets/{fileName}";  // ← CORRECTION ICI
+                existingCharacter.ImagePath = $"avares://CartoonCharacters/Assets/{fileName}";
             }
-            
-            // Sauvegarder dans le JSON
-            MyGlobals.SaveData();
+
+            await MyGlobals.SaveDataAsync();
         }
-        
+
         _goBack.Invoke();
     }
 

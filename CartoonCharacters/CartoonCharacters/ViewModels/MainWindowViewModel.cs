@@ -6,12 +6,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MongoDB.Bson;
 using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
 using CartoonCharacters.Services;
 using System.Collections.Generic;
-using Avalonia.Platform.Storage;
 
 namespace CartoonCharacters.ViewModels;
 
@@ -20,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ViewModelBase _currentPage;
     [ObservableProperty] private string _version = "Version : 1.0";
     [ObservableProperty] private string _qrCode = "En attente d'un scan...";
+    [ObservableProperty] private bool _isBusy;
 
     private readonly CsvServices _csvServices;
     private ScannerManager? _myScanner;
@@ -29,6 +28,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _csvServices = cscServices;
 
         CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+
+        _ = InitializeDataAsync();
 
         try
         {
@@ -40,6 +41,24 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             QrCode = $"Erreur scanner : {e.Message}";
             Console.WriteLine(e.ToString());
+        }
+    }
+
+    private async Task InitializeDataAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            await MyGlobals.InitializeAsync();
+            BackToMain();
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors du chargement des données : {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 
@@ -57,8 +76,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         Console.WriteLine($"QR Code scanné : {valeur}");
     }
-    
-    // Nouvelles commandes pour CSV
+
     [RelayCommand]
     private async Task ImportCsv()
     {
@@ -76,17 +94,15 @@ public partial class MainWindowViewModel : ViewModelBase
                 return;
             }
 
-            // Récupérer le nom du fichier
             var fileName = "Fichier sélectionné";
-        
-            // Ouvrir la page de prévisualisation
+
             var previewViewModel = new CsvImportPreviewViewModel(
                 fileName,
                 importedCharacters,
                 MyGlobals.MyCartoonCharacters,
                 OnImportConfirmed,
                 OnImportCancelled);
-        
+
             CurrentPage = previewViewModel;
         }
         catch (Exception ex)
@@ -94,52 +110,52 @@ public partial class MainWindowViewModel : ViewModelBase
             await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'import : {ex.Message}");
         }
     }
-    
+
     private async void OnImportConfirmed(List<CartoonCharacter> selectedCharacters)
     {
         try
         {
-            // Fusionner avec les données existantes
+            IsBusy = true;
+
             var existingCharacters = MyGlobals.MyCartoonCharacters;
-        
+
             foreach (var selectedChar in selectedCharacters)
             {
                 var existing = existingCharacters.FirstOrDefault(e => e.Id == selectedChar.Id);
                 if (existing != null)
                 {
-                    // Mise à jour
                     existing.Name = selectedChar.Name;
                     existing.Description = selectedChar.Description;
                     existing.ImagePath = selectedChar.ImagePath;
                 }
                 else
                 {
-                    // Nouveau personnage
                     existingCharacters.Add(selectedChar);
                 }
             }
-        
-            // Sauvegarder
-            MyGlobals.SaveData();
-        
-            await DialogService.ShowMessage("Import réussi", 
+
+            await MyGlobals.SaveDataAsync();
+
+            await DialogService.ShowMessage(
+                "Import réussi",
                 $"✅ {selectedCharacters.Count} personnage(s) ont été importés avec succès !");
-        
-            // Retour à l'accueil
+
             BackToMain();
         }
         catch (Exception ex)
         {
             await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'import : {ex.Message}");
         }
-    }
-    
-    private void OnImportCancelled()
-    {
-        // Retour à l'accueil sans importer
-        BackToMain();
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
+    private void OnImportCancelled()
+    {
+        BackToMain();
+    }
 
     [RelayCommand]
     private void ExportCsv()
@@ -147,19 +163,18 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             var characters = MyGlobals.MyCartoonCharacters;
-        
+
             if (!characters.Any())
             {
                 _ = DialogService.ShowMessage("Export CSV", "Aucun personnage à exporter.");
                 return;
             }
 
-            // Ouvrir la page de sélection
             var selectionViewModel = new CsvExportSelectionViewModel(
                 characters,
                 OnExportConfirmed,
                 OnExportCancelled);
-        
+
             CurrentPage = selectionViewModel;
         }
         catch (Exception ex)
@@ -177,10 +192,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
             var csvService = new CsvServices(topLevel);
             await csvService.SaveDataAsync(selectedCharacters);
-        
-            await DialogService.ShowMessage("Export réussi", 
+
+            await DialogService.ShowMessage(
+                "Export réussi",
                 $"✅ {selectedCharacters.Count} personnage(s) ont été exportés avec succès !");
-        
+
             BackToMain();
         }
         catch (Exception ex)
@@ -194,15 +210,13 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    // Méthode utilitaire pour obtenir le TopLevel (nécessaire pour CsvServices)
-    private TopLevel GetTopLevel()
+    private TopLevel? GetTopLevel()
     {
-        // Cette méthode dépend de comment vous gérez la fenêtre principale
-        // Si vous avez accès à la fenêtre, vous pouvez faire :
         if (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             return TopLevel.GetTopLevel(desktop.MainWindow);
         }
+
         return null;
     }
 
