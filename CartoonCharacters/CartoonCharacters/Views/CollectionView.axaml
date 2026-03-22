@@ -25,14 +25,14 @@
     <Border Background="AliceBlue">
       <ScrollViewer>
         <ListBox x:Name="Animals"
-                 ItemsSource="{Binding MyObservableCartoonCharacters}"
+                 ItemsSource="{Binding FilteredCartoonCharacters}"
                  SelectedItem="{Binding SelectedCartoonCharacter}"
                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                  ScrollViewer.HorizontalScrollBarVisibility="Auto">
           <ListBox.ItemTemplate>
             <DataTemplate>
               <Border Background="Gainsboro"
-                      BorderBrush="Black"
+                      BorderBrush="#2C3E50"
                       BorderThickness="2"
                       CornerRadius="3"
                       Padding="10"
@@ -95,10 +95,10 @@
                               Grid.Column="1"
                               VerticalAlignment="Top">
                     <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"
-                               Foreground="Black"
+                               Foreground="#2C3E50"
                                FontWeight="Bold"/>
                     <TextBlock Text="{Binding Description, StringFormat=Description : {0}}"
-                               Foreground="Black"
+                               Foreground="#2C3E50"
                                TextWrapping="Wrap"/>
                   </StackPanel>
                 </Grid>

@@ -19,15 +19,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private string _version = "Version : 1.0";
     [ObservableProperty] private string _qrCode = "En attente d'un scan...";
     [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty] private bool _hasSearchText;
 
     private readonly CsvServices _csvServices;
     private ScannerManager? _myScanner;
+    
+    // Propriété publique pour accéder au CollectionViewModel actuel
+    public CollectionViewModel? CurrentCollectionViewModel { get; private set; }
 
     public MainWindowViewModel(CsvServices cscServices)
     {
         _csvServices = cscServices;
 
         CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+        CurrentCollectionViewModel = CurrentPage as CollectionViewModel;
 
         _ = InitializeDataAsync();
 
@@ -42,6 +48,19 @@ public partial class MainWindowViewModel : ViewModelBase
             QrCode = $"Erreur scanner : {e.Message}";
             Console.WriteLine(e.ToString());
         }
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        HasSearchText = !string.IsNullOrWhiteSpace(value);
+        // Appliquer la recherche directement au CollectionViewModel actuel
+        CurrentCollectionViewModel?.ApplySearchFilter(value);
+    }
+
+    [RelayCommand]
+    private void ClearSearch()
+    {
+        SearchText = string.Empty;
     }
 
     private async Task InitializeDataAsync()
@@ -245,6 +264,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void BackToMain()
     {
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+        // Réinitialiser la recherche quand on revient à l'accueil
+        SearchText = string.Empty;
+        var collectionVM = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+        CurrentPage = collectionVM;
+        CurrentCollectionViewModel = collectionVM;
     }
 }

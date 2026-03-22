@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,6 +14,7 @@ public partial class CollectionViewModel : ViewModelBase
     public IAsyncRelayCommand<string> DeleteCommand { get; }
 
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
+    public ObservableCollection<CartoonCharacter> FilteredCartoonCharacters { get; }
 
     [ObservableProperty]
     private CartoonCharacter? _selectedCartoonCharacter;
@@ -28,7 +30,36 @@ public partial class CollectionViewModel : ViewModelBase
         DeleteCommand = new AsyncRelayCommand<string>(DeleteCartoonCharacterAsync);
 
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+        FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+        
         UpdateList();
+    }
+
+    // Méthode publique pour appliquer le filtre de recherche
+    public void ApplySearchFilter(string searchText)
+    {
+        FilteredCartoonCharacters.Clear();
+        
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            // Afficher tous les personnages
+            foreach (var character in MyObservableCartoonCharacters)
+            {
+                FilteredCartoonCharacters.Add(character);
+            }
+        }
+        else
+        {
+            // Filtrer par nom (insensible à la casse)
+            var filtered = MyObservableCartoonCharacters
+                .Where(c => c.Name.Contains(searchText, System.StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            
+            foreach (var character in filtered)
+            {
+                FilteredCartoonCharacters.Add(character);
+            }
+        }
     }
 
     private void GoToEdit(string id)
@@ -38,6 +69,7 @@ public partial class CollectionViewModel : ViewModelBase
 
     private async Task DeleteCartoonCharacterAsync(string id)
     {
+        // Supprimer de la liste globale
         for (int i = 0; i < MyGlobals.MyCartoonCharacters.Count; i++)
         {
             if (MyGlobals.MyCartoonCharacters[i].Id == id)
@@ -47,6 +79,7 @@ public partial class CollectionViewModel : ViewModelBase
             }
         }
 
+        // Supprimer de la liste observable principale
         for (int i = 0; i < MyObservableCartoonCharacters.Count; i++)
         {
             if (MyObservableCartoonCharacters[i].Id == id)
@@ -55,6 +88,9 @@ public partial class CollectionViewModel : ViewModelBase
                 break;
             }
         }
+
+        // Re-appliquer le filtre après suppression
+        ApplySearchFilter(_mainWindowViewModel.SearchText);
 
         await MyGlobals.SaveDataAsync();
     }
@@ -66,5 +102,8 @@ public partial class CollectionViewModel : ViewModelBase
         {
             MyObservableCartoonCharacters.Add(cartoonCharacter);
         }
+        
+        // Appliquer le filtre après la mise à jour de la liste
+        ApplySearchFilter(_mainWindowViewModel.SearchText);
     }
 }

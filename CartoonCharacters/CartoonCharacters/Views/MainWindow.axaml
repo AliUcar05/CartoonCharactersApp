@@ -79,9 +79,9 @@
               RowDefinitions="Auto,*"
               Margin="10">
             
-            <!-- Barre de navigation avec boutons à gauche et login à droite -->
+            <!-- Barre de navigation avec boutons, recherche et login -->
             <Grid Grid.Row="0"
-                  ColumnDefinitions="*, Auto"
+                  ColumnDefinitions="Auto,*,Auto"
                   Margin="0,0,0,10">
                 
                 <!-- Boutons de navigation à gauche -->
@@ -126,7 +126,6 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- NOUVEAU : Bouton Importer CSV -->
                     <Button Background="#2C3E50"
                             Foreground="White"
                             BorderBrush="#34495E"
@@ -145,7 +144,6 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- NOUVEAU : Bouton Exporter CSV -->
                     <Button Background="#2C3E50"
                             Foreground="White"
                             BorderBrush="#34495E"
@@ -165,8 +163,59 @@
                     </Button>
                 </StackPanel>
 
+                <!-- Barre de recherche au centre -->
+                <Border Grid.Column="1"
+                        Background="White"
+                        CornerRadius="8"
+                        Padding="4"
+                        Margin="10,0"
+                        BorderBrush="#BDC3C7"
+                        BorderThickness="1">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="🔍"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0,4,0"
+                                   Foreground="#7F8C8D"/>
+        
+                        <TextBox Grid.Column="1"
+                                 Name="SearchTextBox"
+                                 Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Watermark="Rechercher un personnage par nom..."
+                                 Background="White"
+                                 BorderThickness="0"
+                                 FontSize="13"
+                                 Padding="4,6"
+                                 Foreground="#2C3E50"
+                                 CaretBrush="#2C3E50">
+                            <!-- Style pour empêcher tout changement de couleur au focus ou à la saisie -->
+                            <TextBox.Styles>
+                                <Style Selector="TextBox:focus /template/ Border#border">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                </Style>
+                                <Style Selector="TextBox:focus">
+                                    <Setter Property="Background" Value="White"/>
+                                </Style>
+                            </TextBox.Styles>
+                        </TextBox>
+        
+                        <Button Grid.Column="2"
+                                Content="✖"
+                                Command="{Binding ClearSearchCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontSize="12"
+                                Foreground="#95A5A6"
+                                Cursor="Hand"
+                                Padding="4,2"
+                                IsVisible="{Binding HasSearchText}"/>
+                    </Grid>
+                </Border>
+
                 <!-- Bouton Login à droite -->
-                <Button Grid.Column="1"
+                <Button Grid.Column="2"
                         Background="#2C3E50"
                         Foreground="White"
                         BorderBrush="#34495E"
