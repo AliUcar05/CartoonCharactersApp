@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="CartoonCharacters/App.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CollectionAddView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CollectionView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CsvImportPreviewView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/MainWindow.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
