@@ -9,28 +9,45 @@ using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CartoonCharacters.Models;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class CollectionAddViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string name = "";
+    private string _name = "";
 
     [ObservableProperty]
-    private string description = "";
+    private string _description = "";
 
     [ObservableProperty]
-    private Bitmap? picture;
+    private Bitmap? _picture;
 
     [ObservableProperty]
-    private string[]? selectedFiles;
+    private string[]? _selectedFiles;
+
+    [ObservableProperty]
+    private string _qrCode = "En attente d'un scan...";
 
     private readonly Action _goBack;
+    private ScannerManager? MyScanner;
 
     public CollectionAddViewModel(Action goBack)
     {
         _goBack = goBack;
+
+        try
+        {
+            MyScanner = new ScannerManager();
+            MyScanner.SerialBuffer.Changed += QRCodeManager;
+            MyScanner.OpenPort();
+        }
+        catch (Exception e)
+        {
+            QrCode = $"Erreur scanner : {e.Message}";
+            Console.WriteLine(e.ToString());
+        }
     }
 
     [RelayCommand]
@@ -87,6 +104,57 @@ public partial class CollectionAddViewModel : ViewModelBase
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
+        await MyGlobals.SaveDataAsync();
+
+        _goBack.Invoke();
+    }
+
+    private void QRCodeManager(object? sender, EventArgs e)
+    {
+        if (MyScanner == null || MyScanner.SerialBuffer.Count == 0)
+            return;
+
+        QrCode = MyScanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
+        Console.WriteLine($"QR Code scanné : {QrCode}");
+    }
+
+    [RelayCommand]
+    private async Task AddCartoonCharacterWithScanner()
+    {
+        if (string.IsNullOrWhiteSpace(QrCode) ||
+            QrCode == "En attente d'un scan..." ||
+            QrCode.StartsWith("Erreur scanner"))
+            return;
+
+        string[] parties = QrCode.Split(',');
+
+        if (parties.Length < 3)
+        {
+            Console.WriteLine("QR code invalide. Format attendu : nom,description,imagePath");
+            return;
+        }
+
+        string nom = parties[0].Trim();
+        string description = parties[1].Trim();
+        string imagePath = parties[2].Trim();
+
+        Name = nom;
+        Description = description;
+
+        var cartoonCharacter = new CartoonCharacter
+        {
+            Name = nom,
+            Description = description,
+            ImagePath = imagePath
+        };
+
+        MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
+
+        Console.WriteLine("Objet créé avec succès");
+        Console.WriteLine($"Nom : {cartoonCharacter.Name}");
+        Console.WriteLine($"Description : {cartoonCharacter.Description}");
+        Console.WriteLine($"Image : {cartoonCharacter.ImagePath}");
+
         await MyGlobals.SaveDataAsync();
 
         _goBack.Invoke();
