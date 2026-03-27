@@ -9,7 +9,6 @@
              Background="#2C3E50">
 
     <UserControl.Styles>
-        <!-- Style pour tous les TextBox -->
         <Style Selector="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="Black"/>
@@ -19,18 +18,15 @@
             <Setter Property="Padding" Value="8,6"/>
         </Style>
 
-        <!-- Style pour TextBox en focus -->
         <Style Selector="TextBox:focus">
             <Setter Property="BorderBrush" Value="#7289DA"/>
             <Setter Property="BorderThickness" Value="2"/>
         </Style>
 
-        <!-- Style pour les Watermark -->
         <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
             <Setter Property="Foreground" Value="#999999"/>
         </Style>
         
-        <!-- Style pour les boutons encadrés -->
         <Style Selector="Button.encadre">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="2"/>
@@ -61,7 +57,6 @@
 
                 <StackPanel Spacing="12">
 
-                    <!-- Titre en français -->
                     <TextBlock Text="➕ Ajouter un personnage"
                                HorizontalAlignment="Center"
                                FontWeight="Bold"
@@ -69,14 +64,12 @@
                                Foreground="White"
                                Margin="0,0,0,10"/>
 
-                    <!-- Nom en français -->
                     <TextBlock Text="📝 Nom :" 
                                Foreground="#E0E0E0" 
                                FontWeight="SemiBold"/>
                     <TextBox Watermark="ex: Homer Simpson"
                              Text="{Binding Name}"/>
 
-                    <!-- Description en français -->
                     <TextBlock Text="📖 Description :" 
                                Foreground="#E0E0E0" 
                                Margin="0,5,0,0"
@@ -86,7 +79,6 @@
                              AcceptsReturn="True"
                              Height="80"/>
 
-                    <!-- Bouton Select Image en français -->
                     <Button Content="🖼️ Choisir une image"
                             Command="{Binding SelectFilesCommand}"
                             Background="#4E5D94"
@@ -113,11 +105,33 @@
                                Opacity="0.9"
                                TextWrapping="Wrap"/>
 
-                    <!-- Boutons d'action encadrés -->
+                    <TextBlock Text="📷 QR Code scanné :" 
+                               Foreground="#E0E0E0" 
+                               Margin="0,8,0,0"
+                               FontWeight="SemiBold"/>
+
+                    <Border Background="#ECF0F1"
+                            BorderBrush="#BDC3C7"
+                            BorderThickness="1"
+                            CornerRadius="5"
+                            Padding="10">
+                        <TextBlock Text="{Binding QrCode}"
+                                   Foreground="#2C3E50"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Button Content="📷 Ajouter avec scanner"
+                            Command="{Binding AddCartoonCharacterWithScannerCommand}"
+                            Background="#4E5D94"
+                            BorderBrush="#3A4A7A"
+                            Foreground="White"
+                            CornerRadius="5"
+                            Padding="10,5"
+                            Margin="0,5,0,0"/>
+
                     <Grid ColumnDefinitions="*,*,*" 
                           Margin="0,15,0,5">
                         
-                        <!-- Bouton Ajouter - encadré vert -->
                         <Button Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Content="✅ Ajouter"
@@ -136,7 +150,6 @@
                             </Button.Styles>
                         </Button>
                         
-                        <!-- Bouton Annuler - encadré rouge -->
                         <Button Grid.Column="2"
                                 Content="❌ Annuler"
                                 Command="{Binding CancelCommand}"
@@ -155,7 +168,6 @@
                         </Button>
                     </Grid>
 
-                    <!-- Espace supplémentaire en bas pour le scrolling -->
                     <Border Height="10" Opacity="0"/>
 
                 </StackPanel>

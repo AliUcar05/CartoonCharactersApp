@@ -11,7 +11,7 @@
         Title="Cartoon Characters Collection"
         Background="#F5F5F5">
 
-    <Grid RowDefinitions="80,80,*">
+    <Grid RowDefinitions="80,*">
         <!-- Header -->
         <Border Grid.Row="0"
                 Background="#2C3E50"
@@ -36,46 +36,8 @@
             </StackPanel>
         </Border>
 
-        <!-- Zone QR Code -->
-        <Border Grid.Row="1"
-                Background="White"
-                BorderBrush="#D5DBDB"
-                BorderThickness="0,0,0,1"
-                Padding="15"
-                Margin="10,10,10,0"
-                CornerRadius="8">
-            <Grid ColumnDefinitions="170,*" ColumnSpacing="15">
-                <Border Grid.Column="0"
-                        Background="#27AE60"
-                        CornerRadius="8"
-                        Padding="12"
-                        VerticalAlignment="Stretch">
-                    <TextBlock Text="QR Code scanné"
-                               Foreground="White"
-                               FontSize="16"
-                               FontWeight="Bold"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"/>
-                </Border>
-
-                <Border Grid.Column="1"
-                        Background="#ECF0F1"
-                        BorderBrush="#BDC3C7"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="12">
-                    <TextBlock Text="{Binding QrCode}"
-                               Foreground="#2C3E50"
-                               FontSize="14"
-                               FontWeight="SemiBold"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Center"/>
-                </Border>
-            </Grid>
-        </Border>
-
         <!-- Contenu principal avec menu horizontal -->
-        <Grid Grid.Row="2"
+        <Grid Grid.Row="1"
               RowDefinitions="Auto,*"
               Margin="10">
             
@@ -189,7 +151,6 @@
                                  Padding="4,6"
                                  Foreground="#2C3E50"
                                  CaretBrush="#2C3E50">
-                            <!-- Style pour empêcher tout changement de couleur au focus ou à la saisie -->
                             <TextBox.Styles>
                                 <Style Selector="TextBox:focus /template/ Border#border">
                                     <Setter Property="Background" Value="White"/>

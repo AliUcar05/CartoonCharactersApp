@@ -1,59 +1,51 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CartoonCharacters.Helpers;
 using CartoonCharacters.Models;
 using CartoonCharacters.Services;
-using System.Collections.Generic;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty] private ViewModelBase _currentPage;
-    [ObservableProperty] private string _version = "Version : 1.0";
-    [ObservableProperty] private string _qrCode = "En attente d'un scan...";
-    [ObservableProperty] private bool _isBusy;
-    [ObservableProperty] private string _searchText = string.Empty;
-    [ObservableProperty] private bool _hasSearchText;
+    [ObservableProperty]
+    private ViewModelBase _currentPage = null!;
+
+    [ObservableProperty]
+    private string _version = "Version : 1.0";
+
+    [ObservableProperty]
+    private bool _isBusy;
+
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
+    [ObservableProperty]
+    private bool _hasSearchText;
 
     private readonly CsvServices _csvServices;
-    private ScannerManager? _myScanner;
-    
-    // Propriété publique pour accéder au CollectionViewModel actuel
+
     public CollectionViewModel? CurrentCollectionViewModel { get; private set; }
 
     public MainWindowViewModel(CsvServices cscServices)
     {
         _csvServices = cscServices;
 
-        CurrentPage = new CollectionViewModel(GoToDetailsFromChildCommand, this);
-        CurrentCollectionViewModel = CurrentPage as CollectionViewModel;
+        var collectionVM = new CollectionViewModel(GoToDetailsFromChildCommand, this);
+        CurrentPage = collectionVM;
+        CurrentCollectionViewModel = collectionVM;
 
         _ = InitializeDataAsync();
-
-        try
-        {
-            _myScanner = new ScannerManager();
-            _myScanner.SerialBuffer.Changed += QRCodeManager;
-            _myScanner.OpenPort();
-        }
-        catch (Exception e)
-        {
-            QrCode = $"Erreur scanner : {e.Message}";
-            Console.WriteLine(e.ToString());
-        }
     }
 
     partial void OnSearchTextChanged(string value)
     {
         HasSearchText = !string.IsNullOrWhiteSpace(value);
-        // Appliquer la recherche directement au CollectionViewModel actuel
         CurrentCollectionViewModel?.ApplySearchFilter(value);
     }
 
@@ -73,7 +65,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors du chargement des données : {ex.Message}");
+            await DialogService.ShowMessage(
+                "Erreur",
+                $"❌ Erreur lors du chargement des données : {ex.Message}");
         }
         finally
         {
@@ -81,42 +75,23 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private void QRCodeManager(object? sender, EventArgs e)
-    {
-        if (_myScanner == null || _myScanner.SerialBuffer.Count == 0)
-            return;
-
-        var valeur = _myScanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
-
-        Dispatcher.UIThread.Post(() =>
-        {
-            QrCode = valeur.Trim();
-        });
-
-        Console.WriteLine($"QR Code scanné : {valeur}");
-    }
-
     [RelayCommand]
     private async Task ImportCsv()
     {
         try
         {
-            var topLevel = GetTopLevel();
-            if (topLevel == null) return;
-
-            var csvService = new CsvServices(topLevel);
-            var importedCharacters = await csvService.LoadDataAsync();
+            var importedCharacters = await _csvServices.LoadDataAsync();
 
             if (!importedCharacters.Any())
             {
-                await DialogService.ShowMessage("Import CSV", "Aucune donnée trouvée dans le fichier CSV.");
+                await DialogService.ShowMessage(
+                    "Import CSV",
+                    "Aucune donnée trouvée dans le fichier CSV.");
                 return;
             }
 
-            var fileName = "Fichier sélectionné";
-
             var previewViewModel = new CsvImportPreviewViewModel(
-                fileName,
+                "Fichier sélectionné",
                 importedCharacters,
                 MyGlobals.MyCartoonCharacters,
                 OnImportConfirmed,
@@ -126,7 +101,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'import : {ex.Message}");
+            await DialogService.ShowMessage(
+                "Erreur",
+                $"❌ Erreur lors de l'import : {ex.Message}");
         }
     }
 
@@ -136,11 +113,11 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             IsBusy = true;
 
-            var existingCharacters = MyGlobals.MyCartoonCharacters;
-
             foreach (var selectedChar in selectedCharacters)
             {
-                var existing = existingCharacters.FirstOrDefault(e => e.Id == selectedChar.Id);
+                var existing = MyGlobals.MyCartoonCharacters
+                    .FirstOrDefault(c => c.Id == selectedChar.Id);
+
                 if (existing != null)
                 {
                     existing.Name = selectedChar.Name;
@@ -149,7 +126,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 }
                 else
                 {
-                    existingCharacters.Add(selectedChar);
+                    MyGlobals.MyCartoonCharacters.Add(selectedChar);
                 }
             }
 
@@ -158,16 +135,17 @@ public partial class MainWindowViewModel : ViewModelBase
             await DialogService.ShowMessage(
                 "Import réussi",
                 $"✅ {selectedCharacters.Count} personnage(s) ont été importés avec succès !");
-
-            BackToMain();
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'import : {ex.Message}");
+            await DialogService.ShowMessage(
+                "Erreur",
+                $"❌ Erreur lors de l'import : {ex.Message}");
         }
         finally
         {
             IsBusy = false;
+            BackToMain();
         }
     }
 
@@ -185,7 +163,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
             if (!characters.Any())
             {
-                _ = DialogService.ShowMessage("Export CSV", "Aucun personnage à exporter.");
+                _ = DialogService.ShowMessage(
+                    "Export CSV",
+                    "Aucun personnage à exporter.");
                 return;
             }
 
@@ -198,7 +178,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _ = DialogService.ShowMessage("Erreur", $"❌ Erreur : {ex.Message}");
+            _ = DialogService.ShowMessage(
+                "Erreur",
+                $"❌ Erreur : {ex.Message}");
         }
     }
 
@@ -206,21 +188,21 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            var topLevel = GetTopLevel();
-            if (topLevel == null) return;
-
-            var csvService = new CsvServices(topLevel);
-            await csvService.SaveDataAsync(selectedCharacters);
+            await _csvServices.SaveDataAsync(selectedCharacters);
 
             await DialogService.ShowMessage(
                 "Export réussi",
                 $"✅ {selectedCharacters.Count} personnage(s) ont été exportés avec succès !");
-
-            BackToMain();
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage("Erreur", $"❌ Erreur lors de l'export : {ex.Message}");
+            await DialogService.ShowMessage(
+                "Erreur",
+                $"❌ Erreur lors de l'export : {ex.Message}");
+        }
+        finally
+        {
+            BackToMain();
         }
     }
 
@@ -229,25 +211,15 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private TopLevel? GetTopLevel()
-    {
-        if (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            return TopLevel.GetTopLevel(desktop.MainWindow);
-        }
-
-        return null;
-    }
-
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
     {
         oldValue?.Dispose();
     }
 
     [RelayCommand]
-    private void GoToDetailsFromChild(string animalId)
+    private void GoToDetailsFromChild(string cartoonCharacterId)
     {
-        CurrentPage = new CollectionDetailsViewModel(animalId);
+        CurrentPage = new CollectionDetailsViewModel(cartoonCharacterId);
     }
 
     [RelayCommand]
@@ -264,8 +236,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void BackToMain()
     {
-        // Réinitialiser la recherche quand on revient à l'accueil
         SearchText = string.Empty;
+
         var collectionVM = new CollectionViewModel(GoToDetailsFromChildCommand, this);
         CurrentPage = collectionVM;
         CurrentCollectionViewModel = collectionVM;

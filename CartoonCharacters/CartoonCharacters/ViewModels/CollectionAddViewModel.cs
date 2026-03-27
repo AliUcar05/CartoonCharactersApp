@@ -31,7 +31,6 @@ public partial class CollectionAddViewModel : ViewModelBase
     private string _qrCode = "En attente d'un scan...";
 
     private readonly Action _goBack;
-    private ScannerManager? MyScanner;
 
     public CollectionAddViewModel(Action goBack)
     {
@@ -164,5 +163,13 @@ public partial class CollectionAddViewModel : ViewModelBase
     private void Cancel()
     {
         _goBack.Invoke();
+    }
+
+    public override void Dispose()
+    {
+        if (MyScanner != null)
+            MyScanner.SerialBuffer.Changed -= QRCodeManager;
+
+        base.Dispose();
     }
 }

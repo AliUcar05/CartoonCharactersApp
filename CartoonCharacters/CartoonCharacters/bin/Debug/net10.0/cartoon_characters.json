@@ -1,14 +1,14 @@
 [
   {
-    "Id": "69b4475bee40ba27dc657bff",
-    "Name": "Huysuz",
-    "Description": "Loves moneyyy",
-    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"
+    "Id": "69c54dd9bc691e2dd89c2106",
+    "Name": "azer",
+    "Description": "azer",
+    "ImagePath": "avares://CartoonCharacters/Assets/mermaid-diagram (1).png"
   },
   {
-    "Id": "69b44715ee40ba27dc657bfe",
-    "Name": "K\u00FCf\u00FCrbaz Haydo",
-    "Description": "Hates notepad",
-    "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp"
+    "Id": "69ba5db6346914fae6469fa1",
+    "Name": "SpongeBob",
+    "Description": "A cartoon character from SpongeBob.",
+    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png"
   }
 ]
