@@ -128,10 +128,10 @@
                 <!-- Barre de recherche au centre -->
                 <Border Grid.Column="1"
                         Background="White"
-                        CornerRadius="8"
+                        CornerRadius="10"
                         Padding="4"
                         Margin="10,0"
-                        BorderBrush="#BDC3C7"
+                        BorderBrush="#D0D7DE"
                         BorderThickness="1">
                     <Grid ColumnDefinitions="Auto,*,Auto">
                         <TextBlock Grid.Column="0"

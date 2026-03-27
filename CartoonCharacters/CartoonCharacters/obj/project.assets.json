@@ -3436,19 +3436,19 @@
     ]
   },
   "packageFolders": {
-    "/home/helb/.nuget/packages/": {}
+    "/home/osman/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
+      "projectUniqueName": "/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
       "projectName": "CartoonCharacters",
-      "projectPath": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
-      "packagesPath": "/home/helb/.nuget/packages/",
-      "outputPath": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/obj/",
+      "projectPath": "/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
+      "packagesPath": "/home/osman/.nuget/packages/",
+      "outputPath": "/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/helb/.nuget/NuGet/NuGet.Config"
+        "/home/osman/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -3531,7 +3531,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/home/helb/.dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/home/osman/.dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
