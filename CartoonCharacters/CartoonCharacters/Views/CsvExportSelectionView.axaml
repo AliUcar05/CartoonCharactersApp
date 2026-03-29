@@ -14,15 +14,15 @@
     </UserControl.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="15" RowSpacing="10">
-        
+
         <!-- En-tête -->
         <Border Grid.Row="0"
                 Background="#36393F"
                 CornerRadius="6"
                 Padding="12">
-            
+
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
-                
+
                 <!-- Titre -->
                 <TextBlock Grid.Column="0"
                            Text="📤 Exporter des personnages"
@@ -41,14 +41,14 @@
                                   Content="Tout"
                                   Foreground="White"
                                   FontSize="11"/>
-                        <TextBlock Text="(" 
+                        <TextBlock Text="("
                                    Foreground="#7F8C8D"
                                    FontSize="11"/>
-                        <TextBlock Text="{Binding SelectedCount}" 
-                                   Foreground="#3498DB" 
+                        <TextBlock Text="{Binding SelectedCount}"
+                                   Foreground="#3498DB"
                                    FontWeight="Bold"
                                    FontSize="11"/>
-                        <TextBlock Text=")" 
+                        <TextBlock Text=")"
                                    Foreground="#7F8C8D"
                                    FontSize="11"/>
                     </StackPanel>
@@ -56,7 +56,7 @@
             </Grid>
         </Border>
 
-        <!-- Liste des personnages - ScrollViewer style CollectionDetailsView -->
+        <!-- Liste des personnages -->
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
@@ -76,29 +76,59 @@
                                     CornerRadius="3"
                                     Padding="10"
                                     Margin="0,0,0,5">
-                                
+
                                 <StackPanel Orientation="Horizontal">
                                     <!-- Image -->
                                     <Panel>
                                         <Rectangle Height="100" Width="100" Fill="LightGray"/>
-                                        <Image Margin="20" 
-                                               Height="200" 
-                                               Width="200" 
+                                        <Image Margin="20"
+                                               Height="200"
+                                               Width="200"
                                                Stretch="UniformToFill"
                                                Source="{Binding Character.ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                                     </Panel>
-                                    
-                                    <!-- Infos avec checkbox intégrée -->
-                                    <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+
+                                    <!-- Infos -->
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="10,0,0,0"
+                                                Spacing="5"
+                                                Width="520">
+
                                         <CheckBox IsChecked="{Binding IsSelected}"
                                                   Content="{Binding Character.Name}"
                                                   Foreground="White"
-                                                  FontWeight="Bold"/>
-                                        
+                                                  FontWeight="Bold"
+                                                  FontSize="14"/>
+
                                         <TextBlock Text="{Binding Character.Description}"
                                                    Foreground="#BDC3C7"
+                                                   FontSize="12"
                                                    TextWrapping="Wrap"
-                                                   Margin="0,5,0,0"/>
+                                                   Margin="0,3,0,4"/>
+
+                                        <!-- Rating affiché avant export -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="14"
+                                                    Margin="0,2,0,0">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="★"
+                                                           Foreground="Gold"
+                                                           FontSize="16"
+                                                           FontWeight="Bold"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Character.Rating, StringFormat=Note moyenne : {0:F1}/5}"
+                                                           Foreground="White"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+
+                                            <TextBlock Text="{Binding Character.RatingVotes, StringFormat=Votes : {0}}"
+                                                       Foreground="#BDC3C7"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
@@ -108,7 +138,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Boutons d'action - Encadrés colorés sans fond -->
+        <!-- Boutons d'action -->
         <Border Grid.Row="2"
                 Background="Transparent"
                 BorderBrush="#36393F"
@@ -116,7 +146,7 @@
                 CornerRadius="6"
                 Padding="10">
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                
+
                 <TextBlock Grid.Column="0"
                            Foreground="#BDC3C7"
                            FontSize="11"
@@ -125,7 +155,6 @@
                     <Run Text=" sélectionné(s)"/>
                 </TextBlock>
 
-                <!-- Bouton Annuler - encadré rouge -->
                 <Button Grid.Column="1"
                         Content="❌ Annuler"
                         Command="{Binding CancelExportCommand}"
@@ -145,7 +174,6 @@
                     </Button.Styles>
                 </Button>
 
-                <!-- Bouton Exporter - encadré vert -->
                 <Button Grid.Column="2"
                         Content="📤 Exporter"
                         Command="{Binding ConfirmExportCommand}"

@@ -131,7 +131,7 @@ public class CsvServices
                     }
                     else if (property.PropertyType == typeof(double))
                     {
-                        convertedValue = double.Parse(values[j], CultureInfo.InvariantCulture);
+                        convertedValue = ParseCsvDouble(values[j]);
                     }
                     else
                     {
@@ -188,5 +188,11 @@ public class CsvServices
         await using var stream = await file.OpenWriteAsync();
         using var writer = new StreamWriter(stream, Encoding.UTF8);
         await writer.WriteAsync(csv.ToString());
+    }
+    
+    private static double ParseCsvDouble(string value)
+    {
+        var normalized = value.Trim().Replace(',', '.');
+        return double.Parse(normalized, CultureInfo.InvariantCulture);
     }
 }
