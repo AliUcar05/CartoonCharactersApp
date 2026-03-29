@@ -14,13 +14,13 @@ namespace CartoonCharacters.Helpers;
 
 public static class JsonDataService
 {
-    private static readonly JsonSerializerOptions _options = new()
+    private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         WriteIndented = true
     };
 
-    private static readonly HttpClient _httpClient = new HttpClient(new HttpClientHandler
+    private static readonly HttpClient Client = new(new HttpClientHandler
     {
         ServerCertificateCustomValidationCallback = (_, _, _, _) => true
     });
@@ -28,9 +28,9 @@ public static class JsonDataService
     private const string BaseUrl = "http://185.157.245.38:8080/json";
     private const string RemoteFileName = "cartoon_characters.json";
 
-    private static readonly SemaphoreSlim _syncLock = new(1, 1);
+    private static readonly SemaphoreSlim SyncLock = new(1, 1);
 
-    public static async Task<List<CartoonCharacter>> LoadFromFileAsync(string filePath)
+    private static async Task<List<CartoonCharacter>> LoadFromFileAsync(string filePath)
     {
         try
         {
@@ -42,9 +42,9 @@ public static class JsonDataService
             }
 
             await using var stream = File.OpenRead(filePath);
-            var characters = await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(stream, _options);
+            var characters = await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(stream, SerializerOptions);
 
-            return characters ?? new List<CartoonCharacter>();
+            return characters ?? [];
         }
         catch (Exception ex)
         {
@@ -53,12 +53,12 @@ public static class JsonDataService
         }
     }
 
-    public static async Task SaveToFileAsync(string filePath, List<CartoonCharacter> characters)
+    private static async Task SaveToFileAsync(string filePath, List<CartoonCharacter> characters)
     {
         try
         {
             await using var stream = File.Create(filePath);
-            await JsonSerializer.SerializeAsync(stream, characters, _options);
+            await JsonSerializer.SerializeAsync(stream, characters, SerializerOptions);
             await stream.FlushAsync();
         }
         catch (Exception ex)
@@ -73,43 +73,43 @@ public static class JsonDataService
         {
             var url = $"{BaseUrl}?FileName={RemoteFileName}";
 
-            using var response = await _httpClient.GetAsync(url);
+            using var response = await Client.GetAsync(url);
+
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Serveur indisponible : {response.StatusCode}");
-                return new List<CartoonCharacter>();
+                return [];
             }
 
             await using var contentStream = await response.Content.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(contentStream, _options)
-                   ?? new List<CartoonCharacter>();
+
+            return await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(contentStream, SerializerOptions)
+                ?? [];
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Erreur lecture JSON serveur : {ex.Message}");
-            return new List<CartoonCharacter>();
+            return [];
         }
     }
 
     public static async Task SaveToServerAsync(List<CartoonCharacter> characters)
     {
-        await _syncLock.WaitAsync();
+        await SyncLock.WaitAsync();
 
         try
         {
             await using var memoryStream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(memoryStream, characters, _options);
+            await JsonSerializer.SerializeAsync(memoryStream, characters, SerializerOptions);
             memoryStream.Position = 0;
 
             using var fileContent = new StreamContent(memoryStream);
             fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            using var content = new MultipartFormDataContent
-            {
-                { fileContent, "file", RemoteFileName }
-            };
+            using var content = new MultipartFormDataContent();
+            content.Add(fileContent, "file", RemoteFileName);
 
-            using var response = await _httpClient.PostAsync(BaseUrl, content);
+            using var response = await Client.PostAsync(BaseUrl, content);
             response.EnsureSuccessStatusCode();
         }
         catch (Exception ex)
@@ -118,7 +118,7 @@ public static class JsonDataService
         }
         finally
         {
-            _syncLock.Release();
+            SyncLock.Release();
         }
     }
 
@@ -174,17 +174,14 @@ public static class JsonDataService
         await PersistAsync(filePath, list);
     }
 
-    private static List<CartoonCharacter> GetDefaultCharacters()
-    {
-        return new List<CartoonCharacter>
+    private static List<CartoonCharacter> GetDefaultCharacters() =>
+    [
+        new CartoonCharacter
         {
-            new CartoonCharacter
-            {
-                Id = ObjectId.GenerateNewId().ToString(),
-                Name = "SpongeBob",
-                Description = "A cartoon character from SpongeBob.",
-                ImagePath = "avares://CartoonCharacters/Assets/sponge_bob.png"
-            }
-        };
-    }
+            Id = ObjectId.GenerateNewId().ToString(),
+            Name = "SpongeBob",
+            Description = "A cartoon character from SpongeBob.",
+            ImagePath = "avares://CartoonCharacters/Assets/sponge_bob.png"
+        }
+    ];
 }

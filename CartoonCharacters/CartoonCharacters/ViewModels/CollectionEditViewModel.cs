@@ -9,53 +9,56 @@ using Avalonia.Platform.Storage;
 using CartoonCharacters.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CartoonCharacters.Models;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class CollectionEditViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string name = "";
+    private string _name = "";
 
     [ObservableProperty]
-    private string description = "";
+    private string _description = "";
 
     [ObservableProperty]
-    private Bitmap? picture;
+    private Bitmap? _picture;
 
     [ObservableProperty]
-    private string[]? selectedFiles;
+    private string[]? _selectedFiles;
 
     [ObservableProperty]
-    private string id;
+    private string _id;
 
-    private readonly Action _goBack;
-    private string? _originalImagePath;
+    private readonly Func<string, Task> _onUpdateAsync;
+    private readonly Action _onCancelUpdate;
 
-    public CollectionEditViewModel(string characterId, Action goBack)
+    public CollectionEditViewModel(
+        string characterId,
+        Func<string, Task> onUpdateAsync,
+        Action onCancelUpdate)
     {
         Id = characterId;
-        _goBack = goBack;
+        _onUpdateAsync = onUpdateAsync;
+        _onCancelUpdate = onCancelUpdate;
 
         var existingCharacter = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == Id);
         if (existingCharacter != null)
         {
             Name = existingCharacter.Name;
             Description = existingCharacter.Description;
-            _originalImagePath = existingCharacter.ImagePath;
+            string? originalImagePath = existingCharacter.ImagePath;
 
-            if (!string.IsNullOrEmpty(_originalImagePath))
+            if (!string.IsNullOrEmpty(originalImagePath))
             {
                 try
                 {
-                    if (_originalImagePath.StartsWith("avares://"))
+                    if (originalImagePath.StartsWith("avares://"))
                     {
-                        Picture = ImageHelper.LoadFromResource(new Uri(_originalImagePath));
+                        Picture = ImageHelper.LoadFromResource(new Uri(originalImagePath));
                     }
-                    else if (File.Exists(_originalImagePath))
+                    else if (File.Exists(originalImagePath))
                     {
-                        using var fs = File.OpenRead(_originalImagePath);
+                        using var fs = File.OpenRead(originalImagePath);
                         Picture = new Bitmap(fs);
                     }
                 }
@@ -121,14 +124,13 @@ public partial class CollectionEditViewModel : ViewModelBase
             }
 
             await MyGlobals.SaveDataAsync();
+            await _onUpdateAsync(existingCharacter.Name);
         }
-
-        _goBack.Invoke();
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _goBack.Invoke();
+        _onCancelUpdate.Invoke();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,9 +10,9 @@ namespace CartoonCharacters.ViewModels;
 
 public partial class CollectionViewModel : ViewModelBase
 {
-    public IRelayCommand<string> FromParentCommand { get; set; }
-    public IRelayCommand<string> EditCommand { get; }
-    public IAsyncRelayCommand<string> DeleteCommand { get; }
+    public IRelayCommand<string> FromParentCommand { get; }
+    public IRelayCommand<string?> EditCommand { get; }
+    public IAsyncRelayCommand<string?> DeleteCommand { get; }
 
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
     public ObservableCollection<CartoonCharacter> FilteredCartoonCharacters { get; }
@@ -19,91 +20,117 @@ public partial class CollectionViewModel : ViewModelBase
     [ObservableProperty]
     private CartoonCharacter? _selectedCartoonCharacter;
 
-    private readonly MainWindowViewModel _mainWindowViewModel;
+    private readonly MainWindowViewModel? _mainWindowViewModel;
+    private readonly Func<string, Task>? _showDeleteMessageAsync;
 
-    public CollectionViewModel(IRelayCommand<string> fromParentCommand, MainWindowViewModel mainWindowViewModel)
+    public CollectionViewModel()
     {
-        FromParentCommand = fromParentCommand;
-        _mainWindowViewModel = mainWindowViewModel;
-
-        EditCommand = new RelayCommand<string>(GoToEdit);
-        DeleteCommand = new AsyncRelayCommand<string>(DeleteCartoonCharacterAsync);
+        FromParentCommand = new RelayCommand<string>(_ => { });
+        EditCommand = new RelayCommand<string?>(_ => { });
+        DeleteCommand = new AsyncRelayCommand<string?>(_ => Task.CompletedTask);
 
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-        
+
+        var demoCharacter = new CartoonCharacter
+        {
+            Id = "1",
+            Name = "Exemple",
+            Description = "Personnage de démonstration",
+            ImagePath = ""
+        };
+
+        MyObservableCartoonCharacters.Add(demoCharacter);
+        FilteredCartoonCharacters.Add(demoCharacter);
+    }
+
+    public CollectionViewModel(
+        IRelayCommand<string> fromParentCommand,
+        MainWindowViewModel mainWindowViewModel,
+        Func<string, Task> showDeleteMessageAsync)
+    {
+        FromParentCommand = fromParentCommand;
+        _mainWindowViewModel = mainWindowViewModel;
+        _showDeleteMessageAsync = showDeleteMessageAsync;
+
+        EditCommand = new RelayCommand<string?>(GoToEdit);
+        DeleteCommand = new AsyncRelayCommand<string?>(DeleteCartoonCharacterAsync);
+
+        MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+        FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+
         UpdateList();
     }
 
-    // Méthode publique pour appliquer le filtre de recherche
-    public void ApplySearchFilter(string searchText)
+    public void ApplySearchFilter(string? searchText)
     {
         FilteredCartoonCharacters.Clear();
-        
+
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            // Afficher tous les personnages
             foreach (var character in MyObservableCartoonCharacters)
             {
                 FilteredCartoonCharacters.Add(character);
             }
+
+            return;
         }
-        else
+
+        var filtered = MyObservableCartoonCharacters
+            .Where(c => c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+        foreach (var character in filtered)
         {
-            // Filtrer par nom (insensible à la casse)
-            var filtered = MyObservableCartoonCharacters
-                .Where(c => c.Name.Contains(searchText, System.StringComparison.OrdinalIgnoreCase))
-                .ToList();
-            
-            foreach (var character in filtered)
-            {
-                FilteredCartoonCharacters.Add(character);
-            }
+            FilteredCartoonCharacters.Add(character);
         }
     }
 
-    private void GoToEdit(string id)
+    private void GoToEdit(string? id)
     {
+        if (string.IsNullOrWhiteSpace(id) || _mainWindowViewModel == null)
+            return;
+
         _mainWindowViewModel.GoToEditCartoonCharacter(id);
     }
 
-    private async Task DeleteCartoonCharacterAsync(string id)
+    private async Task DeleteCartoonCharacterAsync(string? id)
     {
-        // Supprimer de la liste globale
-        for (int i = 0; i < MyGlobals.MyCartoonCharacters.Count; i++)
+        if (string.IsNullOrWhiteSpace(id) || _mainWindowViewModel == null)
+            return;
+
+        var character = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == id);
+        if (character == null)
+            return;
+
+        var deletedName = character.Name;
+
+        MyGlobals.MyCartoonCharacters.Remove(character);
+
+        var observableCharacter = MyObservableCartoonCharacters.FirstOrDefault(c => c.Id == id);
+        if (observableCharacter != null)
         {
-            if (MyGlobals.MyCartoonCharacters[i].Id == id)
-            {
-                MyGlobals.MyCartoonCharacters.RemoveAt(i);
-                break;
-            }
+            MyObservableCartoonCharacters.Remove(observableCharacter);
         }
 
-        // Supprimer de la liste observable principale
-        for (int i = 0; i < MyObservableCartoonCharacters.Count; i++)
-        {
-            if (MyObservableCartoonCharacters[i].Id == id)
-            {
-                MyObservableCartoonCharacters.RemoveAt(i);
-                break;
-            }
-        }
-
-        // Re-appliquer le filtre après suppression
         ApplySearchFilter(_mainWindowViewModel.SearchText);
 
         await MyGlobals.SaveDataAsync();
+
+        if (_showDeleteMessageAsync != null)
+        {
+            await _showDeleteMessageAsync(deletedName);
+        }
     }
 
     private void UpdateList()
     {
         MyObservableCartoonCharacters.Clear();
+
         foreach (var cartoonCharacter in MyGlobals.MyCartoonCharacters)
         {
             MyObservableCartoonCharacters.Add(cartoonCharacter);
         }
-        
-        // Appliquer le filtre après la mise à jour de la liste
-        ApplySearchFilter(_mainWindowViewModel.SearchText);
+
+        ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 }

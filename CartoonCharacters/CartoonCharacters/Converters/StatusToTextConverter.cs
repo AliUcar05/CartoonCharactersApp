@@ -7,7 +7,7 @@ namespace CartoonCharacters.Converters;
 
 public class StatusToTextConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is ImportItemStatus status)
         {
@@ -20,6 +20,7 @@ public class StatusToTextConverter : IValueConverter
                 _ => "Inconnu"
             };
         }
+
         return "Inconnu";
     }
 

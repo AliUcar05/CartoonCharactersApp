@@ -6,12 +6,13 @@ namespace CartoonCharacters.Converters;
 
 public class BoolToOpacityConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is bool isSelected)
         {
-            return isSelected ? 1.0 : 0.5; // Opacité réduite pour non sélectionné
+            return isSelected ? 1.0 : 0.5;
         }
+
         return 1.0;
     }
 

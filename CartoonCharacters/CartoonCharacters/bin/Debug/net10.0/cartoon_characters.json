@@ -1,10 +1,10 @@
 [
   {
-    "Id": "69c9390f24005e838d354cd0",
-    "Name": "Huysuz",
-    "Description": "Loves money",
-    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
-    "Rating": 2.6,
-    "RatingVotes": 9
+    "Id": "69c958d979016a3a02f4879a",
+    "Name": "Patrick Star",
+    "Description": "love eating patty kraby",
+    "ImagePath": "avares://CartoonCharacters/Assets/patrick_star.jpeg",
+    "Rating": 37,
+    "RatingVotes": 3
   }
 ]

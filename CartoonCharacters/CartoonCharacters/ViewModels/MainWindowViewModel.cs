@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CartoonCharacters.Models;
@@ -29,16 +27,19 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _hasSearchText;
 
     private readonly CsvServices _csvServices;
+    private CollectionViewModel? _currentCollectionViewModel;
 
-    public CollectionViewModel? CurrentCollectionViewModel { get; private set; }
-
-    public MainWindowViewModel(CsvServices cscServices)
+    public MainWindowViewModel(CsvServices csvServices)
     {
-        _csvServices = cscServices;
+        _csvServices = csvServices;
 
-        var collectionVM = new CollectionViewModel(GoToDetailsFromChildCommand, this);
-        CurrentPage = collectionVM;
-        CurrentCollectionViewModel = collectionVM;
+        var collectionVm = new CollectionViewModel(
+            GoToDetailsFromChildCommand,
+            this,
+            ShowDeleteMessageAsync);
+
+        CurrentPage = collectionVm;
+        _currentCollectionViewModel = collectionVm;
 
         _ = InitializeDataAsync();
     }
@@ -46,7 +47,7 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnSearchTextChanged(string value)
     {
         HasSearchText = !string.IsNullOrWhiteSpace(value);
-        CurrentCollectionViewModel?.ApplySearchFilter(value);
+        _currentCollectionViewModel?.ApplySearchFilter(value);
     }
 
     [RelayCommand]
@@ -213,8 +214,44 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
+    private async Task ShowDeleteMessageAsync(string characterName)
+    {
+        await DialogService.ShowMessage(
+            "Suppression réussie",
+            $"✅ {characterName} a été supprimé avec succès !");
+    }
+
+    private async Task OnUpdateAsync(string characterName)
+    {
+        await DialogService.ShowMessage(
+            "Modification réussie",
+            $"✅ {characterName} a été modifié avec succès !");
+
+        BackToMain();
+    }
+
+    private void OnCancelUpdate()
+    {
+        BackToMain();
+    }
+
+    private async Task OnAddAsync(string characterName)
+    {
+        await DialogService.ShowMessage(
+            "Ajout réussi",
+            $"✅ {characterName} a été ajouté avec succès !");
+
+        BackToMain();
+    }
+
+    private void OnCancelAdd()
+    {
+        BackToMain();
+    }
+
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
     {
+        _ = newValue;
         oldValue?.Dispose();
     }
 
@@ -227,12 +264,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void GoToAddCartoonCharacters()
     {
-        CurrentPage = new CollectionAddViewModel(BackToMain);
+        CurrentPage = new CollectionAddViewModel(
+            OnAddAsync,
+            OnCancelAdd);
     }
 
     public void GoToEditCartoonCharacter(string id)
     {
-        CurrentPage = new CollectionEditViewModel(id, BackToMain);
+        CurrentPage = new CollectionEditViewModel(
+            id,
+            OnUpdateAsync,
+            OnCancelUpdate);
     }
 
     [RelayCommand]
@@ -240,8 +282,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         SearchText = string.Empty;
 
-        var collectionVM = new CollectionViewModel(GoToDetailsFromChildCommand, this);
-        CurrentPage = collectionVM;
-        CurrentCollectionViewModel = collectionVM;
+        var collectionVm = new CollectionViewModel(
+            GoToDetailsFromChildCommand,
+            this,
+            ShowDeleteMessageAsync);
+
+        CurrentPage = collectionVm;
+        _currentCollectionViewModel = collectionVm;
     }
 }

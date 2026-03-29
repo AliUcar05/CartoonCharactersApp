@@ -14,14 +14,18 @@ public partial class CollectionDetailsViewModel : ViewModelBase
     private CartoonCharacter _myCartoonCharacter;
 
     [ObservableProperty]
-    private int _currentUserRating = 0;
+    private int _currentUserRating;
 
     public IBrush Star1Brush => CurrentUserRating >= 1 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star2Brush => CurrentUserRating >= 2 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star3Brush => CurrentUserRating >= 3 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star4Brush => CurrentUserRating >= 4 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star5Brush => CurrentUserRating >= 5 ? Brushes.Gold : Brushes.LightGray;
-
+    
+    public CollectionDetailsViewModel()
+    {
+        MyCartoonCharacter = new CartoonCharacter();
+    }
     public CollectionDetailsViewModel(string id)
     {
         MyCartoonCharacter = MyGlobals.MyCartoonCharacters.First(cc => cc.Id == id);
@@ -29,6 +33,8 @@ public partial class CollectionDetailsViewModel : ViewModelBase
 
     partial void OnCurrentUserRatingChanged(int value)
     {
+        _ = value;
+
         OnPropertyChanged(nameof(Star1Brush));
         OnPropertyChanged(nameof(Star2Brush));
         OnPropertyChanged(nameof(Star3Brush));

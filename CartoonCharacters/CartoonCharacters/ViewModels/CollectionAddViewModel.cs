@@ -30,16 +30,22 @@ public partial class CollectionAddViewModel : ViewModelBase
     [ObservableProperty]
     private string _qrCode = "En attente d'un scan...";
 
-    private readonly Action _goBack;
+    public ScannerManager? MyScanner { get; private set; }
 
-    public CollectionAddViewModel(Action goBack)
+    private readonly Func<string, Task> _onAddAsync;
+    private readonly Action _onCancelAdd;
+
+    public CollectionAddViewModel(
+        Func<string, Task> onAddAsync,
+        Action onCancelAdd)
     {
-        _goBack = goBack;
+        _onAddAsync = onAddAsync;
+        _onCancelAdd = onCancelAdd;
 
         try
         {
             MyScanner = new ScannerManager();
-            MyScanner.SerialBuffer.Changed += QRCodeManager;
+            MyScanner.SerialBuffer.Changed += QrCodeManager;
             MyScanner.OpenPort();
         }
         catch (Exception e)
@@ -99,18 +105,16 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Name = Name,
             Description = Description,
-            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}",
-            Rating = 0,
-            RatingVotes = 0
+            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}"
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
         await MyGlobals.SaveDataAsync();
 
-        _goBack.Invoke();
+        await _onAddAsync(cartoonCharacter.Name);
     }
 
-    private void QRCodeManager(object? sender, EventArgs e)
+    private void QrCodeManager(object? sender, EventArgs e)
     {
         if (MyScanner == null || MyScanner.SerialBuffer.Count == 0)
             return;
@@ -146,33 +150,28 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Name = nom,
             Description = description,
-            ImagePath = imagePath,
-            Rating = 0,
-            RatingVotes = 0
+            ImagePath = imagePath
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
-
-        Console.WriteLine("Objet créé avec succès");
-        Console.WriteLine($"Nom : {cartoonCharacter.Name}");
-        Console.WriteLine($"Description : {cartoonCharacter.Description}");
-        Console.WriteLine($"Image : {cartoonCharacter.ImagePath}");
-
         await MyGlobals.SaveDataAsync();
 
-        _goBack.Invoke();
+        await _onAddAsync(cartoonCharacter.Name);
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        _goBack.Invoke();
+        _onCancelAdd.Invoke();
     }
 
     public override void Dispose()
     {
         if (MyScanner != null)
-            MyScanner.SerialBuffer.Changed -= QRCodeManager;
+        {
+            MyScanner.SerialBuffer.Changed -= QrCodeManager;
+            MyScanner.ClosePort();
+        }
 
         base.Dispose();
     }

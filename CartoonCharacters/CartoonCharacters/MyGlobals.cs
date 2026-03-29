@@ -7,41 +7,18 @@ namespace CartoonCharacters;
 
 public static class MyGlobals
 {
-    private static readonly string _dataFilePath = "cartoon_characters.json";
+    public static string DataFilePath { get; } = "cartoon_characters.json";
 
-    private static List<CartoonCharacter>? _myCartoonCharacters;
-
-    public static List<CartoonCharacter> MyCartoonCharacters
-    {
-        get
-        {
-            if (_myCartoonCharacters == null)
-            {
-                _myCartoonCharacters = new List<CartoonCharacter>();
-            }
-
-            return _myCartoonCharacters;
-        }
-        set
-        {
-            _myCartoonCharacters = value ?? new List<CartoonCharacter>();
-        }
-    }
-
-    public static string DataFilePath => _dataFilePath;
+    public static List<CartoonCharacter> MyCartoonCharacters { get; private set; } = [];
 
     public static async Task InitializeAsync()
     {
-        MyCartoonCharacters = await JsonDataService.InitializeAsync(_dataFilePath);
+        MyCartoonCharacters = await JsonDataService.InitializeAsync(DataFilePath);
     }
 
-    public static async Task SaveDataAsync()
-    {
-        await JsonDataService.PersistAsync(_dataFilePath, MyCartoonCharacters);
-    }
+    public static Task SaveDataAsync() =>
+        JsonDataService.PersistAsync(DataFilePath, MyCartoonCharacters);
 
-    public static async Task DeleteDataAsync(string id)
-    {
-        await JsonDataService.DeleteRecordAsync(_dataFilePath, id);
-    }
+    public static Task DeleteDataAsync(string id) =>
+        JsonDataService.DeleteRecordAsync(DataFilePath, id);
 }

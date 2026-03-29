@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Layout;
+using Avalonia.Media;
 
 namespace CartoonCharacters.Services;
 
@@ -8,40 +11,44 @@ public static class DialogService
 {
     public static async Task ShowMessage(string title, string message)
     {
-        if (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            return;
+
+        if (desktop.MainWindow == null)
+            return;
+
+        var okButton = new Button
         {
-            var dialog = new Window
+            Content = "OK",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Padding = new Thickness(20, 10)
+        };
+
+        var dialog = new Window
+        {
+            Title = title,
+            Width = 400,
+            Height = 200,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new StackPanel
             {
-                Title = title,
-                Width = 400,
-                Height = 200,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Content = new StackPanel
+                Margin = new Thickness(20),
+                Spacing = 20,
+                Children =
                 {
-                    Margin = new Avalonia.Thickness(20),
-                    Spacing = 20,
-                    Children =
+                    new TextBlock
                     {
-                        new TextBlock 
-                        { 
-                            Text = message, 
-                            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
-                            FontSize = 14 
-                        },
-                        new Button 
-                        { 
-                            Content = "OK", 
-                            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                            Padding = new Avalonia.Thickness(20, 10)
-                        }
-                    }
+                        Text = message,
+                        TextWrapping = TextWrapping.Wrap,
+                        FontSize = 14
+                    },
+                    okButton
                 }
-            };
+            }
+        };
 
-            var okButton = (Button)((StackPanel)dialog.Content).Children[1];
-            okButton.Click += (s, e) => dialog.Close();
+        okButton.Click += (_, _) => dialog.Close();
 
-            await dialog.ShowDialog(desktop.MainWindow);
-        }
+        await dialog.ShowDialog(desktop.MainWindow);
     }
 }

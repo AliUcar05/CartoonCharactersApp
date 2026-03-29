@@ -11,7 +11,7 @@ namespace CartoonCharacters.ViewModels;
 public partial class ExportItem : ObservableObject
 {
     [ObservableProperty]
-    private CartoonCharacter _character;
+    private CartoonCharacter _character = null!;
 
     [ObservableProperty]
     private bool _isSelected = true;
@@ -53,7 +53,7 @@ public partial class CsvExportSelectionViewModel : ViewModelBase
         // S'abonner aux changements de chaque item
         foreach (var item in Items)
         {
-            item.PropertyChanged += (s, e) =>
+            item.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(ExportItem.IsSelected))
                 {
