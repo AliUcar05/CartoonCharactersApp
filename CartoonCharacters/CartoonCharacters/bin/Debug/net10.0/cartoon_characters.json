@@ -1,26 +1,10 @@
 [
   {
-    "Id": "69c54dd9bc691e2dd89c2106",
-    "Name": "Patrick",
-    "Description": "etoile de mer",
-    "ImagePath": "avares://CartoonCharacters/Assets/patrick_star.jpeg"
-  },
-  {
-    "Id": "69ba5db6346914fae6469fa1",
-    "Name": "SpongeBob",
-    "Description": "A cartoon character from SpongeBob.",
-    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png"
-  },
-  {
-    "Id": "69b44715ee40ba27dc657bfe",
-    "Name": "K\u00FCf\u00FCrbaz Haydo",
-    "Description": "Hates notepad",
-    "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp"
-  },
-  {
-    "Id": "69b4475bee40ba27dc657bff",
+    "Id": "69c9390f24005e838d354cd0",
     "Name": "Huysuz",
     "Description": "Loves money",
-    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp"
+    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
+    "Rating": 2.6,
+    "RatingVotes": 9
   }
 ]

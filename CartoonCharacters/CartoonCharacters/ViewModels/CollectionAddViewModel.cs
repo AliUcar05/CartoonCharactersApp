@@ -99,7 +99,9 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Name = Name,
             Description = Description,
-            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}"
+            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}",
+            Rating = 0,
+            RatingVotes = 0
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
@@ -144,7 +146,9 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Name = nom,
             Description = description,
-            ImagePath = imagePath
+            ImagePath = imagePath,
+            Rating = 0,
+            RatingVotes = 0
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);

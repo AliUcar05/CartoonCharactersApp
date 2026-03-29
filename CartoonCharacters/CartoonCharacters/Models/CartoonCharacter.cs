@@ -13,4 +13,9 @@ public class CartoonCharacter
     // Remplacer Bitmap par string pour le chemin
     public string? ImagePath { get; set; }  // ← Nouveau
     // SUPPRIMER: public Bitmap? Picture { get; set; }
+    
+    // Moyenne actuelle
+    public double Rating { get; set; } = 0;
+    // Nombre de votes
+    public int RatingVotes { get; set; } = 0;
 }

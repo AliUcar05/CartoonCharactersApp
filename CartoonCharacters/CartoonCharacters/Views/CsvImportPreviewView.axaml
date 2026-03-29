@@ -19,17 +19,17 @@
     </UserControl.Resources>
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="15" RowSpacing="10">
-        
+
         <!-- En-tête -->
         <Border Grid.Row="0"
                 Background="#36393F"
                 CornerRadius="6"
                 Padding="12">
-            
+
             <StackPanel>
                 <!-- Ligne 1 : Titre + Stats alignées -->
                 <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8">
-                    
+
                     <!-- Titre -->
                     <TextBlock Grid.Column="0"
                                Text="📋 Import CSV"
@@ -49,16 +49,16 @@
                                       Content="Tout"
                                       Foreground="White"
                                       FontSize="11"/>
-                            <TextBlock Text="(" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text="("
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding SelectedCount}" 
-                                       Foreground="#3498DB" 
+                            <TextBlock Text="{Binding SelectedCount}"
+                                       Foreground="#3498DB"
                                        FontWeight="Bold"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text=")" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text=")"
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -77,16 +77,16 @@
                                        Foreground="White"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="(" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text="("
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding NewCount}" 
-                                       Foreground="#27AE60" 
+                            <TextBlock Text="{Binding NewCount}"
+                                       Foreground="#27AE60"
                                        FontWeight="Bold"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text=")" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text=")"
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -105,16 +105,16 @@
                                        Foreground="White"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="(" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text="("
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding ModifiedCount}" 
-                                       Foreground="#F39C12" 
+                            <TextBlock Text="{Binding ModifiedCount}"
+                                       Foreground="#F39C12"
                                        FontWeight="Bold"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text=")" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text=")"
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -133,16 +133,16 @@
                                        Foreground="White"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="(" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text="("
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding UnchangedCount}" 
-                                       Foreground="#3498DB" 
+                            <TextBlock Text="{Binding UnchangedCount}"
+                                       Foreground="#3498DB"
                                        FontWeight="Bold"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text=")" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text=")"
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -161,16 +161,16 @@
                                        Foreground="White"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="(" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text="("
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding ConflictCount}" 
-                                       Foreground="#E74C3C" 
+                            <TextBlock Text="{Binding ConflictCount}"
+                                       Foreground="#E74C3C"
                                        FontWeight="Bold"
                                        FontSize="11"
                                        VerticalAlignment="Center"/>
-                            <TextBlock Text=")" 
-                                       Foreground="#7F8C8D" 
+                            <TextBlock Text=")"
+                                       Foreground="#7F8C8D"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
@@ -184,7 +184,7 @@
             </StackPanel>
         </Border>
 
-        <!-- Liste des personnages - ScrollViewer style CollectionDetailsView -->
+        <!-- Liste des personnages -->
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled">
@@ -205,41 +205,72 @@
                                     Padding="10"
                                     Margin="0,0,0,5"
                                     Opacity="{Binding IsSelected, Converter={StaticResource BoolToOpacityConverter}}">
-                                
+
                                 <StackPanel Orientation="Horizontal">
                                     <!-- Image -->
                                     <Panel>
                                         <Rectangle Height="100" Width="100" Fill="LightGray"/>
-                                        <Image Margin="20" 
-                                               Height="200" 
-                                               Width="200" 
+                                        <Image Margin="20"
+                                               Height="200"
+                                               Width="200"
                                                Stretch="UniformToFill"
                                                Source="{Binding CsvCharacter.ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                                     </Panel>
-                                    
-                                    <!-- Infos avec checkbox intégrée -->
-                                    <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+
+                                    <!-- Infos -->
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="10,0,0,0"
+                                                Spacing="4"
+                                                Width="520">
+
                                         <CheckBox IsChecked="{Binding IsSelected}"
                                                   Content="{Binding CsvCharacter.Name}"
                                                   IsEnabled="{Binding Status, Converter={StaticResource StatusToEnabledConverter}}"
                                                   Foreground="White"
-                                                  FontWeight="Bold"/>
-                                        
+                                                  FontWeight="Bold"
+                                                  FontSize="14"/>
+
                                         <TextBlock Text="{Binding CsvCharacter.Description}"
                                                    Foreground="#BDC3C7"
+                                                   FontSize="12"
                                                    TextWrapping="Wrap"
-                                                   Margin="0,5,0,5"/>
-                                        
+                                                   Margin="0,4,0,4"/>
+
+                                        <!-- Rating importé -->
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="14"
+                                                    Margin="0,2,0,4">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <TextBlock Text="★"
+                                                           Foreground="Gold"
+                                                           FontSize="16"
+                                                           FontWeight="Bold"
+                                                           VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding CsvCharacter.Rating, StringFormat=Note moyenne : {0:F1}/5}"
+                                                           Foreground="White"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+
+                                            <TextBlock Text="{Binding CsvCharacter.RatingVotes, StringFormat=Votes : {0}}"
+                                                       Foreground="#BDC3C7"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+
                                         <!-- Badge de statut -->
                                         <Border Background="{Binding Status, Converter={StaticResource StatusToBackgroundConverter}}"
                                                 CornerRadius="3"
                                                 Padding="5,2"
-                                                HorizontalAlignment="Left">
+                                                HorizontalAlignment="Left"
+                                                Margin="0,2,0,0">
                                             <TextBlock Text="{Binding Status, Converter={StaticResource StatusToTextConverter}}"
                                                        Foreground="White"
                                                        FontSize="10"/>
                                         </Border>
-                                        
+
                                         <!-- Modifications détectées -->
                                         <ItemsControl ItemsSource="{Binding Changes}"
                                                       Margin="0,5,0,0">
@@ -260,7 +291,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Boutons d'action - Encadrés colorés sans fond -->
+        <!-- Boutons d'action -->
         <Border Grid.Row="2"
                 Background="Transparent"
                 BorderBrush="#36393F"
@@ -274,7 +305,6 @@
                            FontSize="11"
                            VerticalAlignment="Center"/>
 
-                <!-- Bouton Annuler - encadré rouge -->
                 <Button Grid.Column="1"
                         Content="❌ Annuler"
                         Command="{Binding CancelImportCommand}"
@@ -294,7 +324,6 @@
                     </Button.Styles>
                 </Button>
 
-                <!-- Bouton Importer - encadré vert -->
                 <Button Grid.Column="2"
                         Content="✅ Importer"
                         Command="{Binding ConfirmImportCommand}"

@@ -14,13 +14,6 @@
     <viewModels:CollectionViewModel/>
   </Design.DataContext>
 
-  <UserControl.Resources>
-    <!-- Icônes simples -->
-    <x:String x:Key="ActionIcon">⚡</x:String>
-    <x:String x:Key="EditIcon">✎</x:String>
-    <x:String x:Key="DeleteIcon">🗑</x:String>
-  </UserControl.Resources>
-
   <DockPanel Margin="20">
     <Border Background="AliceBlue">
       <ScrollViewer>
@@ -37,7 +30,12 @@
                       CornerRadius="3"
                       Padding="10"
                       Margin="10">
-                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,*" ColumnSpacing="15" RowSpacing="10">
+                
+                <Grid RowDefinitions="Auto,Auto"
+                      ColumnDefinitions="Auto,*"
+                      ColumnSpacing="15"
+                      RowSpacing="10">
+
                   <!-- Image -->
                   <Panel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                     <Rectangle Height="100" Width="100" Fill="LightGray"/>
@@ -48,16 +46,15 @@
                            Source="{Binding ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                   </Panel>
 
-                  <!-- Boutons à droite de l'image, en haut -->
-                  <StackPanel Grid.Row="0" 
-                              Grid.Column="1"
-                              Orientation="Horizontal"
-                              HorizontalAlignment="Left"
-                              Spacing="8"
-                              Margin="0,0,0,5">
-                    
-                    <!-- Bouton Action -->
-                    <Button Content="⚡ Action"
+                  <!-- Ligne boutons + note -->
+                  <Grid Grid.Row="0"
+                        Grid.Column="1"
+                        ColumnDefinitions="Auto,Auto,Auto,*"
+                        ColumnSpacing="8"
+                        Margin="0,0,0,5">
+
+                    <Button Grid.Column="0"
+                            Content="⚡ Action"
                             Foreground="Black"
                             Background="LightGray"
                             BorderBrush="Gray"
@@ -67,8 +64,8 @@
                             FontSize="11"
                             MinWidth="70"/>
 
-                    <!-- Bouton Modifier -->
-                    <Button Content="✎ Modifier"
+                    <Button Grid.Column="1"
+                            Content="✎ Modifier"
                             Foreground="White"
                             Background="#4E5D94"
                             BorderBrush="#3A4A7A"
@@ -78,8 +75,8 @@
                             FontSize="11"
                             MinWidth="70"/>
 
-                    <!-- Bouton Supprimer -->
-                    <Button Content="🗑 Supprimer"
+                    <Button Grid.Column="2"
+                            Content="🗑 Supprimer"
                             Foreground="White"
                             Background="#C84B4B"
                             BorderBrush="#A63A3A"
@@ -88,17 +85,38 @@
                             Padding="8,4"
                             FontSize="11"
                             MinWidth="70"/>
-                  </StackPanel>
 
-                  <!-- Informations en dessous des boutons -->
-                  <StackPanel Grid.Row="1" 
+                    <!-- Note à droite, sans encadré -->
+                    <StackPanel Grid.Column="3"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Spacing="4"
+                                Margin="12,0,0,0">
+                      <TextBlock Text="★"
+                                 Foreground="Gold"
+                                 FontSize="20"
+                                 FontWeight="Bold"
+                                 VerticalAlignment="Center"/>
+                      <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}"
+                                 Foreground="Black"
+                                 FontSize="16"
+                                 FontWeight="Bold"
+                                 VerticalAlignment="Center"/>
+                    </StackPanel>
+                  </Grid>
+
+                  <!-- Infos -->
+                  <StackPanel Grid.Row="1"
                               Grid.Column="1"
                               VerticalAlignment="Top">
                     <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"
                                Foreground="#2C3E50"
-                               FontWeight="Bold"/>
+                               FontWeight="Bold"
+                               FontSize="15"/>
                     <TextBlock Text="{Binding Description, StringFormat=Description : {0}}"
                                Foreground="#2C3E50"
+                               FontSize="13"
                                TextWrapping="Wrap"/>
                   </StackPanel>
                 </Grid>

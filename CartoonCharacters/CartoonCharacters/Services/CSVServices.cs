@@ -135,7 +135,7 @@ public class CsvServices
             .Select(h => h.Trim())
             .ToArray();
 
-        var expectedHeaders = new[] { "Id", "Name", "Description", "ImagePath" };
+        var expectedHeaders = new[] { "Id", "Name", "Description", "ImagePath", "Rating", "RatingVotes" };
 
         var sameHeaderCount = headers.Length == expectedHeaders.Length;
         var sameHeaders = sameHeaderCount &&
@@ -145,7 +145,7 @@ public class CsvServices
         {
             throw new InvalidOperationException(
                 "Structure CSV invalide.\n\n" +
-                "Colonnes attendues : Id;Name;Description;ImagePath");
+                "Colonnes attendues : Id;Name;Description;ImagePath;Rating;RatingVotes");
         }
 
         var properties = typeof(CartoonCharacter).GetProperties();

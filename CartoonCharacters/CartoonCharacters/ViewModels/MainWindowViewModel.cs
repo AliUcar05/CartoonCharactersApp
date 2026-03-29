@@ -123,6 +123,8 @@ public partial class MainWindowViewModel : ViewModelBase
                     existing.Name = selectedChar.Name;
                     existing.Description = selectedChar.Description;
                     existing.ImagePath = selectedChar.ImagePath;
+                    existing.Rating = selectedChar.Rating;
+                    existing.RatingVotes = selectedChar.RatingVotes;
                 }
                 else
                 {
