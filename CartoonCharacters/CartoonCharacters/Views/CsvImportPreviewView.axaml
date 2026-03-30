@@ -326,7 +326,6 @@
 
                 <Button Grid.Column="2"
                         Content="✅ Importer"
-                        Command="{Binding ConfirmImportCommand}"
                         Background="Transparent"
                         BorderBrush="#43B581"
                         BorderThickness="2"
@@ -340,6 +339,31 @@
                             <Setter Property="Foreground" Value="White"/>
                         </Style>
                     </Button.Styles>
+
+                    <Button.Flyout>
+                        <Flyout Placement="Top">
+                            <StackPanel Width="280" Spacing="10" Margin="4">
+                                <TextBlock Text="Confirmer l'import"
+                                           FontWeight="Bold"
+                                           FontSize="14"/>
+
+                                <TextBlock Text="{Binding SelectedCount, StringFormat=Éléments sélectionnés : {0}}"/>
+                                <TextBlock Text="{Binding ModifiedCount, StringFormat=Éléments modifiés : {0}}"/>
+                                <TextBlock Text="{Binding NewCount, StringFormat=Nouveaux éléments : {0}}"/>
+
+                                <TextBlock Text="Les éléments modifiés vont écraser les données existantes."
+                                           TextWrapping="Wrap"
+                                           Foreground="#F39C12"
+                                           FontWeight="SemiBold"/>
+
+                                <Button Content="Oui, lancer l'import"
+                                        Background="#43B581"
+                                        Foreground="White"
+                                        BorderBrush="#36966B"
+                                        Command="{Binding ConfirmImportCommand}"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
                 </Button>
             </Grid>
         </Border>

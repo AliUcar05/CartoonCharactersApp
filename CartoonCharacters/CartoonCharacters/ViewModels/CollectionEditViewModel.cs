@@ -7,6 +7,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CartoonCharacters.Helpers;
+using CartoonCharacters.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -111,9 +112,15 @@ public partial class CollectionEditViewModel : ViewModelBase
     [RelayCommand]
     private async Task SaveChanges()
     {
-        var existingCharacter = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == Id);
-        if (existingCharacter != null)
+        try
         {
+            var existingCharacter = MyGlobals.MyCartoonCharacters.FirstOrDefault(c => c.Id == Id);
+            if (existingCharacter == null)
+            {
+                PopupService.Warning("Modification", "Personnage introuvable.");
+                return;
+            }
+
             existingCharacter.Name = Name;
             existingCharacter.Description = Description;
 
@@ -125,6 +132,10 @@ public partial class CollectionEditViewModel : ViewModelBase
 
             await MyGlobals.SaveDataAsync();
             await _onUpdateAsync(existingCharacter.Name);
+        }
+        catch (Exception ex)
+        {
+            PopupService.Error("Erreur", $"Erreur lors de la modification : {ex.Message}");
         }
     }
 

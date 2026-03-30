@@ -26,6 +26,7 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
 
             var mainWindow = new MainWindow();
+            PopupService.Initialize(mainWindow);
             var viewModel = new MainWindowViewModel(new CsvServices(mainWindow));
             mainWindow.DataContext = viewModel;
             desktop.MainWindow = mainWindow;

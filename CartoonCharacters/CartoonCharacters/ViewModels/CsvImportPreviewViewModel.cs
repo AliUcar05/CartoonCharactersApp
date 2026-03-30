@@ -136,6 +136,12 @@ public partial class CsvImportPreviewViewModel : ViewModelBase
                     changes.Add($"Image: {oldFile} → {newFile}");
                 }
 
+                if (item.ExistingCharacter.Rating != csvChar.Rating)
+                    changes.Add($"Note moyenne: {item.ExistingCharacter.Rating:F1} → {csvChar.Rating:F1}");
+
+                if (item.ExistingCharacter.RatingVotes != csvChar.RatingVotes)
+                    changes.Add($"Votes: {item.ExistingCharacter.RatingVotes} → {csvChar.RatingVotes}");
+
                 item.Changes = changes.ToArray();
                 item.Status = changes.Any() ? ImportItemStatus.Modified : ImportItemStatus.Unchanged;
                 item.IsSelected = changes.Any();

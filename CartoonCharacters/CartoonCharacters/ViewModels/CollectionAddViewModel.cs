@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ public partial class CollectionAddViewModel : ViewModelBase
         catch (Exception e)
         {
             QrCode = $"Erreur scanner : {e.Message}";
-            Console.WriteLine(e.ToString());
+            PopupService.Error("Scanner", $"Erreur scanner : {e.Message}");
         }
     }
 
@@ -96,16 +97,34 @@ public partial class CollectionAddViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddCartoonCharacter()
     {
+        var missingFields = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(Name))
+            missingFields.Add("le nom");
+
+        if (string.IsNullOrWhiteSpace(Description))
+            missingFields.Add("la description");
+
         if (SelectedFiles == null || SelectedFiles.Length == 0)
+            missingFields.Add("l'image");
+
+        if (missingFields.Count > 0)
+        {
+            PopupService.Warning(
+                "Champs obligatoires",
+                $"Merci de renseigner : {string.Join(", ", missingFields)}.");
             return;
+        }
 
         var fileName = Path.GetFileName(SelectedFiles[0]);
 
         var cartoonCharacter = new CartoonCharacter
         {
-            Name = Name,
-            Description = Description,
-            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}"
+            Name = Name.Trim(),
+            Description = Description.Trim(),
+            ImagePath = $"avares://CartoonCharacters/Assets/{fileName}",
+            Rating = 0,
+            RatingVotes = 0
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
@@ -127,15 +146,23 @@ public partial class CollectionAddViewModel : ViewModelBase
     private async Task AddCartoonCharacterWithScanner()
     {
         if (string.IsNullOrWhiteSpace(QrCode) ||
-            QrCode == "En attente d'un scan..." ||
-            QrCode.StartsWith("Erreur scanner"))
+            QrCode == "En attente d'un scan...")
+        {
+            PopupService.Warning("Scanner", "Aucun QR code valide n'a été scanné.");
             return;
+        }
+
+        if (QrCode.StartsWith("Erreur scanner"))
+        {
+            PopupService.Error("Scanner", QrCode);
+            return;
+        }
 
         string[] parties = QrCode.Split(',');
 
         if (parties.Length < 3)
         {
-            Console.WriteLine("QR code invalide. Format attendu : nom,description,imagePath");
+            PopupService.Warning("QR code invalide", "Format attendu : nom,description,imagePath");
             return;
         }
 

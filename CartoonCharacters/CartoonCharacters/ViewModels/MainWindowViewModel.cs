@@ -66,9 +66,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage(
-                "Erreur",
-                $"❌ Erreur lors du chargement des données : {ex.Message}");
+            PopupService.Error("Erreur", $"Erreur lors du chargement des données : {ex.Message}");
         }
         finally
         {
@@ -85,9 +83,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             if (!importedCharacters.Any())
             {
-                await DialogService.ShowMessage(
-                    "Import CSV",
-                    "Aucune donnée trouvée dans le fichier CSV.");
+                PopupService.Warning("Import CSV", "Aucune donnée trouvée dans le fichier CSV.");
                 return;
             }
 
@@ -102,9 +98,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage(
-                "Erreur",
-                $"❌ Erreur lors de l'import : {ex.Message}");
+            PopupService.Error("Erreur", $"Erreur lors de l'import : {ex.Message}");
         }
     }
 
@@ -135,15 +129,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
             await MyGlobals.SaveDataAsync();
 
-            await DialogService.ShowMessage(
-                "Import réussi",
-                $"✅ {selectedCharacters.Count} personnage(s) ont été importés avec succès !");
+            PopupService.Success("Import réussi", $"{selectedCharacters.Count} personnage(s) ont été importés avec succès !");
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage(
-                "Erreur",
-                $"❌ Erreur lors de l'import : {ex.Message}");
+            PopupService.Error("Erreur", $"Erreur lors de l'import : {ex.Message}");
         }
         finally
         {
@@ -166,9 +156,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
             if (!characters.Any())
             {
-                _ = DialogService.ShowMessage(
-                    "Export CSV",
-                    "Aucun personnage à exporter.");
+                PopupService.Warning("Export CSV", "Aucun personnage à exporter.");
                 return;
             }
 
@@ -181,9 +169,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _ = DialogService.ShowMessage(
-                "Erreur",
-                $"❌ Erreur : {ex.Message}");
+            PopupService.Error("Erreur", $"Erreur : {ex.Message}");
         }
     }
 
@@ -192,16 +178,11 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             await _csvServices.SaveDataAsync(selectedCharacters);
-
-            await DialogService.ShowMessage(
-                "Export réussi",
-                $"✅ {selectedCharacters.Count} personnage(s) ont été exportés avec succès !");
+            PopupService.Success("Export réussi", $"{selectedCharacters.Count} personnage(s) ont été exportés avec succès !");
         }
         catch (Exception ex)
         {
-            await DialogService.ShowMessage(
-                "Erreur",
-                $"❌ Erreur lors de l'export : {ex.Message}");
+            PopupService.Error("Erreur", $"Erreur lors de l'export : {ex.Message}");
         }
         finally
         {
@@ -216,17 +197,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task ShowDeleteMessageAsync(string characterName)
     {
-        await DialogService.ShowMessage(
-            "Suppression réussie",
-            $"✅ {characterName} a été supprimé avec succès !");
+        PopupService.Success("Suppression réussie", $"{characterName} a été supprimé avec succès !");
     }
 
     private async Task OnUpdateAsync(string characterName)
     {
-        await DialogService.ShowMessage(
-            "Modification réussie",
-            $"✅ {characterName} a été modifié avec succès !");
-
+        PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
         BackToMain();
     }
 
@@ -237,10 +213,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task OnAddAsync(string characterName)
     {
-        await DialogService.ShowMessage(
-            "Ajout réussi",
-            $"✅ {characterName} a été ajouté avec succès !");
-
+        PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
         BackToMain();
     }
 
