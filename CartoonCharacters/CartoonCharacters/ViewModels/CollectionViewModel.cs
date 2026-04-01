@@ -31,17 +31,6 @@ public partial class CollectionViewModel : ViewModelBase
 
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-
-        var demoCharacter = new CartoonCharacter
-        {
-            Id = "1",
-            Name = "Exemple",
-            Description = "Personnage de démonstration",
-            ImagePath = ""
-        };
-
-        MyObservableCartoonCharacters.Add(demoCharacter);
-        FilteredCartoonCharacters.Add(demoCharacter);
     }
 
     public CollectionViewModel(

@@ -18,7 +18,4 @@ public static class MyGlobals
 
     public static Task SaveDataAsync() =>
         JsonDataService.PersistAsync(DataFilePath, MyCartoonCharacters);
-
-    public static Task DeleteDataAsync(string id) =>
-        JsonDataService.DeleteRecordAsync(DataFilePath, id);
 }

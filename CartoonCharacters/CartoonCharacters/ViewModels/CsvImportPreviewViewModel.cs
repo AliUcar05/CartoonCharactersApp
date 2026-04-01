@@ -32,11 +32,7 @@ public partial class CsvImportItem : ObservableObject
 
     [ObservableProperty]
     private string[] _changes = Array.Empty<string>();
-
-    public string DisplayName => CsvCharacter.Name;
-    public string DisplayDescription => CsvCharacter.Description;
-    public string DisplayImage => CsvCharacter.ImagePath ?? "";
-
+    
     public CsvImportItem(CartoonCharacter csvCharacter)
     {
         _csvCharacter = csvCharacter;
@@ -136,7 +132,7 @@ public partial class CsvImportPreviewViewModel : ViewModelBase
                     changes.Add($"Image: {oldFile} → {newFile}");
                 }
 
-                if (item.ExistingCharacter.Rating != csvChar.Rating)
+                if (Math.Abs(item.ExistingCharacter.Rating - csvChar.Rating) > 0.0001)
                     changes.Add($"Note moyenne: {item.ExistingCharacter.Rating:F1} → {csvChar.Rating:F1}");
 
                 if (item.ExistingCharacter.RatingVotes != csvChar.RatingVotes)

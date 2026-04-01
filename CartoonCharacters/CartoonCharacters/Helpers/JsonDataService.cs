@@ -17,7 +17,7 @@ public static class JsonDataService
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        WriteIndented = true
+        WriteIndented = true,
     };
 
     private static readonly HttpClient Client = new(new HttpClientHandler
@@ -141,32 +141,7 @@ public static class JsonDataService
         await SaveToFileAsync(filePath, characters);
         await SaveToServerAsync(characters);
     }
-
-    public static async Task AddCharacterAsync(string filePath, CartoonCharacter character)
-    {
-        var list = (await LoadFromFileAsync(filePath)).ToList();
-
-        if (string.IsNullOrWhiteSpace(character.Id))
-        {
-            character.Id = ObjectId.GenerateNewId().ToString();
-        }
-
-        list.Add(character);
-        await PersistAsync(filePath, list);
-    }
-
-    public static async Task UpdateCharacterAsync(string filePath, CartoonCharacter updatedCharacter)
-    {
-        var list = (await LoadFromFileAsync(filePath)).ToList();
-        var index = list.FindIndex(c => c.Id == updatedCharacter.Id);
-
-        if (index >= 0)
-        {
-            list[index] = updatedCharacter;
-            await PersistAsync(filePath, list);
-        }
-    }
-
+    
     public static async Task DeleteRecordAsync(string filePath, string id)
     {
         var list = (await LoadFromFileAsync(filePath)).ToList();

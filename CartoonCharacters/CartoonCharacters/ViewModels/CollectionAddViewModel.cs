@@ -31,7 +31,7 @@ public partial class CollectionAddViewModel : ViewModelBase
     [ObservableProperty]
     private string _qrCode = "En attente d'un scan...";
 
-    public ScannerManager? MyScanner { get; private set; }
+    private ScannerManager? _scanner;
 
     private readonly Func<string, Task> _onAddAsync;
     private readonly Action _onCancelAdd;
@@ -45,9 +45,9 @@ public partial class CollectionAddViewModel : ViewModelBase
 
         try
         {
-            MyScanner = new ScannerManager();
-            MyScanner.SerialBuffer.Changed += QrCodeManager;
-            MyScanner.OpenPort();
+            _scanner = new ScannerManager();
+            _scanner.SerialBuffer.Changed += QrCodeManager;
+            _scanner.OpenPort();
         }
         catch (Exception e)
         {
@@ -67,20 +67,20 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Title = "Select image",
             AllowMultiple = false,
-            FileTypeFilter = new[]
-            {
+            FileTypeFilter =
+            [
                 new FilePickerFileType("Images")
                 {
-                    Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp" }
+                    Patterns = ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp"]
                 }
-            }
+            ]
         });
 
         var path = files.FirstOrDefault()?.TryGetLocalPath();
         if (string.IsNullOrWhiteSpace(path))
             return;
 
-        SelectedFiles = new[] { path };
+        SelectedFiles = [path];
 
         await using var fs = File.OpenRead(path);
         Picture = new Bitmap(fs);
@@ -105,7 +105,8 @@ public partial class CollectionAddViewModel : ViewModelBase
         if (string.IsNullOrWhiteSpace(Description))
             missingFields.Add("la description");
 
-        if (SelectedFiles == null || SelectedFiles.Length == 0)
+        var selectedFiles = SelectedFiles;
+        if (selectedFiles is null || selectedFiles.Length == 0)
             missingFields.Add("l'image");
 
         if (missingFields.Count > 0)
@@ -116,7 +117,7 @@ public partial class CollectionAddViewModel : ViewModelBase
             return;
         }
 
-        var fileName = Path.GetFileName(SelectedFiles[0]);
+        var fileName = Path.GetFileName(selectedFiles![0]);
 
         var cartoonCharacter = new CartoonCharacter
         {
@@ -135,10 +136,10 @@ public partial class CollectionAddViewModel : ViewModelBase
 
     private void QrCodeManager(object? sender, EventArgs e)
     {
-        if (MyScanner == null || MyScanner.SerialBuffer.Count == 0)
+        if (_scanner == null || _scanner.SerialBuffer.Count == 0)
             return;
 
-        QrCode = MyScanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
+        QrCode = _scanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
         Console.WriteLine($"QR Code scanné : {QrCode}");
     }
 
@@ -194,10 +195,10 @@ public partial class CollectionAddViewModel : ViewModelBase
 
     public override void Dispose()
     {
-        if (MyScanner != null)
+        if (_scanner != null)
         {
-            MyScanner.SerialBuffer.Changed -= QrCodeManager;
-            MyScanner.ClosePort();
+            _scanner.SerialBuffer.Changed -= QrCodeManager;
+            _scanner.ClosePort();
         }
 
         base.Dispose();

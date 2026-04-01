@@ -222,7 +222,7 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase? newValue)
+    partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase newValue)
     {
         _ = newValue;
         oldValue?.Dispose();
