@@ -176,20 +176,38 @@ public class CsvServices
             csv.AppendLine(string.Join(";", values));
         }
 
+        var csvFileType = new FilePickerFileType("Fichier CSV")
+        {
+            Patterns = ["*.csv"],
+            MimeTypes = ["text/csv"]
+        };
+
         var file = await _topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
             Title = "Enregistrer le fichier CSV",
-            SuggestedFileName = "data.csv"
+            SuggestedFileName = "data.csv",
+            DefaultExtension = "csv",
+            FileTypeChoices = [csvFileType],
+            SuggestedFileType = csvFileType,
+            ShowOverwritePrompt = true
         });
 
         if (file == null)
             return;
 
+        var localPath = file.TryGetLocalPath();
+
+        if (!string.IsNullOrWhiteSpace(localPath) &&
+            !Path.GetExtension(localPath).Equals(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("L’export doit être enregistré au format .csv.");
+        }
+
         await using var stream = await file.OpenWriteAsync();
         using var writer = new StreamWriter(stream, Encoding.UTF8);
         await writer.WriteAsync(csv.ToString());
     }
-    
+
     private static double ParseCsvDouble(string value)
     {
         var normalized = value.Trim().Replace(',', '.');
