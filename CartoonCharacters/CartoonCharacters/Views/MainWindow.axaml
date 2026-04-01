@@ -149,8 +149,8 @@
                                  BorderThickness="0"
                                  FontSize="13"
                                  Padding="4,6"
-                                 Foreground="#2C3E50"
-                                 CaretBrush="#2C3E50">
+                                 Foreground="#87CEEB"
+                                 CaretBrush="#87CEEB">
                             <TextBox.Styles>
                                 <Style Selector="TextBox:focus /template/ Border#border">
                                     <Setter Property="Background" Value="White"/>

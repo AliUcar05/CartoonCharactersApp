@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\test1\\RiderProjects\\CartoonCharactersApp\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {}
+    "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {}
   },
   "projects": {
-    "C:\\Users\\test1\\RiderProjects\\CartoonCharactersApp\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {
+    "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\test1\\RiderProjects\\CartoonCharactersApp\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
+        "projectUniqueName": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
         "projectName": "CartoonCharacters",
-        "projectPath": "C:\\Users\\test1\\RiderProjects\\CartoonCharactersApp\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
-        "packagesPath": "C:\\Users\\test1\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\test1\\RiderProjects\\CartoonCharactersApp\\CartoonCharacters\\CartoonCharacters\\obj\\",
+        "projectPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
+        "packagesPath": "C:\\Users\\osman\\.nuget\\packages\\",
+        "outputPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\test1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\osman\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
@@ -103,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\test1\\.dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Users\\osman\\.dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

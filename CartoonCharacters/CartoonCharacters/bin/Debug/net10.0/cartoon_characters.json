@@ -1,18 +1,18 @@
 [
   {
-    "Id": "69c9390f24005e838d354cd0",
-    "Name": "Huysuz",
-    "Description": "Loves money",
-    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
-    "Rating": 2.5,
-    "RatingVotes": 11
-  },
-  {
     "Id": "69ccd164583340be1125ce7d",
     "Name": "haydo",
     "Description": "oe notepad",
     "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp",
     "Rating": 0,
     "RatingVotes": 0
+  },
+  {
+    "Id": "69c9390f24005e838d354cd0",
+    "Name": "Huysuzs",
+    "Description": "Loves money",
+    "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
+    "Rating": 2.6,
+    "RatingVotes": 12
   }
 ]
