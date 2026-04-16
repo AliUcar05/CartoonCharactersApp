@@ -2,17 +2,33 @@
   {
     "Id": "69ccd164583340be1125ce7d",
     "Name": "haydo",
-    "Description": "oe notepad",
+    "Description": "Like robering banks",
     "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp",
-    "Rating": 0,
-    "RatingVotes": 0
+    "Rating": 4,
+    "RatingVotes": 1
   },
   {
     "Id": "69c9390f24005e838d354cd0",
-    "Name": "Huysuzs",
+    "Name": "Huysuz",
     "Description": "Loves money",
     "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
-    "Rating": 2.6,
-    "RatingVotes": 12
+    "Rating": 2.7,
+    "RatingVotes": 13
+  },
+  {
+    "Id": "69d1374b2f135b7789439b6d",
+    "Name": "Uzun",
+    "Description": "Loves sarma",
+    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg",
+    "Rating": 2,
+    "RatingVotes": 1
+  },
+  {
+    "Id": "69dcbd7e400e5354a94c243e",
+    "Name": "qdec",
+    "Description": "qvvq",
+    "ImagePath": "avares://CartoonCharacters/Assets/Sans titre.jpeg",
+    "Rating": 0,
+    "RatingVotes": 0
   }
 ]

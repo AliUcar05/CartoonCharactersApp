@@ -15,7 +15,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private ViewModelBase _currentPage = null!;
 
     [ObservableProperty]
-    private string _version = "Version : 1.0";
+    private string _version = "Version : 1.1";
 
     [ObservableProperty]
     private bool _isBusy;
@@ -28,6 +28,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private readonly CsvServices _csvServices;
     private CollectionViewModel? _currentCollectionViewModel;
+
+    private DatabaseServices databaseServices;
 
     public MainWindowViewModel(CsvServices csvServices)
     {
@@ -42,6 +44,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _currentCollectionViewModel = collectionVm;
 
         _ = InitializeDataAsync();
+
+        databaseServices = new DatabaseServices();
     }
 
     partial void OnSearchTextChanged(string value)

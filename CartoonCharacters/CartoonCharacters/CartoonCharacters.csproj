@@ -25,6 +25,7 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
+        <PackageReference Include="MongoDB.Bson" Version="3.7.1" />
         <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
         <PackageReference Include="System.IO.Ports" Version="11.0.0-preview.1.26104.118" />
         <PackageReference Include="System.Management" Version="11.0.0-preview.1.26104.118" />
@@ -41,8 +42,12 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Update="Views\CsvExportSelectionView.cs">
-        <DependentUpon>CsvExportSelectionView.axaml</DependentUpon>
-      </Compile>
+      <AdditionalFiles Include="Views\CollectionAddView.axaml" />
+      <AdditionalFiles Include="Views\CollectionDetailsView.axaml" />
+      <AdditionalFiles Include="Views\CollectionEditView.axaml" />
+      <AdditionalFiles Include="Views\CollectionView.axaml" />
+      <AdditionalFiles Include="Views\CsvExportSelectionView.axaml" />
+      <AdditionalFiles Include="Views\CsvImportPreviewView.axaml" />
+      <AdditionalFiles Include="Views\MainWindow.axaml" />
     </ItemGroup>
 </Project>
