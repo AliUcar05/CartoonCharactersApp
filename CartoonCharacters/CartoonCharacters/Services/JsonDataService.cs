@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CartoonCharacters.Models;
+using CartoonCharacters.Services;
 using MongoDB.Bson;
 
 namespace CartoonCharacters.Helpers;
@@ -111,6 +112,8 @@ public static class JsonDataService
 
             using var response = await Client.PostAsync(BaseUrl, content);
             response.EnsureSuccessStatusCode();
+
+            Console.WriteLine($"JSON serveur : envoi OK -> {characters.Count} élément(s)");
         }
         catch (Exception ex)
         {
@@ -140,8 +143,27 @@ public static class JsonDataService
     {
         await SaveToFileAsync(filePath, characters);
         await SaveToServerAsync(characters);
+
+        try
+        {
+            var dbService = new DatabaseServices();
+            var connected = await dbService.TestConnectionAsync();
+
+            if (connected)
+            {
+                await dbService.ReplaceAllCharactersAsync(characters);
+            }
+            else
+            {
+                Console.WriteLine("MongoDB : connexion impossible, aucun envoi effectué.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur écriture MongoDB : {ex.Message}");
+        }
     }
-    
+
     public static async Task DeleteRecordAsync(string filePath, string id)
     {
         var list = (await LoadFromFileAsync(filePath)).ToList();

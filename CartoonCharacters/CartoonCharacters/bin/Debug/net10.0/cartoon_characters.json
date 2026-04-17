@@ -30,5 +30,13 @@
     "ImagePath": "avares://CartoonCharacters/Assets/Sans titre.jpeg",
     "Rating": 0,
     "RatingVotes": 0
+  },
+  {
+    "Id": "69e1ef95dd6a3097d30f4d6c",
+    "Name": "Bob",
+    "Description": "l\u0027\u00E9ponge carr\u00E9",
+    "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png",
+    "Rating": 0,
+    "RatingVotes": 0
   }
 ]
