@@ -119,4 +119,21 @@ public partial class DatabaseServices
             return [];
         }
     }
+    public async Task<UserProfile?> AuthenticateUserAsync(string userName, string password)
+    {
+        try
+        {
+            var filter = Builders<UserProfile>.Filter.And(
+                Builders<UserProfile>.Filter.Eq(u => u.UserName, userName),
+                Builders<UserProfile>.Filter.Eq(u => u.Password, password)
+            );
+
+            return await _userProfiles.Find(filter).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : auth KO -> {ex.Message}");
+            return null;
+        }
+    }
 }

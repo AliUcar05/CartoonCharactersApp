@@ -25,47 +25,33 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _hasSearchText;
-    
-    [ObservableProperty] 
-    private UserProfile _currentUser;
+
+    [ObservableProperty]
+    private UserProfile? _currentUser;
+
+    public bool IsUserLoggedIn => CurrentUser != null;
 
     private readonly CsvServices _csvServices;
     private CollectionViewModel? _currentCollectionViewModel;
-    
-    private DatabaseServices databaseServices;
 
     public MainWindowViewModel(CsvServices csvServices)
     {
         _csvServices = csvServices;
-        databaseServices = new DatabaseServices();
 
-        // TEMPORAIRE : bypass auth pour test Mongo
-        var collectionVm = new CollectionViewModel(
-            GoToDetailsFromChildCommand,
-            this,
-            ShowDeleteMessageAsync);
-
-        CurrentPage = collectionVm;
-        _currentCollectionViewModel = collectionVm;
-        _ = InitializeDataAsync();
-
-        /*
-        if (IsUserLoggedIn())
+        if (IsUserLoggedIn)
         {
-            var collectionVm = new CollectionViewModel(
-                GoToDetailsFromChildCommand,
-                this,
-                ShowDeleteMessageAsync);
-
-            CurrentPage = collectionVm;
-            _currentCollectionViewModel = collectionVm;
+            ShowMainCollection();
             _ = InitializeDataAsync();
         }
         else
         {
-            CurrentPage = new LoginViewModel();
+            CurrentPage = new LoginViewModel(OnLoginSuccess);
         }
-        */
+    }
+
+    partial void OnCurrentUserChanged(UserProfile? value)
+    {
+        OnPropertyChanged(nameof(IsUserLoggedIn));
     }
 
     partial void OnSearchTextChanged(string value)
@@ -85,13 +71,7 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             IsBusy = true;
-
             await MyGlobals.InitializeAsync();
-
-            // TEMPORAIRE : insertion automatique d'un utilisateur de test au démarrage
-            // À SUPPRIMER quand on fera la vraie logique d'authentification / création utilisateur
-            await InsertTestUserProfileAsync();
-
             BackToMain();
         }
         catch (Exception ex)
@@ -104,42 +84,22 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private async Task InsertTestUserProfileAsync()
+    private void OnLoginSuccess(UserProfile userProfile)
     {
-        try
-        {
-            var userProfile = new UserProfile
-            {
-                UserName = $"Recep",
-                Password = "1234",
-                IsAdmin = true,
-                CartoonCharacterIds = MyGlobals.MyCartoonCharacters
-                    .Take(2)
-                    .Select(c => c.Id)
-                    .ToList()
-            };
+        CurrentUser = userProfile;
+        ShowMainCollection();
+        _ = InitializeDataAsync();
+    }
 
-            var ok = await databaseServices.InsertUserProfileAsync(userProfile);
+    private void ShowMainCollection()
+    {
+        var collectionVm = new CollectionViewModel(
+            GoToDetailsFromChildCommand,
+            this,
+            ShowDeleteMessageAsync);
 
-            if (ok)
-            {
-                PopupService.Success(
-                    "MongoDB",
-                    $"Profil utilisateur inséré automatiquement : {userProfile.UserName}");
-            }
-            else
-            {
-                PopupService.Error(
-                    "MongoDB",
-                    "L'insertion automatique du profil utilisateur a échoué.");
-            }
-        }
-        catch (Exception ex)
-        {
-            PopupService.Error(
-                "Erreur MongoDB",
-                $"Erreur lors de l'insertion automatique du profil test : {ex.Message}");
-        }
+        CurrentPage = collectionVm;
+        _currentCollectionViewModel = collectionVm;
     }
 
     [RelayCommand]
@@ -322,19 +282,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private void BackToMain()
     {
         SearchText = string.Empty;
-
-        var collectionVm = new CollectionViewModel(
-            GoToDetailsFromChildCommand,
-            this,
-            ShowDeleteMessageAsync);
-
-        CurrentPage = collectionVm;
-        _currentCollectionViewModel = collectionVm;
-    }
-
-    private bool IsUserLoggedIn()
-    {
-        if (_currentUser == null) return false;
-        return true;
+        ShowMainCollection();
     }
 }

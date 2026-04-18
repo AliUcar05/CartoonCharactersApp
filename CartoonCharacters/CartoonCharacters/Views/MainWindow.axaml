@@ -44,7 +44,8 @@
             <!-- Barre de navigation avec boutons, recherche et login -->
             <Grid Grid.Row="0"
                   ColumnDefinitions="Auto,*,Auto"
-                  Margin="0,0,0,10">
+                  Margin="0,0,0,10"
+                  IsVisible="{Binding IsUserLoggedIn}">
                 
                 <!-- Boutons de navigation à gauche -->
                 <StackPanel Grid.Column="0"

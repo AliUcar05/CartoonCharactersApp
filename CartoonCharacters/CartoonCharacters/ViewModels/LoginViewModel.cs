@@ -1,19 +1,63 @@
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CartoonCharacters.Models;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase
 {
+    private readonly Action<UserProfile> _onLoginSuccess;
+    private readonly DatabaseServices _databaseServices;
+
     [ObservableProperty]
     private string _username = string.Empty;
 
     [ObservableProperty]
     private string _password = string.Empty;
 
-    [RelayCommand]
-    private void Login()
+    [ObservableProperty]
+    private bool _isBusy;
+
+    public LoginViewModel(Action<UserProfile> onLoginSuccess)
     {
-        // mettre la logique ici.
+        _onLoginSuccess = onLoginSuccess;
+        _databaseServices = new DatabaseServices();
+    }
+
+    public LoginViewModel()
+    {
+        _onLoginSuccess = _ => { };
+        _databaseServices = new DatabaseServices();
+    }
+
+    [RelayCommand]
+    private async Task Login()
+    {
+        try
+        {
+            IsBusy = true;
+
+            var user = await _databaseServices.AuthenticateUserAsync(Username, Password);
+
+            if (user != null)
+            {
+                _onLoginSuccess.Invoke(user);
+            }
+            else
+            {
+                PopupService.Error("Connexion", "Nom d'utilisateur ou mot de passe incorrect.");
+            }
+        }
+        catch (Exception ex)
+        {
+            PopupService.Error("Connexion", $"Erreur lors de la connexion : {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }
