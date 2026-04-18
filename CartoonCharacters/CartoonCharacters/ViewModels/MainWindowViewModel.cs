@@ -27,7 +27,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _hasSearchText;
     
     [ObservableProperty] 
-    private User _currentUser;
+    private UserProfile _currentUser;
 
     private readonly CsvServices _csvServices;
     private CollectionViewModel? _currentCollectionViewModel;
@@ -38,7 +38,18 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _csvServices = csvServices;
         databaseServices = new DatabaseServices();
-        
+
+        // TEMPORAIRE : bypass auth pour test Mongo
+        var collectionVm = new CollectionViewModel(
+            GoToDetailsFromChildCommand,
+            this,
+            ShowDeleteMessageAsync);
+
+        CurrentPage = collectionVm;
+        _currentCollectionViewModel = collectionVm;
+        _ = InitializeDataAsync();
+
+        /*
         if (IsUserLoggedIn())
         {
             var collectionVm = new CollectionViewModel(
@@ -49,12 +60,12 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentPage = collectionVm;
             _currentCollectionViewModel = collectionVm;
             _ = InitializeDataAsync();
-            
         }
         else
         {
             CurrentPage = new LoginViewModel();
         }
+        */
     }
 
     partial void OnSearchTextChanged(string value)
@@ -74,7 +85,13 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             IsBusy = true;
+
             await MyGlobals.InitializeAsync();
+
+            // TEMPORAIRE : insertion automatique d'un utilisateur de test au démarrage
+            // À SUPPRIMER quand on fera la vraie logique d'authentification / création utilisateur
+            await InsertTestUserProfileAsync();
+
             BackToMain();
         }
         catch (Exception ex)
@@ -84,6 +101,44 @@ public partial class MainWindowViewModel : ViewModelBase
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    private async Task InsertTestUserProfileAsync()
+    {
+        try
+        {
+            var userProfile = new UserProfile
+            {
+                UserName = $"Recep",
+                Password = "1234",
+                IsAdmin = true,
+                CartoonCharacterIds = MyGlobals.MyCartoonCharacters
+                    .Take(2)
+                    .Select(c => c.Id)
+                    .ToList()
+            };
+
+            var ok = await databaseServices.InsertUserProfileAsync(userProfile);
+
+            if (ok)
+            {
+                PopupService.Success(
+                    "MongoDB",
+                    $"Profil utilisateur inséré automatiquement : {userProfile.UserName}");
+            }
+            else
+            {
+                PopupService.Error(
+                    "MongoDB",
+                    "L'insertion automatique du profil utilisateur a échoué.");
+            }
+        }
+        catch (Exception ex)
+        {
+            PopupService.Error(
+                "Erreur MongoDB",
+                $"Erreur lors de l'insertion automatique du profil test : {ex.Message}");
         }
     }
 
@@ -280,7 +335,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool IsUserLoggedIn()
     {
         if (_currentUser == null) return false;
-
         return true;
     }
 }

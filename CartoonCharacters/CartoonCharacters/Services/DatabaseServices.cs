@@ -10,6 +10,7 @@ namespace CartoonCharacters.Services;
 public partial class DatabaseServices
 {
     private readonly IMongoCollection<CartoonCharacter> _cartoonCharacters;
+    private readonly IMongoCollection<UserProfile> _userProfiles;
 
     public DatabaseServices()
     {
@@ -23,8 +24,9 @@ public partial class DatabaseServices
         var database = client.GetDatabase("CartoonCharactersDB");
 
         _cartoonCharacters = database.GetCollection<CartoonCharacter>("CartoonCharactersCollection");
+        _userProfiles = database.GetCollection<UserProfile>("UserProfiles");
 
-        Console.WriteLine("MongoDB : collection initialisée");
+        Console.WriteLine("MongoDB : collections initialisées");
     }
 
     public async Task<bool> TestConnectionAsync()
@@ -78,17 +80,42 @@ public partial class DatabaseServices
         }
     }
 
-    public async Task<List<CartoonCharacter>> GetAllCharactersAsync()
+    public async Task<bool> InsertUserProfileAsync(UserProfile userProfile)
     {
         try
         {
-            return await _cartoonCharacters
-                .Find(Builders<CartoonCharacter>.Filter.Empty)
+            if (userProfile == null)
+            {
+                Console.WriteLine("MongoDB : userProfile null");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(userProfile.Id))
+                userProfile.Id = ObjectId.GenerateNewId().ToString();
+
+            await _userProfiles.InsertOneAsync(userProfile);
+
+            Console.WriteLine($"MongoDB : profil utilisateur inséré -> {userProfile.UserName}");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : insert profil KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<List<UserProfile>> GetAllUserProfilesAsync()
+    {
+        try
+        {
+            return await _userProfiles
+                .Find(Builders<UserProfile>.Filter.Empty)
                 .ToListAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"MongoDB : lecture KO -> {ex.Message}");
+            Console.WriteLine($"MongoDB : lecture profils KO -> {ex.Message}");
             return [];
         }
     }

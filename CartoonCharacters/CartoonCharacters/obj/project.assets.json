@@ -3437,24 +3437,31 @@
     ]
   },
   "packageFolders": {
-    "/home/helb/.nuget/packages/": {}
+    "C:\\Users\\osman\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
+      "projectUniqueName": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
       "projectName": "CartoonCharacters",
-      "projectPath": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
-      "packagesPath": "/home/helb/.nuget/packages/",
-      "outputPath": "/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/obj/",
+      "projectPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
+      "packagesPath": "C:\\Users\\osman\\.nuget\\packages\\",
+      "outputPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/helb/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\osman\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3536,7 +3543,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/home/helb/.dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Users\\osman\\.dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
