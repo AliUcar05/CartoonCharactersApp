@@ -17,39 +17,42 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CartoonCharacters
-build_property.ProjectDir = C:\Lubuntu partage\RiderProjects\CartoonCharacters\CartoonCharacters\
+build_property.ProjectDir = /home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CollectionAddView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CollectionAddView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CollectionDetailsView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CollectionDetailsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CollectionEditView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CollectionEditView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CollectionView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CollectionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CsvExportSelectionView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CsvExportSelectionView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/CsvImportPreviewView.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/CsvImportPreviewView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/Views/MainWindow.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = 
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/App.axaml]
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/Views/LoginView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

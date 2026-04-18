@@ -25,27 +25,36 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _hasSearchText;
+    
+    [ObservableProperty] 
+    private User _currentUser;
 
     private readonly CsvServices _csvServices;
     private CollectionViewModel? _currentCollectionViewModel;
-
+    
     private DatabaseServices databaseServices;
 
     public MainWindowViewModel(CsvServices csvServices)
     {
         _csvServices = csvServices;
-
-        var collectionVm = new CollectionViewModel(
-            GoToDetailsFromChildCommand,
-            this,
-            ShowDeleteMessageAsync);
-
-        CurrentPage = collectionVm;
-        _currentCollectionViewModel = collectionVm;
-
-        _ = InitializeDataAsync();
-
         databaseServices = new DatabaseServices();
+        
+        if (IsUserLoggedIn())
+        {
+            var collectionVm = new CollectionViewModel(
+                GoToDetailsFromChildCommand,
+                this,
+                ShowDeleteMessageAsync);
+
+            CurrentPage = collectionVm;
+            _currentCollectionViewModel = collectionVm;
+            _ = InitializeDataAsync();
+            
+        }
+        else
+        {
+            CurrentPage = new LoginViewModel();
+        }
     }
 
     partial void OnSearchTextChanged(string value)
@@ -266,5 +275,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
         CurrentPage = collectionVm;
         _currentCollectionViewModel = collectionVm;
+    }
+
+    private bool IsUserLoggedIn()
+    {
+        if (_currentUser == null) return false;
+
+        return true;
     }
 }

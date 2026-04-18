@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="900"
+             d:DesignHeight="700"
+             x:Class="CartoonCharacters.Views.LoginView"
+             x:DataType="vm:LoginViewModel"
+             x:Name="LoginRoot"
+             Background="#2C3E50">
+
+    <Design.DataContext>
+        <vm:LoginViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <Border Width="380"
+                Padding="30"
+                CornerRadius="12"
+                Background="AliceBlue"
+                BorderBrush="#1F2D3A"
+                BorderThickness="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+            <StackPanel Spacing="16">
+
+                <TextBlock Text="Login"
+                           FontSize="28"
+                           FontWeight="Bold"
+                           Foreground="#2C3E50"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Sign in to access the application"
+                           FontSize="13"
+                           Foreground="Gray"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Username"
+                               FontWeight="SemiBold"
+                               Foreground="#2C3E50"/>
+                    <TextBox Text="{Binding Username}"
+                             Watermark="Enter your username"
+                             Background="White"
+                             Foreground="Black"
+                             BorderBrush="#B0BEC5"
+                             Padding="10"/>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Password"
+                               FontWeight="SemiBold"
+                               Foreground="#2C3E50"/>
+                    <TextBox Text="{Binding Password}"
+                             Watermark="Enter your password"
+                             PasswordChar="•"
+                             Background="White"
+                             Foreground="Black"
+                             BorderBrush="#B0BEC5"
+                             Padding="10"/>
+                </StackPanel>
+
+                <Button Content="Login"
+                        Command="{Binding LoginCommand}"
+                        Background="#4E5D94"
+                        Foreground="White"
+                        BorderBrush="#3A4A7A"
+                        FontWeight="Bold"
+                        Padding="12"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Stretch"/>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
