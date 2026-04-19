@@ -1,0 +1,156 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="CartoonCharacters.Views.AdminUserEditView"
+             x:DataType="vm:AdminUserEditViewModel">
+
+    <Grid RowDefinitions="Auto,*" RowSpacing="12">
+
+        <Border Background="#34495E"
+                CornerRadius="8"
+                Padding="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="{Binding Title}"
+                           Foreground="White"
+                           FontSize="24"
+                           FontWeight="Bold"/>
+
+                <TextBlock Text="Gestion d'un compte utilisateur"
+                           Foreground="#D5DBDB"
+                           FontSize="13"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1"
+                Background="#ECF0F1"
+                CornerRadius="8"
+                Padding="20">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="14">
+
+                    <Grid ColumnDefinitions="180,*"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="10"
+                          ColumnSpacing="12">
+
+                        <TextBlock Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Nom d'utilisateur :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="1"
+                                 Text="{Binding UserName, Mode=TwoWay}"
+                                 Watermark="username"
+                                 Background="White"/>
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Prénom :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Text="{Binding FirstName, Mode=TwoWay}"
+                                 Watermark="Prénom"
+                                 Background="White"/>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Nom :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <TextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Text="{Binding LastName, Mode=TwoWay}"
+                                 Watermark="Nom"
+                                 Background="White"/>
+
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   Text="Email :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding Email, Mode=TwoWay}"
+                                 Watermark="email@exemple.com"
+                                 Background="White"/>
+
+                        <TextBlock Grid.Row="4"
+                                   Grid.Column="0"
+                                   Text="Mot de passe :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <TextBox Grid.Row="4"
+                                 Grid.Column="1"
+                                 Text="{Binding Password, Mode=TwoWay}"
+                                 Watermark="Laisser vide pour conserver l'ancien"
+                                 Background="White"/>
+
+                        <TextBlock Grid.Row="5"
+                                   Grid.Column="0"
+                                   Text="Administrateur :"
+                                   VerticalAlignment="Center"
+                                   FontWeight="SemiBold"
+                                   Foreground="#2C3E50"/>
+
+                        <CheckBox Grid.Row="5"
+                                  Grid.Column="1"
+                                  IsChecked="{Binding IsAdmin, Mode=TwoWay}"
+                                  Content="Donner les droits administrateur"
+                                  VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Border Height="1" Background="#D5D8DC"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="10">
+
+                        <Button Background="#7F8C8D"
+                                Foreground="White"
+                                BorderBrush="#626567"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Padding="12,8"
+                                Command="{Binding CancelCommand}"
+                                Cursor="Hand">
+                            <TextBlock Text="Annuler"
+                                       FontWeight="SemiBold"/>
+                        </Button>
+
+                        <Button Background="#27AE60"
+                                Foreground="White"
+                                BorderBrush="#1E8449"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                Padding="12,8"
+                                Command="{Binding SaveCommand}"
+                                Cursor="Hand">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Text="💾"/>
+                                <TextBlock Text="Enregistrer"
+                                           FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

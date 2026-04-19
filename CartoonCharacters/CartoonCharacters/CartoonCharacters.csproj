@@ -50,4 +50,10 @@
       <AdditionalFiles Include="Views\CsvImportPreviewView.axaml" />
       <AdditionalFiles Include="Views\MainWindow.axaml" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Views\AdminUsersEditView.axaml.cs">
+        <DependentUpon>AdminUserEditView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

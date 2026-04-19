@@ -93,6 +93,11 @@ public partial class DatabaseServices
             if (string.IsNullOrWhiteSpace(userProfile.Id))
                 userProfile.Id = ObjectId.GenerateNewId().ToString();
 
+            userProfile.UserName = userProfile.UserName.Trim();
+            userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
+            userProfile.FirstName = userProfile.FirstName.Trim();
+            userProfile.LastName = userProfile.LastName.Trim();
+
             await _userProfiles.InsertOneAsync(userProfile);
 
             Console.WriteLine($"MongoDB : profil utilisateur inséré -> {userProfile.UserName}");
@@ -102,6 +107,80 @@ public partial class DatabaseServices
         {
             Console.WriteLine($"MongoDB : insert profil KO -> {ex.Message}");
             return false;
+        }
+    }
+
+    public async Task<bool> UpdateUserProfileAsync(UserProfile userProfile)
+    {
+        try
+        {
+            if (userProfile == null)
+            {
+                Console.WriteLine("MongoDB : userProfile null");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(userProfile.Id))
+            {
+                Console.WriteLine("MongoDB : userProfile.Id vide");
+                return false;
+            }
+
+            userProfile.UserName = userProfile.UserName.Trim();
+            userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
+            userProfile.FirstName = userProfile.FirstName.Trim();
+            userProfile.LastName = userProfile.LastName.Trim();
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userProfile.Id);
+            var result = await _userProfiles.ReplaceOneAsync(filter, userProfile);
+
+            Console.WriteLine($"MongoDB : profil utilisateur mis à jour -> {userProfile.UserName}");
+            return result.IsAcknowledged;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : update profil KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteUserProfileAsync(string userId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                Console.WriteLine("MongoDB : userId vide");
+                return false;
+            }
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userId);
+            var result = await _userProfiles.DeleteOneAsync(filter);
+
+            Console.WriteLine($"MongoDB : suppression profil -> {userId}");
+            return result.DeletedCount > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : delete profil KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<UserProfile?> GetUserByIdAsync(string userId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return null;
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userId);
+            return await _userProfiles.Find(filter).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : lecture profil par id KO -> {ex.Message}");
+            return null;
         }
     }
 
@@ -116,7 +195,6 @@ public partial class DatabaseServices
             }
 
             var normalizedUserName = userName.Trim();
-
             var filter = Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName);
 
             return await _userProfiles.Find(filter).AnyAsync();
@@ -139,7 +217,6 @@ public partial class DatabaseServices
             }
 
             var normalizedEmail = email.Trim().ToLowerInvariant();
-
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail);
 
             return await _userProfiles.Find(filter).AnyAsync();
@@ -147,6 +224,52 @@ public partial class DatabaseServices
         catch (Exception ex)
         {
             Console.WriteLine($"MongoDB : vérification email KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> UserNameExistsForAnotherUserAsync(string userName, string currentUserId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                return false;
+
+            var normalizedUserName = userName.Trim();
+
+            var filter = Builders<UserProfile>.Filter.And(
+                Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName),
+                Builders<UserProfile>.Filter.Ne(u => u.Id, currentUserId)
+            );
+
+            return await _userProfiles.Find(filter).AnyAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : vérification username autre user KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> EmailExistsForAnotherUserAsync(string email, string currentUserId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            var filter = Builders<UserProfile>.Filter.And(
+                Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail),
+                Builders<UserProfile>.Filter.Ne(u => u.Id, currentUserId)
+            );
+
+            return await _userProfiles.Find(filter).AnyAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : vérification email autre user KO -> {ex.Message}");
             return false;
         }
     }
@@ -163,6 +286,21 @@ public partial class DatabaseServices
         {
             Console.WriteLine($"MongoDB : lecture profils KO -> {ex.Message}");
             return [];
+        }
+    }
+
+    public async Task<int> CountAdminsAsync()
+    {
+        try
+        {
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.IsAdmin, true);
+            var count = await _userProfiles.CountDocumentsAsync(filter);
+            return (int)count;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : count admins KO -> {ex.Message}");
+            return 0;
         }
     }
 

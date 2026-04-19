@@ -11,6 +11,8 @@ public static class MyGlobals
 
     public static List<CartoonCharacter> MyCartoonCharacters { get; private set; } = [];
 
+    public static UserProfile? CurrentUser { get; set; }
+
     public static async Task InitializeAsync()
     {
         MyCartoonCharacters = await JsonDataService.InitializeAsync(DataFilePath);

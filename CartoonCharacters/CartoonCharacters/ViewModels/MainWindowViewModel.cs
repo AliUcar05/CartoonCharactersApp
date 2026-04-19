@@ -28,8 +28,15 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private UserProfile? _currentUser;
-    
+
     public bool IsUserLoggedIn => CurrentUser != null;
+    public bool IsCurrentUserAdmin => CurrentUser?.IsAdmin == true;
+
+    public bool IsAdminPage =>
+        CurrentPage is AdminUsersViewModel ||
+        CurrentPage is AdminUserEditViewModel;
+
+    public bool ShowNavigationBar => IsUserLoggedIn && !IsAdminPage;
 
     private readonly CsvServices _csvServices;
     private CollectionViewModel? _currentCollectionViewModel;
@@ -51,7 +58,17 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnCurrentUserChanged(UserProfile? value)
     {
+        MyGlobals.CurrentUser = value;
         OnPropertyChanged(nameof(IsUserLoggedIn));
+        OnPropertyChanged(nameof(IsCurrentUserAdmin));
+        OnPropertyChanged(nameof(ShowNavigationBar));
+    }
+
+    partial void OnCurrentPageChanged(ViewModelBase value)
+    {
+        _ = value;
+        OnPropertyChanged(nameof(IsAdminPage));
+        OnPropertyChanged(nameof(ShowNavigationBar));
     }
 
     partial void OnSearchTextChanged(string value)
@@ -90,14 +107,13 @@ public partial class MainWindowViewModel : ViewModelBase
         ShowMainCollection();
         _ = InitializeDataAsync();
     }
-    
+
     [RelayCommand]
     private void Logout()
     {
         CurrentUser = null;
         ShowLoginPage();
     }
-    
 
     private void ShowMainCollection()
     {
@@ -114,10 +130,22 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = new LoginViewModel(OnLoginSuccess, ShowRegisterPage);
     }
-    
+
     private void ShowRegisterPage()
     {
-        CurrentPage = new RegisterViewModel(OnLoginSuccess,ShowLoginPage);
+        CurrentPage = new RegisterViewModel(OnLoginSuccess, ShowLoginPage);
+    }
+
+    [RelayCommand]
+    private void GoToAdminUsers()
+    {
+        if (CurrentUser?.IsAdmin != true)
+        {
+            PopupService.Warning("Accès refusé", "Cette page est réservée aux administrateurs.");
+            return;
+        }
+
+        CurrentPage = new AdminUsersViewModel(this);
     }
 
     [RelayCommand]
@@ -259,7 +287,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async Task OnAddAsync(string characterName)
     {
-        PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
+        PopupService.Success("Ajout réussi", $"{characterName} a été ajouté avec succès !");
         BackToMain();
     }
 
@@ -296,10 +324,37 @@ public partial class MainWindowViewModel : ViewModelBase
             OnCancelUpdate);
     }
 
+    public void GoToEditUser(string userId)
+    {
+        if (CurrentUser?.IsAdmin != true)
+        {
+            PopupService.Warning("Accès refusé", "Cette page est réservée aux administrateurs.");
+            return;
+        }
+
+        CurrentPage = new AdminUserEditViewModel(this, userId);
+    }
+
+    public void GoToCreateUser()
+    {
+        if (CurrentUser?.IsAdmin != true)
+        {
+            PopupService.Warning("Accès refusé", "Cette page est réservée aux administrateurs.");
+            return;
+        }
+
+        CurrentPage = new AdminUserEditViewModel(this);
+    }
+
     [RelayCommand]
-    private void BackToMain()
+    public void BackToMain()
     {
         SearchText = string.Empty;
         ShowMainCollection();
+    }
+
+    public void BackToAdminUsers()
+    {
+        CurrentPage = new AdminUsersViewModel(this);
     }
 }

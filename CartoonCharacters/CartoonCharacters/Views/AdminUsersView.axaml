@@ -1,0 +1,190 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:conv="using:CartoonCharacters.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="CartoonCharacters.Views.AdminUsersView"
+             x:DataType="vm:AdminUsersViewModel"
+             x:Name="Root">
+
+    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="12">
+
+        <Border Background="#34495E"
+                CornerRadius="8"
+                Padding="10">
+            <TextBlock Text="Administration des utilisateurs"
+                       Foreground="White"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"/>
+        </Border>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="Auto,Auto,*,Auto"
+              ColumnSpacing="8">
+
+            <Button Grid.Column="0"
+                    Background="#27AE60"
+                    Foreground="White"
+                    BorderBrush="#1E8449"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Padding="10,6"
+                    Command="{Binding CreateUserCommand}"
+                    Cursor="Hand">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="➕"/>
+                    <TextBlock Text="Créer un utilisateur" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Background="#2980B9"
+                    Foreground="White"
+                    BorderBrush="#1F618D"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    Padding="10,6"
+                    Command="{Binding RefreshCommand}"
+                    Cursor="Hand">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="🔄"/>
+                    <TextBlock Text="Rafraîchir" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Button>
+
+            <Border Grid.Column="3"
+                    Background="#2C3E50"
+                    CornerRadius="5">
+                <Button Background="Transparent"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Padding="10,6"
+                        Command="{Binding BackCommand}"
+                        Cursor="Hand">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="⬅"/>
+                        <TextBlock Text="Retour" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2"
+                Background="#ECF0F1"
+                CornerRadius="8"
+                Padding="12">
+
+            <Grid RowDefinitions="Auto,*">
+
+                <Grid ColumnDefinitions="2*,2*,2*,3*,2*,Auto,Auto"
+                      Margin="0,0,0,8">
+                    <TextBlock Grid.Column="0"
+                               Text="Nom d'utilisateur"
+                               FontWeight="Bold"
+                               Foreground="#2C3E50"/>
+                    <TextBlock Grid.Column="1"
+                               Text="Prénom"
+                               FontWeight="Bold"
+                               Foreground="#2C3E50"/>
+                    <TextBlock Grid.Column="2"
+                               Text="Nom"
+                               FontWeight="Bold"
+                               Foreground="#2C3E50"/>
+                    <TextBlock Grid.Column="3"
+                               Text="Email"
+                               FontWeight="Bold"
+                               Foreground="#2C3E50"/>
+                    <TextBlock Grid.Column="4"
+                               Text="Rôle"
+                               FontWeight="Bold"
+                               Foreground="#2C3E50"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Width="80"/>
+                    <TextBlock Grid.Column="6" Width="90"/>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Users}"
+                                  x:CompileBindings="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White"
+                                        CornerRadius="6"
+                                        Padding="10"
+                                        Margin="0,0,0,8"
+                                        BorderBrush="#D5D8DC"
+                                        BorderThickness="1">
+                                    <Grid ColumnDefinitions="2*,2*,2*,3*,2*,Auto,Auto"
+                                          ColumnSpacing="8">
+
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding UserName}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#2C3E50"/>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding FirstName}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#2C3E50"/>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding LastName}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#2C3E50"/>
+
+                                        <TextBlock Grid.Column="3"
+                                                   Text="{Binding Email}"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="#2C3E50"/>
+
+                                        <TextBlock Grid.Column="4"
+                                                   Text="{Binding IsAdmin, Converter={x:Static conv:BooleanToRoleConverter.Instance}}"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Foreground="#2C3E50"/>
+
+                                        <Button Grid.Column="5"
+                                                Background="#F39C12"
+                                                Foreground="White"
+                                                BorderBrush="#D68910"
+                                                BorderThickness="1"
+                                                CornerRadius="5"
+                                                Padding="8,4"
+                                                Cursor="Hand"
+                                                Command="{Binding DataContext.EditUserCommand, ElementName=Root}"
+                                                CommandParameter="{Binding}">
+                                            <TextBlock Text="Modifier"
+                                                       FontSize="11"
+                                                       FontWeight="SemiBold"/>
+                                        </Button>
+
+                                        <Button Grid.Column="6"
+                                                Background="#C0392B"
+                                                Foreground="White"
+                                                BorderBrush="#922B21"
+                                                BorderThickness="1"
+                                                CornerRadius="5"
+                                                Padding="8,4"
+                                                Cursor="Hand"
+                                                Command="{Binding DataContext.DeleteUserCommand, ElementName=Root}"
+                                                CommandParameter="{Binding}">
+                                            <TextBlock Text="Supprimer"
+                                                       FontSize="11"
+                                                       FontWeight="SemiBold"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

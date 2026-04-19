@@ -5,6 +5,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CartoonCharacters.Models;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 
@@ -16,19 +17,28 @@ public partial class CollectionDetailsViewModel : ViewModelBase
     [ObservableProperty]
     private int _currentUserRating;
 
+    private readonly DatabaseServices _databaseServices = new();
+
     public IBrush Star1Brush => CurrentUserRating >= 1 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star2Brush => CurrentUserRating >= 2 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star3Brush => CurrentUserRating >= 3 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star4Brush => CurrentUserRating >= 4 ? Brushes.Gold : Brushes.LightGray;
     public IBrush Star5Brush => CurrentUserRating >= 5 ? Brushes.Gold : Brushes.LightGray;
-    
+
     public CollectionDetailsViewModel()
     {
         MyCartoonCharacter = new CartoonCharacter();
     }
+
     public CollectionDetailsViewModel(string id)
     {
         MyCartoonCharacter = MyGlobals.MyCartoonCharacters.First(cc => cc.Id == id);
+
+        if (MyGlobals.CurrentUser != null &&
+            MyGlobals.CurrentUser.CharacterRatings.TryGetValue(id, out var savedRating))
+        {
+            CurrentUserRating = savedRating;
+        }
     }
 
     partial void OnCurrentUserRatingChanged(int value)
@@ -62,10 +72,18 @@ public partial class CollectionDetailsViewModel : ViewModelBase
         if (stars < 1 || stars > 5)
             return;
 
-        if (CurrentUserRating == 0)
-        {
-            var totalBefore = MyCartoonCharacter.Rating * MyCartoonCharacter.RatingVotes;
+        if (MyGlobals.CurrentUser == null)
+            return;
 
+        var user = MyGlobals.CurrentUser;
+        var characterId = MyCartoonCharacter.Id;
+
+        var hasAlreadyVoted = user.CharacterRatings.TryGetValue(characterId, out var previousRating);
+
+        var totalBefore = MyCartoonCharacter.Rating * MyCartoonCharacter.RatingVotes;
+
+        if (!hasAlreadyVoted)
+        {
             MyCartoonCharacter.RatingVotes++;
             MyCartoonCharacter.Rating = Math.Round(
                 (totalBefore + stars) / MyCartoonCharacter.RatingVotes,
@@ -73,17 +91,19 @@ public partial class CollectionDetailsViewModel : ViewModelBase
         }
         else
         {
-            var totalBefore = MyCartoonCharacter.Rating * MyCartoonCharacter.RatingVotes;
-            var correctedTotal = totalBefore - CurrentUserRating + stars;
+            var correctedTotal = totalBefore - previousRating + stars;
 
             MyCartoonCharacter.Rating = MyCartoonCharacter.RatingVotes == 0
                 ? 0
                 : Math.Round(correctedTotal / MyCartoonCharacter.RatingVotes, 1);
         }
 
+        user.CharacterRatings[characterId] = stars;
         CurrentUserRating = stars;
 
         OnPropertyChanged(nameof(MyCartoonCharacter));
+
         await MyGlobals.SaveDataAsync();
+        await _databaseServices.UpdateUserProfileAsync(user);
     }
 }
