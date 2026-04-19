@@ -28,7 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private UserProfile? _currentUser;
-
+    
     public bool IsUserLoggedIn => CurrentUser != null;
 
     private readonly CsvServices _csvServices;
@@ -45,7 +45,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            CurrentPage = new LoginViewModel(OnLoginSuccess);
+            ShowLoginPage();
         }
     }
 
@@ -90,6 +90,14 @@ public partial class MainWindowViewModel : ViewModelBase
         ShowMainCollection();
         _ = InitializeDataAsync();
     }
+    
+    [RelayCommand]
+    private void Logout()
+    {
+        CurrentUser = null;
+        ShowLoginPage();
+    }
+    
 
     private void ShowMainCollection()
     {
@@ -100,6 +108,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
         CurrentPage = collectionVm;
         _currentCollectionViewModel = collectionVm;
+    }
+
+    private void ShowLoginPage()
+    {
+        CurrentPage = new LoginViewModel(OnLoginSuccess, ShowRegisterPage);
+    }
+    
+    private void ShowRegisterPage()
+    {
+        CurrentPage = new RegisterViewModel(OnLoginSuccess,ShowLoginPage);
     }
 
     [RelayCommand]

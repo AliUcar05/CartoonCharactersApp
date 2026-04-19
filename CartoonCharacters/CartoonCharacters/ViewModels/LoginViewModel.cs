@@ -10,20 +10,19 @@ namespace CartoonCharacters.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly Action<UserProfile> _onLoginSuccess;
+    private readonly Action _goToRegister;
     private readonly DatabaseServices _databaseServices;
 
-    [ObservableProperty]
-    private string _username = string.Empty;
+    [ObservableProperty] private string _username = string.Empty;
 
-    [ObservableProperty]
-    private string _password = string.Empty;
+    [ObservableProperty] private string _password = string.Empty;
 
-    [ObservableProperty]
-    private bool _isBusy;
-
-    public LoginViewModel(Action<UserProfile> onLoginSuccess)
+    [ObservableProperty] private bool _isBusy;
+    
+    public LoginViewModel(Action<UserProfile> onLoginSuccess, Action goToRegister)
     {
         _onLoginSuccess = onLoginSuccess;
+        _goToRegister = goToRegister;
         _databaseServices = new DatabaseServices();
     }
 
@@ -59,5 +58,11 @@ public partial class LoginViewModel : ViewModelBase
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private void GoToRegister()
+    {
+        _goToRegister();
     }
 }

@@ -105,6 +105,52 @@ public partial class DatabaseServices
         }
     }
 
+    public async Task<bool> UserExistsAsync(string userName)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                Console.WriteLine("MongoDB : username vide");
+                return false;
+            }
+
+            var normalizedUserName = userName.Trim();
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName);
+
+            return await _userProfiles.Find(filter).AnyAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : vérification username KO -> {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> EmailExistsAsync(string email)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                Console.WriteLine("MongoDB : email vide");
+                return false;
+            }
+
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail);
+
+            return await _userProfiles.Find(filter).AnyAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : vérification email KO -> {ex.Message}");
+            return false;
+        }
+    }
+
     public async Task<List<UserProfile>> GetAllUserProfilesAsync()
     {
         try
@@ -119,12 +165,15 @@ public partial class DatabaseServices
             return [];
         }
     }
+
     public async Task<UserProfile?> AuthenticateUserAsync(string userName, string password)
     {
         try
         {
+            var normalizedUserName = userName.Trim();
+
             var filter = Builders<UserProfile>.Filter.And(
-                Builders<UserProfile>.Filter.Eq(u => u.UserName, userName),
+                Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName),
                 Builders<UserProfile>.Filter.Eq(u => u.Password, password)
             );
 

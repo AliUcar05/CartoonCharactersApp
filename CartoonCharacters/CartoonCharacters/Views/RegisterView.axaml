@@ -6,13 +6,13 @@
              mc:Ignorable="d"
              d:DesignWidth="900"
              d:DesignHeight="700"
-             x:Class="CartoonCharacters.Views.LoginView"
-             x:DataType="vm:LoginViewModel"
-             x:Name="LoginRoot"
+             x:Class="CartoonCharacters.Views.RegisterView"
+             x:DataType="vm:RegisterViewModel"
+             x:Name="RegisterRoot"
              Background="#2C3E50">
 
     <Design.DataContext>
-        <vm:LoginViewModel/>
+        <vm:RegisterViewModel/>
     </Design.DataContext>
 
     <Grid>
@@ -27,13 +27,13 @@
 
             <StackPanel Spacing="16">
 
-                <TextBlock Text="Login"
+                <TextBlock Text="Register"
                            FontSize="28"
                            FontWeight="Bold"
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"/>
 
-                <TextBlock Text="Sign in to access the application"
+                <TextBlock Text="Create your account to access the application"
                            FontSize="13"
                            Foreground="Gray"
                            HorizontalAlignment="Center"
@@ -44,8 +44,20 @@
                     <TextBlock Text="Username"
                                FontWeight="SemiBold"
                                Foreground="#2C3E50"/>
-                    <TextBox Text="{Binding Username}"
+                    <TextBox Text="{Binding UserName}"
                              Watermark="Enter your username"
+                             Background="White"
+                             Foreground="Black"
+                             BorderBrush="#B0BEC5"
+                             Padding="10"/>
+                </StackPanel>
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Email"
+                               FontWeight="SemiBold"
+                               Foreground="#2C3E50"/>
+                    <TextBox Text="{Binding Email}"
+                             Watermark="Enter your email"
                              Background="White"
                              Foreground="Black"
                              BorderBrush="#B0BEC5"
@@ -65,8 +77,8 @@
                              Padding="10"/>
                 </StackPanel>
 
-                <Button Content="Login"
-                        Command="{Binding LoginCommand}"
+                <Button Content="Register"
+                        Command="{Binding RegisterCommand}"
                         Background="#4E5D94"
                         Foreground="White"
                         BorderBrush="#3A4A7A"
@@ -80,12 +92,12 @@
                             Spacing="4"
                             Margin="0,10,0,0">
 
-                    <TextBlock Text="Not registered yet?"
+                    <TextBlock Text="Already have an account?"
                                Foreground="Gray"
                                VerticalAlignment="Center"/>
 
-                    <Button Content="Sign up"
-                            Command="{Binding GoToRegisterCommand}"
+                    <Button Content="Sign in"
+                            Command="{Binding GoToLoginCommand}"
                             Background="Transparent"
                             BorderThickness="0"
                             Padding="0"
