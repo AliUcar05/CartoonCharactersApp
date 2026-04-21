@@ -21,6 +21,8 @@ public class UserProfile
     public string Password { get; set; } = string.Empty;
 
     public bool IsAdmin { get; set; }
+    
+    public List<string> CartoonCharacterIds { get; set; } = [];
 
     // Key   = Id du personnage
     // Value = note donnée par l'utilisateur (1 à 5)

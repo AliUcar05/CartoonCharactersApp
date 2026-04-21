@@ -14,7 +14,25 @@
     <viewModels:CollectionViewModel/>
   </Design.DataContext>
 
-  <DockPanel Margin="20">
+  <DockPanel Margin="20" LastChildFill="True">
+
+    <Border DockPanel.Dock="Top"
+            Background="Transparent"
+            Margin="0,0,0,12">
+      <StackPanel Orientation="Horizontal"
+                  Spacing="10"
+                  VerticalAlignment="Center">
+        <TextBlock Text="Afficher :"
+                   VerticalAlignment="Center"
+                   FontWeight="SemiBold"
+                   Foreground="White"
+                   FontSize="14"/>
+        <ComboBox Width="220"
+                  ItemsSource="{Binding FilterOptions}"
+                  SelectedItem="{Binding SelectedFilter, Mode=TwoWay}" />
+      </StackPanel>
+    </Border>
+
     <Border Background="AliceBlue">
       <ScrollViewer>
         <ListBox x:Name="Animals"
@@ -30,13 +48,12 @@
                       CornerRadius="3"
                       Padding="10"
                       Margin="10">
-                
+
                 <Grid RowDefinitions="Auto,Auto"
                       ColumnDefinitions="Auto,*"
                       ColumnSpacing="15"
                       RowSpacing="10">
 
-                  <!-- Image -->
                   <Panel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                     <Rectangle Height="100" Width="100" Fill="LightGray"/>
                     <Image Margin="20"
@@ -46,7 +63,6 @@
                            Source="{Binding ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
                   </Panel>
 
-                  <!-- Ligne boutons + note -->
                   <Grid Grid.Row="0"
                         Grid.Column="1"
                         ColumnDefinitions="Auto,Auto,Auto,*"
@@ -106,7 +122,6 @@
                       </Button.Flyout>
                     </Button>
 
-                    <!-- Note à droite, sans encadré -->
                     <StackPanel Grid.Column="3"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Right"
@@ -126,7 +141,6 @@
                     </StackPanel>
                   </Grid>
 
-                  <!-- Infos -->
                   <StackPanel Grid.Row="1"
                               Grid.Column="1"
                               VerticalAlignment="Top">

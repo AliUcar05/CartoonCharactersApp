@@ -4,7 +4,7 @@
     "Name": "haydo",
     "Description": "Like robering banks",
     "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp",
-    "Rating": 3.7,
+    "Rating": 3,
     "RatingVotes": 3
   },
   {
@@ -12,16 +12,16 @@
     "Name": "Huysuz",
     "Description": "Loves money",
     "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
-    "Rating": 2.9,
-    "RatingVotes": 14
+    "Rating": 3,
+    "RatingVotes": 15
   },
   {
     "Id": "69d1374b2f135b7789439b6d",
     "Name": "Uzun",
     "Description": "Loves sarma",
     "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg",
-    "Rating": 2,
-    "RatingVotes": 1
+    "Rating": 3.5,
+    "RatingVotes": 2
   },
   {
     "Id": "69dcbd7e400e5354a94c243e",
@@ -32,9 +32,25 @@
     "RatingVotes": 0
   },
   {
-    "Id": "69e1ef95dd6a3097d30f4d6c",
+    "Id": "69e63c857d31ba2fa09c5d82",
+    "Name": "ff",
+    "Description": "ff",
+    "ImagePath": "avares://CartoonCharacters/Assets/OIP.jpeg",
+    "Rating": 0,
+    "RatingVotes": 0
+  },
+  {
+    "Id": "69e63cc07d31ba2fa09c5d83",
+    "Name": "aa",
+    "Description": "aa",
+    "ImagePath": "avares://CartoonCharacters/Assets/OIP.jpeg",
+    "Rating": 0,
+    "RatingVotes": 0
+  },
+  {
+    "Id": "69e747ebf2654ce10233169a",
     "Name": "Bob",
-    "Description": "l\u0027\u00E9ponge carr\u00E9",
+    "Description": "\u00E9ponge carr\u00E9",
     "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png",
     "Rating": 0,
     "RatingVotes": 0

@@ -1,27 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CartoonCharacters.Models;
+using CartoonCharacters.Services;
 
 namespace CartoonCharacters.ViewModels;
 
 public partial class CollectionViewModel : ViewModelBase
 {
+    public const string AllCollectionsFilter = "Toutes les collections";
+    public const string MyCollectionsFilter = "Mes collections";
+
     public IRelayCommand<string> FromParentCommand { get; }
     public IRelayCommand<string?> EditCommand { get; }
     public IAsyncRelayCommand<string?> DeleteCommand { get; }
 
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
     public ObservableCollection<CartoonCharacter> FilteredCartoonCharacters { get; }
+    public ObservableCollection<string> FilterOptions { get; }
 
     [ObservableProperty]
     private CartoonCharacter? _selectedCartoonCharacter;
 
+    [ObservableProperty]
+    private string _selectedFilter = AllCollectionsFilter;
+
     private readonly MainWindowViewModel? _mainWindowViewModel;
     private readonly Func<string, Task>? _showDeleteMessageAsync;
+    private readonly DatabaseServices _databaseServices = new();
 
     public CollectionViewModel()
     {
@@ -31,6 +41,11 @@ public partial class CollectionViewModel : ViewModelBase
 
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+        FilterOptions = new ObservableCollection<string>
+        {
+            AllCollectionsFilter,
+            MyCollectionsFilter
+        };
     }
 
     public CollectionViewModel(
@@ -47,26 +62,38 @@ public partial class CollectionViewModel : ViewModelBase
 
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
+        FilterOptions = new ObservableCollection<string>
+        {
+            AllCollectionsFilter,
+            MyCollectionsFilter
+        };
 
         UpdateList();
+    }
+
+    partial void OnSelectedFilterChanged(string value)
+    {
+        _ = value;
+        ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 
     public void ApplySearchFilter(string? searchText)
     {
         FilteredCartoonCharacters.Clear();
 
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            foreach (var character in MyObservableCartoonCharacters)
-            {
-                FilteredCartoonCharacters.Add(character);
-            }
+        IEnumerable<CartoonCharacter> filtered = MyObservableCartoonCharacters;
 
-            return;
+        if (SelectedFilter == MyCollectionsFilter)
+        {
+            var currentUserIds = MyGlobals.CurrentUser?.CartoonCharacterIds ?? [];
+            filtered = filtered.Where(c => currentUserIds.Contains(c.Id));
         }
 
-        var filtered = MyObservableCartoonCharacters
-            .Where(c => c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            filtered = filtered.Where(c =>
+                c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        }
 
         foreach (var character in filtered)
         {
@@ -99,6 +126,13 @@ public partial class CollectionViewModel : ViewModelBase
         if (observableCharacter != null)
         {
             MyObservableCartoonCharacters.Remove(observableCharacter);
+        }
+
+        if (MyGlobals.CurrentUser != null &&
+            MyGlobals.CurrentUser.CartoonCharacterIds.Contains(id))
+        {
+            MyGlobals.CurrentUser.CartoonCharacterIds.Remove(id);
+            await _databaseServices.UpdateUserProfileAsync(MyGlobals.CurrentUser);
         }
 
         ApplySearchFilter(_mainWindowViewModel.SearchText);

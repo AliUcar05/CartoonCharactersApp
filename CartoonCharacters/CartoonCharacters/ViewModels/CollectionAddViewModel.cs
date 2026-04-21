@@ -35,6 +35,7 @@ public partial class CollectionAddViewModel : ViewModelBase
 
     private readonly Func<string, Task> _onAddAsync;
     private readonly Action _onCancelAdd;
+    private readonly DatabaseServices _databaseServices = new();
 
     public CollectionAddViewModel(
         Func<string, Task> onAddAsync,
@@ -129,6 +130,14 @@ public partial class CollectionAddViewModel : ViewModelBase
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
+
+        if (MyGlobals.CurrentUser != null &&
+            !MyGlobals.CurrentUser.CartoonCharacterIds.Contains(cartoonCharacter.Id))
+        {
+            MyGlobals.CurrentUser.CartoonCharacterIds.Add(cartoonCharacter.Id);
+            await _databaseServices.UpdateUserProfileAsync(MyGlobals.CurrentUser);
+        }
+
         await MyGlobals.SaveDataAsync();
 
         await _onAddAsync(cartoonCharacter.Name);
@@ -178,10 +187,20 @@ public partial class CollectionAddViewModel : ViewModelBase
         {
             Name = nom,
             Description = description,
-            ImagePath = imagePath
+            ImagePath = imagePath,
+            Rating = 0,
+            RatingVotes = 0
         };
 
         MyGlobals.MyCartoonCharacters.Add(cartoonCharacter);
+
+        if (MyGlobals.CurrentUser != null &&
+            !MyGlobals.CurrentUser.CartoonCharacterIds.Contains(cartoonCharacter.Id))
+        {
+            MyGlobals.CurrentUser.CartoonCharacterIds.Add(cartoonCharacter.Id);
+            await _databaseServices.UpdateUserProfileAsync(MyGlobals.CurrentUser);
+        }
+
         await MyGlobals.SaveDataAsync();
 
         await _onAddAsync(cartoonCharacter.Name);
