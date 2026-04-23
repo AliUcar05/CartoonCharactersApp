@@ -127,6 +127,8 @@ public partial class DatabaseServices
             }
 
             userProfile.UserName = userProfile.UserName.Trim();
+            userProfile.FirstName = userProfile.FirstName.Trim();
+            userProfile.LastName = userProfile.LastName.Trim();
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
             userProfile.FirstName = userProfile.FirstName.Trim();
             userProfile.LastName = userProfile.LastName.Trim();

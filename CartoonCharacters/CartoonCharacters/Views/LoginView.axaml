@@ -27,13 +27,13 @@
 
             <StackPanel Spacing="16">
 
-                <TextBlock Text="Login"
+                <TextBlock Text="Connexion"
                            FontSize="28"
                            FontWeight="Bold"
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"/>
 
-                <TextBlock Text="Sign in to access the application"
+                <TextBlock Text="Connectez-vous pour accéder à l'application"
                            FontSize="13"
                            Foreground="Gray"
                            HorizontalAlignment="Center"
@@ -41,11 +41,11 @@
                            Margin="0,0,0,10"/>
 
                 <StackPanel Spacing="6">
-                    <TextBlock Text="Username"
+                    <TextBlock Text="Nom d'utilisateur"
                                FontWeight="SemiBold"
                                Foreground="#2C3E50"/>
                     <TextBox Text="{Binding Username}"
-                             Watermark="Enter your username"
+                             Watermark="Entrez votre nom d'utilisateur"
                              Background="White"
                              Foreground="Black"
                              BorderBrush="#B0BEC5"
@@ -53,11 +53,11 @@
                 </StackPanel>
 
                 <StackPanel Spacing="6">
-                    <TextBlock Text="Password"
+                    <TextBlock Text="Mot de passe"
                                FontWeight="SemiBold"
                                Foreground="#2C3E50"/>
                     <TextBox Text="{Binding Password}"
-                             Watermark="Enter your password"
+                             Watermark="Entrez votre mot de passe"
                              PasswordChar="•"
                              Background="White"
                              Foreground="Black"
@@ -65,7 +65,7 @@
                              Padding="10"/>
                 </StackPanel>
 
-                <Button Content="Login"
+                <Button Content="Se connecter"
                         Command="{Binding LoginCommand}"
                         Background="#4E5D94"
                         Foreground="White"
@@ -80,11 +80,11 @@
                             Spacing="4"
                             Margin="0,10,0,0">
 
-                    <TextBlock Text="Not registered yet?"
+                    <TextBlock Text="Pas encore inscrit ?"
                                Foreground="Gray"
                                VerticalAlignment="Center"/>
 
-                    <Button Content="Sign up"
+                    <Button Content="S'inscrire"
                             Command="{Binding GoToRegisterCommand}"
                             Background="Transparent"
                             BorderThickness="0"

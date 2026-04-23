@@ -16,6 +16,12 @@ public partial class RegisterViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _userName = string.Empty;
+    
+    [ObservableProperty]
+    private string _firstName = string.Empty;
+    
+    [ObservableProperty]
+    private string _lastName = string.Empty;
 
     [ObservableProperty]
     private string _email = string.Empty;
@@ -48,9 +54,13 @@ public partial class RegisterViewModel : ViewModelBase
             IsBusy = true;
 
             var normalizedUserName = UserName.Trim();
+            var normalizedFirstName = FirstName.Trim();
+            var normalizedLastName = LastName.Trim();
             var normalizedEmail = Email.Trim().ToLowerInvariant();
 
             if (string.IsNullOrWhiteSpace(normalizedUserName) ||
+                string.IsNullOrWhiteSpace(normalizedFirstName) ||
+                string.IsNullOrWhiteSpace(normalizedLastName) ||
                 string.IsNullOrWhiteSpace(normalizedEmail) ||
                 string.IsNullOrWhiteSpace(Password))
             {
@@ -81,6 +91,8 @@ public partial class RegisterViewModel : ViewModelBase
             var newUser = new UserProfile
             {
                 UserName = normalizedUserName,
+                FirstName = normalizedFirstName,
+                LastName = normalizedLastName,
                 Email = normalizedEmail,
                 Password = Password,
                 IsAdmin = false

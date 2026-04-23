@@ -1,11 +1,11 @@
 [
   {
     "Id": "69ccd164583340be1125ce7d",
-    "Name": "haydo",
+    "Name": "hayd",
     "Description": "Like robering banks",
     "ImagePath": "avares://CartoonCharacters/Assets/haydo.webp",
-    "Rating": 3,
-    "RatingVotes": 3
+    "Rating": 2.8,
+    "RatingVotes": 4
   },
   {
     "Id": "69c9390f24005e838d354cd0",
@@ -14,14 +14,6 @@
     "ImagePath": "avares://CartoonCharacters/Assets/Huysuz.webp",
     "Rating": 3,
     "RatingVotes": 15
-  },
-  {
-    "Id": "69d1374b2f135b7789439b6d",
-    "Name": "Uzun",
-    "Description": "Loves sarma",
-    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg",
-    "Rating": 3.5,
-    "RatingVotes": 2
   },
   {
     "Id": "69dcbd7e400e5354a94c243e",
@@ -54,5 +46,13 @@
     "ImagePath": "avares://CartoonCharacters/Assets/sponge_bob.png",
     "Rating": 0,
     "RatingVotes": 0
+  },
+  {
+    "Id": "69ea071a652b6fa9cdb9f356",
+    "Name": "Uzun",
+    "Description": "loves sarma",
+    "ImagePath": "avares://CartoonCharacters/Assets/uzun.jpg",
+    "Rating": 5,
+    "RatingVotes": 1
   }
 ]
