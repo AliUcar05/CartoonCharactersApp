@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:converters="clr-namespace:CartoonCharacters.Converters"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
@@ -14,151 +16,242 @@
     <viewModels:CollectionViewModel/>
   </Design.DataContext>
 
-  <DockPanel Margin="20" LastChildFill="True">
+  <UserControl.Resources>
+    <converters:IsAllCollectionsFilterConverter x:Key="IsAllCollectionsFilterConverter"/>
+  </UserControl.Resources>
 
-    <Border DockPanel.Dock="Top"
-            Background="Transparent"
-            Margin="0,0,0,12">
-      <StackPanel Orientation="Horizontal"
-                  Spacing="10"
-                  VerticalAlignment="Center">
-        <TextBlock Text="Afficher :"
-                   VerticalAlignment="Center"
-                   FontWeight="SemiBold"
-                   Foreground="White"
-                   FontSize="14"/>
-        <ComboBox Width="220"
-                  ItemsSource="{Binding FilterOptions}"
-                  SelectedItem="{Binding SelectedFilter, Mode=TwoWay}" />
-      </StackPanel>
-    </Border>
+  <Grid>
+    <!-- Contenu principal -->
+    <DockPanel Margin="20" LastChildFill="True">
+      <Border DockPanel.Dock="Top"
+              Background="Transparent"
+              Margin="0,0,0,12">
+        <StackPanel Orientation="Horizontal"
+                    Spacing="10"
+                    VerticalAlignment="Center">
+          <TextBlock Text="Afficher :"
+                     VerticalAlignment="Center"
+                     FontWeight="SemiBold"
+                     Foreground="White"
+                     FontSize="14"/>
+          <ComboBox Width="220"
+                    ItemsSource="{Binding FilterOptions}"
+                    SelectedItem="{Binding SelectedFilter, Mode=TwoWay}" />
+          
+          <Button Content="🏆 Voir le top 5 des mieux notés"
+                  Command="{Binding ShowTop5Command}"
+                  Background="#FFD700"
+                  Foreground="Black"
+                  FontWeight="Bold"
+                  Padding="12,6"
+                  CornerRadius="8"
+                  Cursor="Hand"
+                  IsVisible="{Binding SelectedFilter, Converter={StaticResource IsAllCollectionsFilterConverter}}">
+            <Button.Styles>
+              <Style Selector="Button:pointerover">
+                <Setter Property="Background" Value="#FFC107"/>
+              </Style>
+            </Button.Styles>
+          </Button>
+        </StackPanel>
+      </Border>
 
-    <Border Background="AliceBlue">
-      <ScrollViewer>
-        <ListBox x:Name="Animals"
-                 ItemsSource="{Binding FilteredCartoonCharacters}"
-                 SelectedItem="{Binding SelectedCartoonCharacter}"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <Border Background="Gainsboro"
-                      BorderBrush="#2C3E50"
-                      BorderThickness="2"
-                      CornerRadius="3"
-                      Padding="10"
-                      Margin="10">
-
-                <Grid RowDefinitions="Auto,Auto"
-                      ColumnDefinitions="Auto,*"
-                      ColumnSpacing="15"
-                      RowSpacing="10">
-
-                  <Panel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
-                    <Rectangle Height="100" Width="100" Fill="LightGray"/>
-                    <Image Margin="20"
-                           Height="200"
-                           Width="200"
-                           Stretch="UniformToFill"
-                           Source="{Binding ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
-                  </Panel>
-
-                  <Grid Grid.Row="0"
-                        Grid.Column="1"
-                        ColumnDefinitions="Auto,Auto,Auto,*"
-                        ColumnSpacing="8"
-                        Margin="0,0,0,5">
-
-                    <Button Grid.Column="0"
-                            Content="⚡ Action"
-                            Foreground="Black"
-                            Background="LightGray"
-                            BorderBrush="Gray"
-                            Command="{Binding DataContext.FromParentCommand, ElementName=Collection}"
-                            CommandParameter="{Binding Id}"
-                            Padding="8,4"
-                            FontSize="11"
-                            MinWidth="70"/>
-
-                    <Button Grid.Column="1"
-                            Content="✎ Modifier"
-                            Foreground="White"
-                            Background="#4E5D94"
-                            BorderBrush="#3A4A7A"
-                            Command="{Binding DataContext.EditCommand, ElementName=Collection}"
-                            CommandParameter="{Binding Id}"
-                            Padding="8,4"
-                            FontSize="11"
-                            MinWidth="70"/>
-
-                    <Button Grid.Column="2"
-                            Content="🗑 Supprimer"
-                            Foreground="White"
-                            Background="#C84B4B"
-                            BorderBrush="#A63A3A"
-                            Padding="8,4"
-                            FontSize="11"
-                            MinWidth="70">
-                      <Button.Flyout>
-                        <Flyout Placement="Bottom">
-                          <StackPanel Width="240" Spacing="10" Margin="4">
-                            <TextBlock Text="Confirmer la suppression"
-                                       FontWeight="Bold"
-                                       FontSize="14"/>
-                            <TextBlock Text="{Binding Name, StringFormat=Tu vas supprimer : {0}}"
-                                       TextWrapping="Wrap"/>
-                            <TextBlock Text="Cette action est irréversible."
-                                       Foreground="#C84B4B"
-                                       FontWeight="SemiBold"/>
-
-                            <Button Content="Oui, supprimer"
-                                    Background="#C84B4B"
-                                    Foreground="White"
-                                    BorderBrush="#A63A3A"
-                                    Command="{Binding DataContext.DeleteCommand, ElementName=Collection}"
-                                    CommandParameter="{Binding Id}"/>
-                          </StackPanel>
-                        </Flyout>
-                      </Button.Flyout>
-                    </Button>
-
-                    <StackPanel Grid.Column="3"
-                                Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center"
-                                Spacing="4"
-                                Margin="12,0,0,0">
-                      <TextBlock Text="★"
-                                 Foreground="Gold"
-                                 FontSize="20"
+      <Border Background="AliceBlue">
+        <ScrollViewer>
+          <ListBox x:Name="Animals"
+                   ItemsSource="{Binding FilteredCartoonCharacters}"
+                   SelectedItem="{Binding SelectedCartoonCharacter}"
+                   ScrollViewer.VerticalScrollBarVisibility="Visible"
+                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <Border Background="Gainsboro"
+                        BorderBrush="#2C3E50"
+                        BorderThickness="2"
+                        CornerRadius="3"
+                        Padding="10"
+                        Margin="10">
+                  <Grid RowDefinitions="Auto,Auto"
+                        ColumnDefinitions="Auto,*"
+                        ColumnSpacing="15"
+                        RowSpacing="10">
+                    <Panel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
+                      <Rectangle Height="100" Width="100" Fill="LightGray"/>
+                      <Image Margin="20"
+                             Height="200"
+                             Width="200"
+                             Stretch="UniformToFill"
+                             Source="{Binding ImagePath, Converter={StaticResource PathToBitmapConverter}}"/>
+                    </Panel>
+                    <Grid Grid.Row="0"
+                          Grid.Column="1"
+                          ColumnDefinitions="Auto,Auto,Auto,*"
+                          ColumnSpacing="8"
+                          Margin="0,0,0,5">
+                      <Button Grid.Column="0"
+                              Content="⚡ Action"
+                              Foreground="Black"
+                              Background="LightGray"
+                              BorderBrush="Gray"
+                              Command="{Binding DataContext.FromParentCommand, ElementName=Collection}"
+                              CommandParameter="{Binding Id}"
+                              Padding="8,4"
+                              FontSize="11"
+                              MinWidth="70"/>
+                      <Button Grid.Column="1"
+                              Content="✎ Modifier"
+                              Foreground="White"
+                              Background="#4E5D94"
+                              BorderBrush="#3A4A7A"
+                              Command="{Binding DataContext.EditCommand, ElementName=Collection}"
+                              CommandParameter="{Binding Id}"
+                              Padding="8,4"
+                              FontSize="11"
+                              MinWidth="70"/>
+                      <Button Grid.Column="2"
+                              Content="🗑 Supprimer"
+                              Foreground="White"
+                              Background="#C84B4B"
+                              BorderBrush="#A63A3A"
+                              Padding="8,4"
+                              FontSize="11"
+                              MinWidth="70">
+                        <Button.Flyout>
+                          <Flyout Placement="Bottom">
+                            <StackPanel Width="240" Spacing="10" Margin="4">
+                              <TextBlock Text="Confirmer la suppression"
+                                         FontWeight="Bold"
+                                         FontSize="14"/>
+                              <TextBlock Text="{Binding Name, StringFormat=Tu vas supprimer : {0}}"
+                                         TextWrapping="Wrap"/>
+                              <TextBlock Text="Cette action est irréversible."
+                                         Foreground="#C84B4B"
+                                         FontWeight="SemiBold"/>
+                              <Button Content="Oui, supprimer"
+                                      Background="#C84B4B"
+                                      Foreground="White"
+                                      BorderBrush="#A63A3A"
+                                      Command="{Binding DataContext.DeleteCommand, ElementName=Collection}"
+                                      CommandParameter="{Binding Id}"/>
+                            </StackPanel>
+                          </Flyout>
+                        </Button.Flyout>
+                      </Button>
+                      <StackPanel Grid.Column="3"
+                                  Orientation="Horizontal"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"
+                                  Spacing="4"
+                                  Margin="12,0,0,0">
+                        <TextBlock Text="★"
+                                   Foreground="Gold"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}"
+                                   Foreground="Black"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"/>
+                      </StackPanel>
+                    </Grid>
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Top">
+                      <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"
+                                 Foreground="#2C3E50"
                                  FontWeight="Bold"
-                                 VerticalAlignment="Center"/>
-                      <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}"
-                                 Foreground="Black"
-                                 FontSize="16"
-                                 FontWeight="Bold"
-                                 VerticalAlignment="Center"/>
+                                 FontSize="15"/>
+                      <TextBlock Text="{Binding Description, StringFormat=Description : {0}}"
+                                 Foreground="#2C3E50"
+                                 FontSize="13"
+                                 TextWrapping="Wrap"/>
                     </StackPanel>
                   </Grid>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </ScrollViewer>
+      </Border>
+    </DockPanel>
 
-                  <StackPanel Grid.Row="1"
-                              Grid.Column="1"
-                              VerticalAlignment="Top">
-                    <TextBlock Text="{Binding Name, StringFormat=Nom : {0}}"
-                               Foreground="#2C3E50"
-                               FontWeight="Bold"
-                               FontSize="15"/>
-                    <TextBlock Text="{Binding Description, StringFormat=Description : {0}}"
-                               Foreground="#2C3E50"
-                               FontSize="13"
-                               TextWrapping="Wrap"/>
-                  </StackPanel>
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </ScrollViewer>
-    </Border>
-  </DockPanel>
+    <!-- Dialogue Top 5 avec graphique amélioré -->
+    <Panel IsVisible="{Binding IsTop5DialogOpen}">
+      <Border Background="#CC000000"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+        <Border HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="White"
+                CornerRadius="16"
+                Padding="25"
+                MaxWidth="700"
+                MinWidth="600">
+          <StackPanel Spacing="20">
+            <!-- Titre -->
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Grid.Column="0"
+                         Text="🏆 TOP 5 DES MIEUX NOTÉS"
+                         FontSize="22"
+                         FontWeight="Bold"
+                         Foreground="#2C3E50"
+                         VerticalAlignment="Center"/>
+              <Button Grid.Column="1"
+                      Content="✕"
+                      Background="Transparent"
+                      Foreground="#C84B4B"
+                      FontWeight="Bold"
+                      Command="{Binding CloseTop5Dialog}"
+                      FontSize="18"
+                      Cursor="Hand">
+                <Button.Styles>
+                  <Style Selector="Button:pointerover">
+                    <Setter Property="Foreground" Value="#8B0000"/>
+                  </Style>
+                </Button.Styles>
+              </Button>
+            </Grid>
+
+            <!-- Graphique à barres horizontales -->
+            <Border Background="#F8F9FA"
+                    CornerRadius="12"
+                    Padding="15">
+              <lvc:CartesianChart Series="{Binding Top5Series}"
+                                  XAxes="{Binding Top5XAxes}"
+                                  YAxes="{Binding Top5YAxes}"
+                                  Height="400"
+                                  MinWidth="550"/>
+            </Border>
+
+            <!-- Légende -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Spacing="30"
+                        Margin="0,5,0,0">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border Width="24" Height="24" Background="#FF6B6B" CornerRadius="4"/>
+                <TextBlock Text="Note moyenne" FontSize="13" Foreground="#555"/>
+              </StackPanel>
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="⭐" FontSize="16"/>
+                <TextBlock Text="Maximum = 5.0" FontSize="13" Foreground="#555"/>
+              </StackPanel>
+            </StackPanel>
+
+            <Button Content="Fermer"
+                    Command="{Binding CloseTop5Dialog}"
+                    HorizontalAlignment="Center"
+                    Width="120"
+                    Padding="10,6"
+                    CornerRadius="8"
+                    Background="#4E5D94"
+                    Foreground="White"
+                    FontWeight="SemiBold"
+                    Cursor="Hand"/>
+          </StackPanel>
+        </Border>
+      </Border>
+    </Panel>
+  </Grid>
 </UserControl>

@@ -325,4 +325,19 @@ public partial class DatabaseServices
             return null;
         }
     }
+    
+    public async Task<List<CartoonCharacter>> GetAllCharactersAsync()
+    {
+        try
+        {
+            return await _cartoonCharacters
+                .Find(Builders<CartoonCharacter>.Filter.Empty)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MongoDB : lecture tous les personnages KO -> {ex.Message}");
+            return new List<CartoonCharacter>();
+        }
+    }
 }

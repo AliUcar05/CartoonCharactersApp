@@ -412,3 +412,11 @@ C:/Users/test1/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonChara
 C:/Users/test1/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/obj/Debug/net10.0/CartoonCharacters.pdb
 C:/Users/test1/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/obj/Debug/net10.0/CartoonCharacters.genruntimeconfig.cache
 C:/Users/test1/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/obj/Debug/net10.0/ref/CartoonCharacters.dll
+C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.dll
+C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.dll
+C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.Avalonia.dll
+C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/SkiaSharp.HarfBuzz.dll
+/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.dll
+/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.dll
+/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.Avalonia.dll
+/media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/SkiaSharp.HarfBuzz.dll
