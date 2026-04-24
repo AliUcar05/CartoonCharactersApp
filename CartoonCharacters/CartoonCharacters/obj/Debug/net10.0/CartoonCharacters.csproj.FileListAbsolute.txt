@@ -420,3 +420,7 @@ C:/Lubuntu partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/n
 /media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.dll
 /media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.Avalonia.dll
 /media/sf_Lubuntu_partage/RiderProjects/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/SkiaSharp.HarfBuzz.dll
+/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.dll
+/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.dll
+/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/LiveChartsCore.SkiaSharpView.Avalonia.dll
+/home/helb/RiderProjects/CartoonCharactersApp/CartoonCharacters/CartoonCharacters/bin/Debug/net10.0/SkiaSharp.HarfBuzz.dll

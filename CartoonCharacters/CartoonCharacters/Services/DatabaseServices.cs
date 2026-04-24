@@ -11,6 +11,7 @@ public partial class DatabaseServices
 {
     private readonly IMongoCollection<CartoonCharacter> _cartoonCharacters;
     private readonly IMongoCollection<UserProfile> _userProfiles;
+    private readonly HashingService _hashingService = new();
 
     public DatabaseServices()
     {
@@ -97,6 +98,7 @@ public partial class DatabaseServices
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
             userProfile.FirstName = userProfile.FirstName.Trim();
             userProfile.LastName = userProfile.LastName.Trim();
+            userProfile.Password = _hashingService.Encrypt(userProfile.Password);
 
             await _userProfiles.InsertOneAsync(userProfile);
 
@@ -126,17 +128,38 @@ public partial class DatabaseServices
                 return false;
             }
 
+            var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userProfile.Id);
+
+            var oldUser = await _userProfiles.Find(filter).FirstOrDefaultAsync();
+
+            if (oldUser == null)
+            {
+                Console.WriteLine("MongoDB : utilisateur introuvable");
+                return false;
+            }
+
             userProfile.UserName = userProfile.UserName.Trim();
             userProfile.FirstName = userProfile.FirstName.Trim();
             userProfile.LastName = userProfile.LastName.Trim();
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
-            userProfile.FirstName = userProfile.FirstName.Trim();
-            userProfile.LastName = userProfile.LastName.Trim();
 
-            var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userProfile.Id);
+            if (string.IsNullOrWhiteSpace(userProfile.Password))
+            {
+                userProfile.Password = oldUser.Password;
+            }
+            else if (userProfile.Password == oldUser.Password)
+            {
+                userProfile.Password = oldUser.Password;
+            }
+            else
+            {
+                userProfile.Password = _hashingService.Encrypt(userProfile.Password.Trim());
+            }
+
             var result = await _userProfiles.ReplaceOneAsync(filter, userProfile);
 
             Console.WriteLine($"MongoDB : profil utilisateur mis à jour -> {userProfile.UserName}");
+
             return result.IsAcknowledged;
         }
         catch (Exception ex)
@@ -310,14 +333,31 @@ public partial class DatabaseServices
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+                return null;
+
             var normalizedUserName = userName.Trim();
 
-            var filter = Builders<UserProfile>.Filter.And(
-                Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName),
-                Builders<UserProfile>.Filter.Eq(u => u.Password, password)
+            var filter = Builders<UserProfile>.Filter.Eq(
+                u => u.UserName,
+                normalizedUserName
             );
 
-            return await _userProfiles.Find(filter).FirstOrDefaultAsync();
+            var user = await _userProfiles.Find(filter).FirstOrDefaultAsync();
+
+            if (user == null)
+                return null;
+
+            string decryptedPassword = _hashingService.Decrypt(user.Password);
+
+            if (decryptedPassword == password.Trim())
+            {
+                Console.WriteLine($"MongoDB : auth OK -> {user.UserName}");
+                return user;
+            }
+
+            Console.WriteLine("MongoDB : auth KO -> mauvais mot de passe");
+            return null;
         }
         catch (Exception ex)
         {
