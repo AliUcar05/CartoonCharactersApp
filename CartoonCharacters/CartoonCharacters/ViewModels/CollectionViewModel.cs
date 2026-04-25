@@ -14,6 +14,17 @@ using SkiaSharp;
 
 namespace CartoonCharacters.ViewModels;
 
+// Enum pour les options de tri
+public enum SortOption
+{
+    OldestFirst,      // Plus ancien au plus récent (par ID)
+    NewestFirst,      // Plus récent au plus ancien (par ID)
+    RatingHighest,    // Note la plus haute
+    RatingLowest,     // Note la plus basse
+    NameAscending,    // Nom A → Z
+    NameDescending    // Nom Z → A
+}
+
 public partial class CollectionViewModel : ViewModelBase
 {
     public const string AllCollectionsFilter = "Toutes les collections";
@@ -27,6 +38,7 @@ public partial class CollectionViewModel : ViewModelBase
     public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
     public ObservableCollection<CartoonCharacter> FilteredCartoonCharacters { get; }
     public ObservableCollection<string> FilterOptions { get; }
+    public ObservableCollection<SortOption> SortOptions { get; }
 
     [ObservableProperty]
     private CartoonCharacter? _selectedCartoonCharacter;
@@ -49,6 +61,12 @@ public partial class CollectionViewModel : ViewModelBase
     [ObservableProperty]
     private Axis[] _top5YAxes = Array.Empty<Axis>();
 
+    [ObservableProperty]
+    private bool _isAdmin;
+
+    [ObservableProperty]
+    private SortOption _selectedSortOption = SortOption.OldestFirst;
+
     private readonly MainWindowViewModel? _mainWindowViewModel;
     private readonly Func<string, Task>? _showDeleteMessageAsync;
     private readonly DatabaseServices _databaseServices = new();
@@ -68,6 +86,18 @@ public partial class CollectionViewModel : ViewModelBase
             AllCollectionsFilter,
             MyCollectionsFilter
         };
+        
+        SortOptions = new ObservableCollection<SortOption>
+        {
+            SortOption.OldestFirst,
+            SortOption.NewestFirst,
+            SortOption.RatingHighest,
+            SortOption.RatingLowest,
+            SortOption.NameAscending,
+            SortOption.NameDescending
+        };
+        
+        IsAdmin = false;
     }
 
     public CollectionViewModel(
@@ -86,16 +116,34 @@ public partial class CollectionViewModel : ViewModelBase
         MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
         Top5Characters = new ObservableCollection<TopCharacter>();
+        
         FilterOptions = new ObservableCollection<string>
         {
             AllCollectionsFilter,
             MyCollectionsFilter
         };
+        
+        SortOptions = new ObservableCollection<SortOption>
+        {
+            SortOption.OldestFirst,
+            SortOption.NewestFirst,
+            SortOption.RatingHighest,
+            SortOption.RatingLowest,
+            SortOption.NameAscending,
+            SortOption.NameDescending
+        };
+        
+        IsAdmin = MyGlobals.CurrentUser?.IsAdmin ?? false;
 
         UpdateList();
     }
 
     partial void OnSelectedFilterChanged(string value)
+    {
+        ApplySearchFilter(_mainWindowViewModel?.SearchText);
+    }
+
+    partial void OnSelectedSortOptionChanged(SortOption value)
     {
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
@@ -118,10 +166,71 @@ public partial class CollectionViewModel : ViewModelBase
                 c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
         }
 
+        // Appliquer le tri
+        filtered = ApplySorting(filtered);
+
         foreach (var character in filtered)
         {
             FilteredCartoonCharacters.Add(character);
         }
+    }
+
+    /// <summary>
+    /// Applique le tri selon l'option sélectionnée
+    /// </summary>
+    private IEnumerable<CartoonCharacter> ApplySorting(IEnumerable<CartoonCharacter> characters)
+    {
+        return SelectedSortOption switch
+        {
+            SortOption.OldestFirst => characters.OrderBy(c => c.Id),
+            SortOption.NewestFirst => characters.OrderByDescending(c => c.Id),
+            SortOption.RatingHighest => characters.OrderByDescending(c => c.Rating),
+            SortOption.RatingLowest => characters.OrderBy(c => c.Rating),
+            SortOption.NameAscending => characters.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase),
+            SortOption.NameDescending => characters.OrderByDescending(c => c.Name, StringComparer.OrdinalIgnoreCase),
+            _ => characters.OrderBy(c => c.Id)
+        };
+    }
+
+    /// <summary>
+    /// Vérifie si l'utilisateur courant peut modifier/supprimer un personnage
+    /// </summary>
+    /// <param name="characterId">L'ID du personnage à vérifier</param>
+    /// <returns>True si l'utilisateur est admin OU propriétaire du personnage</returns>
+    public bool CanEditOrDelete(string characterId)
+    {
+        if (string.IsNullOrWhiteSpace(characterId))
+            return false;
+
+        // Admin peut tout modifier/supprimer
+        if (IsAdmin)
+            return true;
+
+        // Vérifier si l'utilisateur est le propriétaire
+        var currentUser = MyGlobals.CurrentUser;
+        if (currentUser?.CartoonCharacterIds != null)
+        {
+            return currentUser.CartoonCharacterIds.Contains(characterId);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Retourne le nom d'affichage pour une option de tri
+    /// </summary>
+    public string GetSortOptionDisplayName(SortOption option)
+    {
+        return option switch
+        {
+            SortOption.OldestFirst => "📅 Plus ancien → récent",
+            SortOption.NewestFirst => "📅 Plus récent → ancien",
+            SortOption.RatingHighest => "⭐ Note la plus haute",
+            SortOption.RatingLowest => "⭐ Note la plus basse",
+            SortOption.NameAscending => "🔤 Nom A → Z",
+            SortOption.NameDescending => "🔤 Nom Z → A",
+            _ => "📅 Plus ancien → récent"
+        };
     }
 
     private async Task ShowTop5Async()
@@ -284,5 +393,10 @@ public partial class CollectionViewModel : ViewModelBase
         }
 
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
+    }
+    
+    public void RefreshAdminStatus()
+    {
+        IsAdmin = MyGlobals.CurrentUser?.IsAdmin ?? false;
     }
 }

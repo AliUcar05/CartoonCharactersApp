@@ -3,7 +3,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:CartoonCharacters.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" 
+             d:DesignWidth="800" 
+             d:DesignHeight="450"
              x:Class="CartoonCharacters.Views.CollectionAddView"
              x:DataType="viewModels:CollectionAddViewModel"
              Background="#2C3E50">
@@ -11,31 +13,85 @@
     <UserControl.Styles>
         <Style Selector="TextBox">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="BorderBrush" Value="#D5D8DC"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
         </Style>
-
+        
         <Style Selector="TextBox:focus">
-            <Setter Property="BorderBrush" Value="#7289DA"/>
+            <Setter Property="BorderBrush" Value="#3498DB"/>
             <Setter Property="BorderThickness" Value="2"/>
         </Style>
-
+        
         <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
-            <Setter Property="Foreground" Value="#999999"/>
+            <Setter Property="Foreground" Value="#95A5A6"/>
         </Style>
         
-        <Style Selector="Button.encadre">
+        <Style Selector="Button.OutlineGreen">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#27AE60"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#27AE60"/>
+            <Setter Property="Padding" Value="12,8"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         
-        <Style Selector="Button.encadre:pointerover">
-            <Setter Property="Background" Value="#33FFFFFF"/>
+        <Style Selector="Button.OutlineGreen:pointerover">
+            <Setter Property="Background" Value="#27AE6010"/>
+            <Setter Property="BorderBrush" Value="#2ECC71"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineRed">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#E74C3C"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#E74C3C"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineRed:pointerover">
+            <Setter Property="Background" Value="#E74C3C10"/>
+            <Setter Property="BorderBrush" Value="#EC7063"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGray">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#7F8C8D"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#7F8C8D"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGray:pointerover">
+            <Setter Property="Background" Value="#7F8C8D10"/>
+            <Setter Property="BorderBrush" Value="#95A5A6"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineBlue">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#3498DB"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineBlue:pointerover">
+            <Setter Property="Background" Value="#3498DB10"/>
+            <Setter Property="BorderBrush" Value="#5DADE2"/>
         </Style>
     </UserControl.Styles>
 
@@ -48,32 +104,34 @@
                     Margin="0,0,0,20">
             
             <Border Background="#36393F"
-                    BorderBrush="#7289DA"
-                    BorderThickness="3"
-                    CornerRadius="8"
-                    Padding="20"
+                    BorderBrush="#34495E"
+                    BorderThickness="2"
+                    CornerRadius="12"
+                    Padding="24"
                     Margin="10"
-                    Width="400">
+                    Width="450">
 
-                <StackPanel Spacing="12">
+                <StackPanel Spacing="14">
 
                     <TextBlock Text="➕ Ajouter un personnage"
                                HorizontalAlignment="Center"
                                FontWeight="Bold"
-                               FontSize="18"
+                               FontSize="20"
                                Foreground="White"
-                               Margin="0,0,0,10"/>
+                               Margin="0,0,0,8"/>
 
-                    <TextBlock Text="📝 Nom :" 
-                               Foreground="#E0E0E0" 
-                               FontWeight="SemiBold"/>
+                    <TextBlock Text="Nom"
+                               Foreground="#ECF0F1" 
+                               FontWeight="SemiBold"
+                               FontSize="12"/>
                     <TextBox Watermark="ex: Homer Simpson"
                              Text="{Binding Name}"/>
 
-                    <TextBlock Text="📖 Description :" 
-                               Foreground="#E0E0E0" 
+                    <TextBlock Text="Description" 
+                               Foreground="#ECF0F1" 
                                Margin="0,5,0,0"
-                               FontWeight="SemiBold"/>
+                               FontWeight="SemiBold"
+                               FontSize="12"/>
                     <TextBox Watermark="ex: Aime les donuts..."
                              Text="{Binding Description}"
                              AcceptsReturn="True"
@@ -81,16 +139,12 @@
 
                     <Button Content="🖼️ Choisir une image"
                             Command="{Binding SelectFilesCommand}"
-                            Background="#4E5D94"
-                            BorderBrush="#3A4A7A"
-                            Foreground="White"
-                            CornerRadius="5"
-                            Padding="10,5"
+                            Classes="OutlineGray"
                             Margin="0,5,0,0"/>
                     
-                    <Border BorderBrush="#7289DA" 
+                    <Border BorderBrush="#34495E" 
                             BorderThickness="2" 
-                            CornerRadius="5" 
+                            CornerRadius="8" 
                             Padding="4"
                             Background="White">
                         <Image Source="{Binding Picture}"
@@ -101,74 +155,47 @@
                     
                     <TextBlock Text="{Binding SelectedFiles[0]}"
                                FontSize="11"
-                               Foreground="#CCCCCC"
-                               Opacity="0.9"
+                               Foreground="#7F8C8D"
                                TextWrapping="Wrap"/>
 
-                    <TextBlock Text="📷 QR Code scanné :" 
-                               Foreground="#E0E0E0" 
+                    <TextBlock Text="QR Code scanné" 
+                               Foreground="#ECF0F1" 
                                Margin="0,8,0,0"
-                               FontWeight="SemiBold"/>
+                               FontWeight="SemiBold"
+                               FontSize="12"/>
 
-                    <Border Background="#ECF0F1"
-                            BorderBrush="#BDC3C7"
+                    <Border Background="#2C3E50"
+                            BorderBrush="#34495E"
                             BorderThickness="1"
-                            CornerRadius="5"
+                            CornerRadius="8"
                             Padding="10">
                         <TextBlock Text="{Binding QrCode}"
-                                   Foreground="#2C3E50"
-                                   TextWrapping="Wrap"/>
+                                   Foreground="#BDC3C7"
+                                   TextWrapping="Wrap"
+                                   FontSize="12"/>
                     </Border>
 
                     <Button Content="📷 Ajouter avec scanner"
                             Command="{Binding AddCartoonCharacterWithScannerCommand}"
-                            Background="#4E5D94"
-                            BorderBrush="#3A4A7A"
-                            Foreground="White"
-                            CornerRadius="5"
-                            Padding="10,5"
+                            Classes="OutlineBlue"
                             Margin="0,5,0,0"/>
 
-                    <Grid ColumnDefinitions="*,*,*" 
+                    <Grid ColumnDefinitions="*,*" 
+                          ColumnSpacing="10"
                           Margin="0,15,0,5">
                         
                         <Button Grid.Column="0"
-                                Grid.ColumnSpan="2"
                                 Content="✅ Ajouter"
                                 Command="{Binding AddCartoonCharacterCommand}"
-                                Classes="encadre"
-                                BorderBrush="#43B581"
-                                Foreground="#43B581"
-                                CornerRadius="5"
-                                Padding="12,8"
-                                Margin="0,0,5,0">
-                            <Button.Styles>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="Background" Value="#3343B581"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                </Style>
-                            </Button.Styles>
-                        </Button>
+                                Classes="OutlineGreen"
+                                Padding="12,8"/>
                         
-                        <Button Grid.Column="2"
+                        <Button Grid.Column="1"
                                 Content="❌ Annuler"
                                 Command="{Binding CancelCommand}"
-                                Classes="encadre"
-                                BorderBrush="#F04747"
-                                Foreground="#F04747"
-                                CornerRadius="5"
-                                Padding="12,8"
-                                Margin="5,0,0,0">
-                            <Button.Styles>
-                                <Style Selector="Button:pointerover">
-                                    <Setter Property="Background" Value="#33F04747"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                </Style>
-                            </Button.Styles>
-                        </Button>
+                                Classes="OutlineRed"
+                                Padding="12,8"/>
                     </Grid>
-
-                    <Border Height="10" Opacity="0"/>
 
                 </StackPanel>
             </Border>

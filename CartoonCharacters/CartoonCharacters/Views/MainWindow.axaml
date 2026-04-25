@@ -22,6 +22,7 @@
             <StackPanel VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         Spacing="2">
+                <!-- Titre principal -->
                 <TextBlock Text="Cartoon Characters Collection"
                            Foreground="White"
                            FontSize="24"
@@ -30,10 +31,42 @@
                            LetterSpacing="0.5"
                            HorizontalAlignment="Center"/>
 
+                <!-- Séparateur décoratif -->
+                <Border Height="1"
+                        Width="200"
+                        Background="#34495E"
+                        Margin="0,4,0,4"
+                        IsVisible="{Binding IsUserLoggedIn}"/>
+
+                <!-- Ligne d'accueil personnalisée -->
+                <StackPanel Orientation="Horizontal"
+                            Spacing="6"
+                            HorizontalAlignment="Center"
+                            IsVisible="{Binding IsUserLoggedIn}">
+                    <TextBlock Text="✨"
+                               Foreground="#FFD700"
+                               FontSize="11"/>
+                    <TextBlock Text="{Binding CurrentUser.FirstName}"
+                               Foreground="#FFD700"
+                               FontSize="11"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="·"
+                               Foreground="#7F8C8D"
+                               FontSize="11"/>
+                    <TextBlock Text="{Binding Version}"
+                               Foreground="#7F8C8D"
+                               FontSize="11"/>
+                    <TextBlock Text="✨"
+                               Foreground="#FFD700"
+                               FontSize="11"/>
+                </StackPanel>
+                
+                <!-- Version seule quand non connecté -->
                 <TextBlock Text="{Binding Version}"
                            Foreground="#BDC3C7"
                            FontSize="12"
-                           HorizontalAlignment="Center"/>
+                           HorizontalAlignment="Center"
+                           IsVisible="{Binding !IsUserLoggedIn}"/>
             </StackPanel>
         </Border>
 
@@ -46,89 +79,115 @@
                   Margin="0,0,0,10"
                   IsVisible="{Binding ShowNavigationBar}">
 
+                <!-- Boutons de navigation à gauche - Design avec contour -->
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             HorizontalAlignment="Left"
-                            Spacing="8">
+                            Spacing="12">
 
-                    <Button Background="#2C3E50"
-                            Foreground="White"
-                            BorderBrush="#34495E"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="8,6"
-                            Command="{Binding BackToMainCommand}"
-                            Cursor="Hand">
+                    <Button Command="{Binding BackToMainCommand}"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="#3498DB"
+                            BorderThickness="1.5"
+                            CornerRadius="6"
+                            Padding="10,6">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#3498DB10"/>
+                                <Setter Property="BorderBrush" Value="#5DADE2"/>
+                            </Style>
+                        </Button.Styles>
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="3"
+                                    Spacing="6"
                                     HorizontalAlignment="Center">
                             <TextBlock Text="🏠" FontSize="12"/>
                             <TextBlock Text="Accueil"
-                                       FontSize="11"
-                                       FontWeight="SemiBold"/>
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#3498DB"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Background="#2C3E50"
-                            Foreground="White"
-                            BorderBrush="#34495E"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="8,6"
-                            Command="{Binding GoToAddCartoonCharactersCommand}"
-                            Cursor="Hand">
+                    <Button Command="{Binding GoToAddCartoonCharactersCommand}"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="#27AE60"
+                            BorderThickness="1.5"
+                            CornerRadius="6"
+                            Padding="10,6">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#27AE6010"/>
+                                <Setter Property="BorderBrush" Value="#2ECC71"/>
+                            </Style>
+                        </Button.Styles>
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="3"
+                                    Spacing="6"
                                     HorizontalAlignment="Center">
                             <TextBlock Text="➕" FontSize="12"/>
                             <TextBlock Text="Ajouter"
-                                       FontSize="11"
-                                       FontWeight="SemiBold"/>
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#27AE60"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Background="#2C3E50"
-                            Foreground="White"
-                            BorderBrush="#34495E"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="8,6"
-                            Command="{Binding ImportCsvCommand}"
-                            Cursor="Hand">
+                    <Button Command="{Binding ImportCsvCommand}"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="#E67E22"
+                            BorderThickness="1.5"
+                            CornerRadius="6"
+                            Padding="10,6">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#E67E2210"/>
+                                <Setter Property="BorderBrush" Value="#F39C12"/>
+                            </Style>
+                        </Button.Styles>
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="3"
+                                    Spacing="6"
                                     HorizontalAlignment="Center">
                             <TextBlock Text="📥" FontSize="12"/>
                             <TextBlock Text="Importer"
-                                       FontSize="11"
-                                       FontWeight="SemiBold"/>
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#E67E22"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Background="#2C3E50"
-                            Foreground="White"
-                            BorderBrush="#34495E"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="8,6"
-                            Command="{Binding ExportCsvCommand}"
-                            Cursor="Hand">
+                    <Button Command="{Binding ExportCsvCommand}"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="#8E44AD"
+                            BorderThickness="1.5"
+                            CornerRadius="6"
+                            Padding="10,6">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#8E44AD10"/>
+                                <Setter Property="BorderBrush" Value="#9B59B6"/>
+                            </Style>
+                        </Button.Styles>
                         <StackPanel Orientation="Horizontal"
-                                    Spacing="3"
+                                    Spacing="6"
                                     HorizontalAlignment="Center">
                             <TextBlock Text="📤" FontSize="12"/>
                             <TextBlock Text="Exporter"
-                                       FontSize="11"
-                                       FontWeight="SemiBold"/>
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="#8E44AD"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
 
+                <!-- Barre de recherche au centre -->
                 <Border Grid.Column="1"
                         Background="White"
                         CornerRadius="10"
                         Padding="4"
-                        Margin="10,0"
+                        Margin="15,0"
                         BorderBrush="#D0D7DE"
                         BorderThickness="1">
                     <Grid ColumnDefinitions="Auto,*,Auto">
@@ -143,22 +202,12 @@
                                  Name="SearchTextBox"
                                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Watermark="Rechercher un personnage par nom..."
-                                 Background="White"
+                                 Background="Transparent"
                                  BorderThickness="0"
                                  FontSize="13"
                                  Padding="4,6"
-                                 Foreground="#87CEEB"
-                                 CaretBrush="#87CEEB">
-                            <TextBox.Styles>
-                                <Style Selector="TextBox:focus /template/ Border#border">
-                                    <Setter Property="Background" Value="White"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                </Style>
-                                <Style Selector="TextBox:focus">
-                                    <Setter Property="Background" Value="White"/>
-                                </Style>
-                            </TextBox.Styles>
-                        </TextBox>
+                                 Foreground="#2C3E50"
+                                 CaretBrush="#2C3E50"/>
 
                         <Button Grid.Column="2"
                                 Content="✖"
@@ -173,25 +222,36 @@
                     </Grid>
                 </Border>
 
+                <!-- Bouton Profile à droite avec menu intégré -->
                 <StackPanel Grid.Column="2"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
-                            Spacing="8">
-
-                    <Button Background="#2C3E50"
-                            Foreground="White"
-                            BorderBrush="#34495E"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            Padding="10,6"
-                            Cursor="Hand">
-                        <StackPanel Orientation="Horizontal"
-                                    Spacing="4"
-                                    HorizontalAlignment="Center">
-                            <TextBlock Text="👤" FontSize="12"/>
-                            <TextBlock Text="Profile"
-                                       FontSize="11"
+                            VerticalAlignment="Center">
+                    
+                    <Button Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="#3498DB"
+                            BorderThickness="1.5"
+                            CornerRadius="20"
+                            Padding="12,6"
+                            IsVisible="{Binding IsUserLoggedIn}">
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background" Value="#3498DB10"/>
+                                <Setter Property="BorderBrush" Value="#5DADE2"/>
+                            </Style>
+                        </Button.Styles>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="👤"
+                                       FontSize="13"/>
+                            <TextBlock Text="{Binding CurrentUser.UserName}"
+                                       Foreground="#3498DB"
+                                       FontSize="12"
                                        FontWeight="SemiBold"/>
+                            <TextBlock Text="▼"
+                                       Foreground="#7F8C8D"
+                                       FontSize="10"
+                                       VerticalAlignment="Center"/>
                         </StackPanel>
 
                         <Button.Flyout>
@@ -199,51 +259,65 @@
                                 <Border Background="White"
                                         BorderBrush="#D0D7DE"
                                         BorderThickness="1"
-                                        CornerRadius="8"
-                                        Padding="8"
-                                        MinWidth="130"
-                                        MaxWidth="150">
-                                    <StackPanel Spacing="8"
-                                                HorizontalAlignment="Center">
-
-                                        <Button Background="#8E44AD"
-                                                Foreground="White"
-                                                BorderBrush="#6C3483"
-                                                BorderThickness="1"
-                                                CornerRadius="5"
-                                                Padding="8,6"
-                                                Width="110"
-                                                HorizontalAlignment="Center"
-                                                Command="{Binding GoToAdminUsersCommand}"
-                                                IsVisible="{Binding IsCurrentUserAdmin}">
-                                            <StackPanel Orientation="Horizontal"
-                                                        Spacing="4"
-                                                        HorizontalAlignment="Center">
-                                                <TextBlock Text="🛠" FontSize="12"/>
-                                                <TextBlock Text="Admin"
-                                                           FontSize="11"
-                                                           FontWeight="SemiBold"
-                                                           TextAlignment="Center"/>
+                                        CornerRadius="10"
+                                        Padding="6"
+                                        MinWidth="160">
+                                    <StackPanel Spacing="4">
+                                        
+                                        <!-- Admin option (visible seulement pour admin) -->
+                                        <Button Command="{Binding GoToAdminUsersCommand}"
+                                                IsVisible="{Binding IsCurrentUserAdmin}"
+                                                Cursor="Hand"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                HorizontalAlignment="Stretch"
+                                                Padding="12,8"
+                                                CornerRadius="6">
+                                            <Button.Styles>
+                                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                    <Setter Property="Background" Value="#8E44AD10"/>
+                                                </Style>
+                                                <Style Selector="Button:pointerover">
+                                                    <Setter Property="Background" Value="#8E44AD10"/>
+                                                </Style>
+                                            </Button.Styles>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock Text="🛠" FontSize="13"/>
+                                                <TextBlock Text="Administration"
+                                                           Foreground="#8E44AD"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"/>
                                             </StackPanel>
                                         </Button>
 
-                                        <Button Background="#C0392B"
-                                                Foreground="White"
-                                                BorderBrush="#922B21"
-                                                BorderThickness="1"
-                                                CornerRadius="5"
-                                                Padding="8,6"
-                                                Width="110"
-                                                HorizontalAlignment="Center"
-                                                Command="{Binding LogoutCommand}">
-                                            <StackPanel Orientation="Horizontal"
-                                                        Spacing="4"
-                                                        HorizontalAlignment="Center">
-                                                <TextBlock Text="🔑" FontSize="12"/>
-                                                <TextBlock Text="Logout"
-                                                           FontSize="11"
-                                                           FontWeight="SemiBold"
-                                                           TextAlignment="Center"/>
+                                        <!-- Séparateur pour admin -->
+                                        <Border Height="1"
+                                                Background="#ECF0F1"
+                                                Margin="8,4"
+                                                IsVisible="{Binding IsCurrentUserAdmin}"/>
+
+                                        <!-- Déconnexion -->
+                                        <Button Command="{Binding LogoutCommand}"
+                                                Cursor="Hand"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                HorizontalAlignment="Stretch"
+                                                Padding="12,8"
+                                                CornerRadius="6">
+                                            <Button.Styles>
+                                                <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                                    <Setter Property="Background" Value="#E74C3C10"/>
+                                                </Style>
+                                                <Style Selector="Button:pointerover">
+                                                    <Setter Property="Background" Value="#E74C3C10"/>
+                                                </Style>
+                                            </Button.Styles>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock Text="🚪" FontSize="13"/>
+                                                <TextBlock Text="Déconnexion"
+                                                           Foreground="#E74C3C"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"/>
                                             </StackPanel>
                                         </Button>
                                     </StackPanel>

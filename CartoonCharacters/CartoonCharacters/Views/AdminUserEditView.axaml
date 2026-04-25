@@ -5,149 +5,180 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="CartoonCharacters.Views.AdminUserEditView"
-             x:DataType="vm:AdminUserEditViewModel">
+             x:DataType="vm:AdminUserEditViewModel"
+             Background="#2C3E50">
 
-    <Grid RowDefinitions="Auto,*" RowSpacing="12">
+    <UserControl.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="BorderBrush" Value="#D5D8DC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        
+        <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
+            <Setter Property="Foreground" Value="#95A5A6"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGreen">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#27AE60"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#27AE60"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGreen:pointerover">
+            <Setter Property="Background" Value="#27AE6010"/>
+            <Setter Property="BorderBrush" Value="#2ECC71"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGray">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#7F8C8D"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#7F8C8D"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGray:pointerover">
+            <Setter Property="Background" Value="#7F8C8D10"/>
+            <Setter Property="BorderBrush" Value="#95A5A6"/>
+        </Style>
+        
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="#ECF0F1"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*" RowSpacing="12"
+          Margin="20">
 
         <Border Background="#34495E"
-                CornerRadius="8"
+                CornerRadius="10"
                 Padding="16">
             <StackPanel Spacing="4">
                 <TextBlock Text="{Binding Title}"
                            Foreground="White"
-                           FontSize="24"
+                           FontSize="22"
                            FontWeight="Bold"/>
-
                 <TextBlock Text="Gestion d'un compte utilisateur"
-                           Foreground="#D5DBDB"
-                           FontSize="13"/>
+                           Foreground="#BDC3C7"
+                           FontSize="12"/>
             </StackPanel>
         </Border>
 
         <Border Grid.Row="1"
-                Background="#ECF0F1"
-                CornerRadius="8"
+                Background="#36393F"
+                CornerRadius="10"
                 Padding="20">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel Spacing="14">
+                <StackPanel Spacing="16">
 
-                    <Grid ColumnDefinitions="180,*"
+                    <Grid ColumnDefinitions="140,*"
                           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                          RowSpacing="10"
+                          RowSpacing="12"
                           ColumnSpacing="12">
 
-                        <TextBlock Grid.Row="0"
-                                   Grid.Column="0"
-                                   Text="Nom d'utilisateur :"
+                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   Text="Nom d'utilisateur"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <TextBox Grid.Row="0"
-                                 Grid.Column="1"
+                        <TextBox Grid.Row="0" Grid.Column="1"
                                  Text="{Binding UserName, Mode=TwoWay}"
-                                 Watermark="username"
-                                 Background="White"/>
+                                 Watermark="username"/>
 
-                        <TextBlock Grid.Row="1"
-                                   Grid.Column="0"
-                                   Text="Prénom :"
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Prénom"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <TextBox Grid.Row="1"
-                                 Grid.Column="1"
+                        <TextBox Grid.Row="1" Grid.Column="1"
                                  Text="{Binding FirstName, Mode=TwoWay}"
-                                 Watermark="Prénom"
-                                 Background="White"/>
+                                 Watermark="Prénom"/>
 
-                        <TextBlock Grid.Row="2"
-                                   Grid.Column="0"
-                                   Text="Nom :"
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   Text="Nom"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <TextBox Grid.Row="2"
-                                 Grid.Column="1"
+                        <TextBox Grid.Row="2" Grid.Column="1"
                                  Text="{Binding LastName, Mode=TwoWay}"
-                                 Watermark="Nom"
-                                 Background="White"/>
+                                 Watermark="Nom"/>
 
-                        <TextBlock Grid.Row="3"
-                                   Grid.Column="0"
-                                   Text="Email :"
+                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                   Text="Email"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <TextBox Grid.Row="3"
-                                 Grid.Column="1"
+                        <TextBox Grid.Row="3" Grid.Column="1"
                                  Text="{Binding Email, Mode=TwoWay}"
-                                 Watermark="email@exemple.com"
-                                 Background="White"/>
+                                 Watermark="email@exemple.com"/>
 
-                        <TextBlock Grid.Row="4"
-                                   Grid.Column="0"
-                                   Text="Mot de passe :"
+                        <TextBlock Grid.Row="4" Grid.Column="0"
+                                   Text="Mot de passe"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <TextBox Grid.Row="4"
-                                 Grid.Column="1"
+                        <TextBox Grid.Row="4" Grid.Column="1"
                                  Text="{Binding Password, Mode=TwoWay}"
                                  Watermark="Laisser vide pour conserver l'ancien"
-                                 Background="White"/>
+                                 PasswordChar="•"/>
 
-                        <TextBlock Grid.Row="5"
-                                   Grid.Column="0"
-                                   Text="Administrateur :"
+                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                   Text="Administrateur"
                                    VerticalAlignment="Center"
                                    FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
+                                   Foreground="#ECF0F1"
+                                   FontSize="12"/>
 
-                        <CheckBox Grid.Row="5"
-                                  Grid.Column="1"
+                        <CheckBox Grid.Row="5" Grid.Column="1"
                                   IsChecked="{Binding IsAdmin, Mode=TwoWay}"
-                                  Content="Donner les droits administrateur"
-                                  VerticalAlignment="Center"/>
+                                  Content="Donner les droits administrateur"/>
                     </Grid>
 
-                    <Border Height="1" Background="#D5D8DC"/>
+                    <Border Height="1" Background="#34495E"/>
 
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
                                 Spacing="10">
 
-                        <Button Background="#7F8C8D"
-                                Foreground="White"
-                                BorderBrush="#626567"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                Padding="12,8"
+                        <Button Content="Annuler"
                                 Command="{Binding CancelCommand}"
-                                Cursor="Hand">
-                            <TextBlock Text="Annuler"
-                                       FontWeight="SemiBold"/>
-                        </Button>
+                                Classes="OutlineGray"
+                                Padding="12,8"/>
 
-                        <Button Background="#27AE60"
-                                Foreground="White"
-                                BorderBrush="#1E8449"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                Padding="12,8"
+                        <Button Content="💾 Enregistrer"
                                 Command="{Binding SaveCommand}"
-                                Cursor="Hand">
-                            <StackPanel Orientation="Horizontal" Spacing="4">
-                                <TextBlock Text="💾"/>
-                                <TextBlock Text="Enregistrer"
-                                           FontWeight="SemiBold"/>
-                            </StackPanel>
-                        </Button>
+                                Classes="OutlineGreen"
+                                Padding="12,8"/>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>

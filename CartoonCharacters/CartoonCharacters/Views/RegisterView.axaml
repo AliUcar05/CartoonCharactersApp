@@ -15,125 +15,161 @@
         <vm:RegisterViewModel/>
     </Design.DataContext>
 
+    <UserControl.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#2C3E50"/>
+            <Setter Property="BorderBrush" Value="#D5D8DC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        
+        <Style Selector="TextBox /template/ TextBlock#PART_Watermark">
+            <Setter Property="Foreground" Value="#95A5A6"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGreen">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#27AE60"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#27AE60"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineGreen:pointerover">
+            <Setter Property="Background" Value="#27AE6010"/>
+            <Setter Property="BorderBrush" Value="#2ECC71"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineBlue">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#3498DB"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Foreground" Value="#3498DB"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+        
+        <Style Selector="Button.OutlineBlue:pointerover">
+            <Setter Property="Background" Value="#3498DB10"/>
+            <Setter Property="BorderBrush" Value="#5DADE2"/>
+        </Style>
+    </UserControl.Styles>
+
     <Grid>
-        <Border Width="380"
-                Padding="30"
+        <Border Background="#2C3E50"
                 CornerRadius="12"
-                Background="AliceBlue"
-                BorderBrush="#1F2D3A"
+                BorderBrush="#34495E"
                 BorderThickness="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             
-            <ScrollViewer VerticalScrollBarVisibility="Visible"
-                          HorizontalScrollBarVisibility="Disabled">
-                <StackPanel Spacing="16">
+            <Border Background="#36393F"
+                    CornerRadius="12"
+                    Padding="30"
+                    Width="420">
+                
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              MaxHeight="600">
+                    <StackPanel Spacing="16">
 
-                    <TextBlock Text="Inscription"
-                               FontSize="28"
-                               FontWeight="Bold"
-                               Foreground="#2C3E50"
-                               HorizontalAlignment="Center"/>
+                        <TextBlock Text="✨ Inscription"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"/>
 
-                    <TextBlock Text="Créez votre compte pour accéder à l'application"
-                               FontSize="13"
-                               Foreground="Gray"
-                               HorizontalAlignment="Center"
-                               TextAlignment="Center"
-                               Margin="0,0,0,10"/>
+                        <TextBlock Text="Créez votre compte pour accéder à l'application"
+                                   FontSize="12"
+                                   Foreground="#BDC3C7"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Margin="0,0,0,10"/>
 
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="Nom d'utilisateur"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
-                        <TextBox Text="{Binding UserName}"
-                                 Watermark="Entrez votre nom d'utilisateur"
-                                 Background="White"
-                                 Foreground="Black"
-                                 BorderBrush="#B0BEC5"
-                                 Padding="10"/>
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Nom d'utilisateur"
+                                       FontWeight="SemiBold"
+                                       Foreground="#ECF0F1"
+                                       FontSize="12"/>
+                            <TextBox Text="{Binding UserName}"
+                                     Watermark="Entrez votre nom d'utilisateur"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Prénom"
+                                       FontWeight="SemiBold"
+                                       Foreground="#ECF0F1"
+                                       FontSize="12"/>
+                            <TextBox Text="{Binding FirstName}"
+                                     Watermark="Entrez votre prénom"/>
+                        </StackPanel>
+                        
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Nom"
+                                       FontWeight="SemiBold"
+                                       Foreground="#ECF0F1"
+                                       FontSize="12"/>
+                            <TextBox Text="{Binding LastName}"
+                                     Watermark="Entrez votre nom"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="E-mail"
+                                       FontWeight="SemiBold"
+                                       Foreground="#ECF0F1"
+                                       FontSize="12"/>
+                            <TextBox Text="{Binding Email}"
+                                     Watermark="Entrez votre e-mail"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Mot de passe"
+                                       FontWeight="SemiBold"
+                                       Foreground="#ECF0F1"
+                                       FontSize="12"/>
+                            <TextBox Text="{Binding Password}"
+                                     Watermark="Entrez votre mot de passe"
+                                     PasswordChar="•"/>
+                        </StackPanel>
+
+                        <Button Content="S'inscrire"
+                                Command="{Binding RegisterCommand}"
+                                Classes="OutlineGreen"
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Stretch"/>
+
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="4"
+                                    Margin="0,10,0,0">
+
+                            <TextBlock Text="Vous avez déjà un compte ?"
+                                       Foreground="#95A5A6"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"/>
+
+                            <Button Content="Se connecter"
+                                    Command="{Binding GoToLoginCommand}"
+                                    Classes="OutlineBlue"
+                                    Padding="8,4"/>
+                        </StackPanel>
+
                     </StackPanel>
-                    
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="Prénom"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
-                        <TextBox Text="{Binding FirstName}"
-                                 Watermark="Entrez votre prénom"
-                                 Background="White"
-                                 Foreground="Black"
-                                 BorderBrush="#B0BEC5"
-                                 Padding="10"/>
-                    </StackPanel>
-                    
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="Nom"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
-                        <TextBox Text="{Binding LastName}"
-                                 Watermark="Entrez votre nom"
-                                 Background="White"
-                                 Foreground="Black"
-                                 BorderBrush="#B0BEC5"
-                                 Padding="10"/>
-                    </StackPanel>
-
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="E-mail"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
-                        <TextBox Text="{Binding Email}"
-                                 Watermark="Entrez votre e-mail"
-                                 Background="White"
-                                 Foreground="Black"
-                                 BorderBrush="#B0BEC5"
-                                 Padding="10"/>
-                    </StackPanel>
-
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="Mot de passe"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C3E50"/>
-                        <TextBox Text="{Binding Password}"
-                                 Watermark="Entrez votre mot de passe"
-                                 PasswordChar="•"
-                                 Background="White"
-                                 Foreground="Black"
-                                 BorderBrush="#B0BEC5"
-                                 Padding="10"/>
-                    </StackPanel>
-
-                    <Button Content="S'inscrire"
-                            Command="{Binding RegisterCommand}"
-                            Background="#4E5D94"
-                            Foreground="White"
-                            BorderBrush="#3A4A7A"
-                            FontWeight="Bold"
-                            Padding="12"
-                            Margin="0,10,0,0"
-                            HorizontalAlignment="Stretch"/>
-
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center"
-                                Spacing="4"
-                                Margin="0,10,0,0">
-
-                        <TextBlock Text="Vous avez déjà un compte ?"
-                                   Foreground="Gray"
-                                   VerticalAlignment="Center"/>
-
-                        <Button Content="Se connecter"
-                                Command="{Binding GoToLoginCommand}"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Padding="0"
-                                Foreground="#4E5D94"
-                                FontWeight="SemiBold"
-                                Cursor="Hand"/>
-                    </StackPanel>
-
-                </StackPanel>
-            </ScrollViewer>
+                </ScrollViewer>
+            </Border>
         </Border>
     </Grid>
 </UserControl>
