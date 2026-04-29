@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -12,6 +13,11 @@ public partial class DatabaseServices
     private readonly IMongoCollection<CartoonCharacter> _cartoonCharacters;
     private readonly IMongoCollection<UserProfile> _userProfiles;
     private readonly HashingService _hashingService = new();
+
+    private static readonly Regex EmailRegex = new Regex(
+        @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        RegexOptions.IgnoreCase
+    );
 
     public DatabaseServices()
     {
@@ -98,6 +104,13 @@ public partial class DatabaseServices
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
             userProfile.FirstName = userProfile.FirstName.Trim();
             userProfile.LastName = userProfile.LastName.Trim();
+
+            if (!IsValidEmail(userProfile.Email))
+            {
+                Console.WriteLine("MongoDB : email invalide");
+                return false;
+            }
+
             userProfile.Password = _hashingService.Encrypt(userProfile.Password);
 
             await _userProfiles.InsertOneAsync(userProfile);
@@ -142,6 +155,12 @@ public partial class DatabaseServices
             userProfile.FirstName = userProfile.FirstName.Trim();
             userProfile.LastName = userProfile.LastName.Trim();
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
+
+            if (!IsValidEmail(userProfile.Email))
+            {
+                Console.WriteLine("MongoDB : email invalide");
+                return false;
+            }
 
             if (string.IsNullOrWhiteSpace(userProfile.Password))
             {
@@ -242,6 +261,13 @@ public partial class DatabaseServices
             }
 
             var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            if (!IsValidEmail(normalizedEmail))
+            {
+                Console.WriteLine("MongoDB : email invalide");
+                return false;
+            }
+
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail);
 
             return await _userProfiles.Find(filter).AnyAsync();
@@ -285,6 +311,12 @@ public partial class DatabaseServices
 
             var normalizedEmail = email.Trim().ToLowerInvariant();
 
+            if (!IsValidEmail(normalizedEmail))
+            {
+                Console.WriteLine("MongoDB : email invalide");
+                return false;
+            }
+
             var filter = Builders<UserProfile>.Filter.And(
                 Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail),
                 Builders<UserProfile>.Filter.Ne(u => u.Id, currentUserId)
@@ -310,7 +342,7 @@ public partial class DatabaseServices
         catch (Exception ex)
         {
             Console.WriteLine($"MongoDB : lecture profils KO -> {ex.Message}");
-            return [];
+            return new List<UserProfile>();
         }
     }
 
@@ -365,7 +397,7 @@ public partial class DatabaseServices
             return null;
         }
     }
-    
+
     public async Task<List<CartoonCharacter>> GetAllCharactersAsync()
     {
         try
@@ -379,5 +411,10 @@ public partial class DatabaseServices
             Console.WriteLine($"MongoDB : lecture tous les personnages KO -> {ex.Message}");
             return new List<CartoonCharacter>();
         }
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        return EmailRegex.IsMatch(email);
     }
 }

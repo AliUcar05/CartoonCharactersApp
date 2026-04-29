@@ -1,5 +1,5 @@
 using System;
-using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CartoonCharacters.Models;
 using CartoonCharacters.Services;
@@ -13,6 +13,11 @@ public partial class RegisterViewModel : ViewModelBase
     private readonly Action<UserProfile> _onLoginSuccess;
     private readonly Action _goToLogin;
     private readonly DatabaseServices _databaseServices;
+
+    private static readonly Regex EmailRegex = new(
+        @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        RegexOptions.IgnoreCase
+    );
 
     [ObservableProperty]
     private string _userName = string.Empty;
@@ -64,27 +69,27 @@ public partial class RegisterViewModel : ViewModelBase
                 string.IsNullOrWhiteSpace(normalizedEmail) ||
                 string.IsNullOrWhiteSpace(Password))
             {
-                PopupService.Warning("Registration", "Username, email and password are required.");
+                PopupService.Warning("Inscription", "Tous les champs sont obligatoires.");
                 return;
             }
 
             if (!IsValidEmail(normalizedEmail))
             {
-                PopupService.Warning("Registration", "Please enter a valid email address.");
+                PopupService.Warning("Inscription", "Veuillez entrer une adresse email valide.");
                 return;
             }
 
             var userExists = await _databaseServices.UserExistsAsync(normalizedUserName);
             if (userExists)
             {
-                PopupService.Error("Registration", "This username already exists.");
+                PopupService.Error("Inscription", "Ce nom d'utilisateur existe déjà.");
                 return;
             }
 
             var emailExists = await _databaseServices.EmailExistsAsync(normalizedEmail);
             if (emailExists)
             {
-                PopupService.Error("Registration", "This email already exists.");
+                PopupService.Error("Inscription", "Cette adresse email existe déjà.");
                 return;
             }
 
@@ -102,17 +107,17 @@ public partial class RegisterViewModel : ViewModelBase
 
             if (inserted)
             {
-                PopupService.Success("Registration", "Account created successfully.");
+                PopupService.Success("Inscription", "Compte créé avec succès.");
                 _onLoginSuccess.Invoke(newUser);
             }
             else
             {
-                PopupService.Error("Registration", "Unable to create the account.");
+                PopupService.Error("Inscription", "Impossible de créer le compte.");
             }
         }
         catch (Exception ex)
         {
-            PopupService.Error("Registration", $"Error during registration: {ex.Message}");
+            PopupService.Error("Inscription", $"Erreur pendant l'inscription : {ex.Message}");
         }
         finally
         {
@@ -128,14 +133,6 @@ public partial class RegisterViewModel : ViewModelBase
 
     private bool IsValidEmail(string email)
     {
-        try
-        {
-            var mailAddress = new MailAddress(email);
-            return mailAddress.Address == email;
-        }
-        catch
-        {
-            return false;
-        }
+        return EmailRegex.IsMatch(email);
     }
 }
