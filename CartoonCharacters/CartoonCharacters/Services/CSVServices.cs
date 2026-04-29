@@ -14,17 +14,6 @@ namespace CartoonCharacters.Services;
 public class CsvServices
 {
     private readonly TopLevel _topLevel;
-    private const char DefaultSeparator = ';';
-
-    private static readonly string[] ExpectedHeaders =
-    [
-        "Id",
-        "Name",
-        "Description",
-        "ImagePath",
-        "Rating",
-        "RatingVotes"
-    ];
 
     public CsvServices(TopLevel topLevel)
     {
@@ -55,53 +44,67 @@ public class CsvServices
         var selectedFile = files[0];
         var localPath = selectedFile.TryGetLocalPath();
 
-        if (!string.IsNullOrWhiteSpace(localPath) &&
+        if (string.IsNullOrWhiteSpace(localPath) ||
             !Path.GetExtension(localPath).Equals(".csv", StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException("Le fichier sélectionné doit être un fichier .csv.");
         }
 
         await using var stream = await selectedFile.OpenReadAsync();
-        using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-        var content = await reader.ReadToEndAsync();
+        using var reader = new StreamReader(stream, Encoding.UTF8);
 
-        if (string.IsNullOrWhiteSpace(content))
+        List<string> lines = [];
+        string? line;
+
+        while ((line = await reader.ReadLineAsync()) is not null)
+        {
+            lines.Add(line);
+        }
+
+        if (lines.Count == 0 || string.IsNullOrWhiteSpace(lines[0]))
+        {
             throw new InvalidOperationException("Le fichier CSV est vide.");
+        }
 
-        var separator = DetectSeparator(content);
-        var records = ParseCsv(content, separator)
-            .Where(r => r.Any(v => !string.IsNullOrWhiteSpace(v)))
-            .ToList();
-
-        if (records.Count == 0)
-            throw new InvalidOperationException("Le fichier CSV est vide.");
-
-        var headers = records[0]
-            .Select(NormalizeCsvValue)
+        var headers = lines[0]
+            .Split(';')
+            .Select(h => h.Trim())
             .ToArray();
 
-        if (!HeadersAreValid(headers))
+        string[] expectedHeaders =
+        [
+            "Id",
+            "Name",
+            "Description",
+            "ImagePath",
+            "Rating",
+            "RatingVotes"
+        ];
+
+        var sameHeaders =
+            headers.Length == expectedHeaders.Length &&
+            headers.SequenceEqual(expectedHeaders, StringComparer.OrdinalIgnoreCase);
+
+        if (!sameHeaders)
         {
             throw new InvalidOperationException(
                 "Structure CSV invalide.\n\n" +
-                "Colonnes attendues : Id;Name;Description;ImagePath;Rating;RatingVotes\n" +
-                "Astuce LibreOffice : enregistrez en CSV UTF-8 avec un séparateur ';' ou ','.");
+                "Colonnes attendues : Id;Name;Description;ImagePath;Rating;RatingVotes");
         }
 
         var properties = typeof(CartoonCharacter).GetProperties();
 
-        for (int i = 1; i < records.Count; i++)
+        for (int i = 1; i < lines.Count; i++)
         {
-            var values = records[i]
-                .Select(NormalizeCsvValue)
-                .ToArray();
+            if (string.IsNullOrWhiteSpace(lines[i]))
+                continue;
+
+            var values = lines[i].Split(';');
 
             if (values.Length != headers.Length)
             {
                 throw new InvalidOperationException(
-                    $"La ligne {i + 1} ne contient pas le bon nombre de colonnes. " +
-                    $"Attendu : {headers.Length}, trouvé : {values.Length}. " +
-                    "Vérifiez les guillemets et les séparateurs dans LibreOffice.");
+                    $"La ligne {i + 1} ne contient pas le bon nombre de colonnes.");
             }
 
             var obj = new CartoonCharacter();
@@ -154,14 +157,23 @@ public class CsvServices
     {
         var csv = new StringBuilder();
         var properties = typeof(T).GetProperties();
-        var separator = DefaultSeparator;
 
-        csv.AppendLine(string.Join(separator, properties.Select(p => EscapeCsvValue(p.Name, separator))));
+        csv.AppendLine(string.Join(";", properties.Select(p => p.Name)));
 
         foreach (var item in data)
         {
-            var values = properties.Select(p => EscapeCsvValue(p.GetValue(item), separator));
-            csv.AppendLine(string.Join(separator, values));
+            var values = properties.Select(p =>
+            {
+                var value = p.GetValue(item);
+
+                return value switch
+                {
+                    double d => d.ToString(CultureInfo.InvariantCulture),
+                    _ => value?.ToString() ?? string.Empty
+                };
+            });
+
+            csv.AppendLine(string.Join(";", values));
         }
 
         var csvFileType = new FilePickerFileType("Fichier CSV")
@@ -192,163 +204,13 @@ public class CsvServices
         }
 
         await using var stream = await file.OpenWriteAsync();
-        using var writer = new StreamWriter(stream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+        using var writer = new StreamWriter(stream, Encoding.UTF8);
         await writer.WriteAsync(csv.ToString());
-    }
-
-    private static bool HeadersAreValid(string[] headers)
-    {
-        return headers.Length == ExpectedHeaders.Length &&
-               headers.SequenceEqual(ExpectedHeaders, StringComparer.OrdinalIgnoreCase);
-    }
-
-    private static char DetectSeparator(string content)
-    {
-        foreach (var separator in new[] { ';', ',', '\t' })
-        {
-            var firstRecord = ParseCsv(content, separator).FirstOrDefault();
-
-            if (firstRecord == null)
-                continue;
-
-            var headers = firstRecord.Select(NormalizeCsvValue).ToArray();
-
-            if (HeadersAreValid(headers))
-                return separator;
-        }
-
-        return DefaultSeparator;
-    }
-
-    private static List<string[]> ParseCsv(string content, char separator)
-    {
-        var records = new List<string[]>();
-        var record = new List<string>();
-        var field = new StringBuilder();
-        var inQuotes = false;
-        var fieldHasContent = false;
-
-        for (var i = 0; i < content.Length; i++)
-        {
-            var c = content[i];
-
-            if (inQuotes)
-            {
-                if (c == '"')
-                {
-                    if (i + 1 < content.Length && content[i + 1] == '"')
-                    {
-                        field.Append('"');
-                        i++;
-                    }
-                    else
-                    {
-                        inQuotes = false;
-                    }
-                }
-                else
-                {
-                    field.Append(c);
-                }
-
-                continue;
-            }
-
-            if (c == '"')
-            {
-                if (!fieldHasContent && string.IsNullOrWhiteSpace(field.ToString()))
-                {
-                    field.Clear();
-                    inQuotes = true;
-                    fieldHasContent = true;
-                }
-                else
-                {
-                    field.Append(c);
-                    fieldHasContent = true;
-                }
-            }
-            else if (c == separator)
-            {
-                record.Add(field.ToString());
-                field.Clear();
-                fieldHasContent = false;
-            }
-            else if (c == '\r' || c == '\n')
-            {
-                record.Add(field.ToString());
-                field.Clear();
-                fieldHasContent = false;
-
-                if (record.Any(v => !string.IsNullOrWhiteSpace(v)))
-                    records.Add(record.ToArray());
-
-                record.Clear();
-
-                if (c == '\r' && i + 1 < content.Length && content[i + 1] == '\n')
-                    i++;
-            }
-            else
-            {
-                field.Append(c);
-
-                if (!char.IsWhiteSpace(c))
-                    fieldHasContent = true;
-            }
-        }
-
-        if (inQuotes)
-            throw new InvalidOperationException("CSV invalide : guillemet fermant manquant.");
-
-        if (field.Length > 0 || fieldHasContent || record.Count > 0)
-        {
-            record.Add(field.ToString());
-
-            if (record.Any(v => !string.IsNullOrWhiteSpace(v)))
-                records.Add(record.ToArray());
-        }
-
-        return records;
-    }
-
-    private static string NormalizeCsvValue(string value)
-    {
-        return value
-            .Trim()
-            .Trim('\uFEFF')
-            .Trim();
-    }
-
-    private static string EscapeCsvValue(object? value, char separator)
-    {
-        var text = value switch
-        {
-            null => string.Empty,
-            double d => d.ToString(CultureInfo.InvariantCulture),
-            float f => f.ToString(CultureInfo.InvariantCulture),
-            decimal m => m.ToString(CultureInfo.InvariantCulture),
-            _ => value.ToString() ?? string.Empty
-        };
-
-        var mustQuote = text.Contains(separator) ||
-                        text.Contains('"') ||
-                        text.Contains('\r') ||
-                        text.Contains('\n');
-
-        if (text.Contains('"'))
-            text = text.Replace("\"", "\"\"");
-
-        return mustQuote ? $"\"{text}\"" : text;
     }
 
     private static double ParseCsvDouble(string value)
     {
-        var normalized = value
-            .Trim()
-            .Replace("\u00A0", "")
-            .Replace(" ", "")
-            .Replace(',', '.');
-
+        var normalized = value.Trim().Replace(',', '.');
         return double.Parse(normalized, CultureInfo.InvariantCulture);
     }
 }

@@ -45,9 +45,37 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _csvServices = csvServices;
 
-        // Ne pas lancer de méthode async dans le constructeur.
-        // Au démarrage, on affiche simplement la page de connexion.
-        ShowLoginPage();
+        // ============================================================
+        // 🔓 BYPASS AUTHENTIFICATION - À DÉCOMMENTER POUR LES TESTS
+        // ============================================================
+        // Crée un utilisateur admin factice pour bypass le login
+        // var adminUser = new UserProfile
+        // {
+        //     Id = "69ebbc53a411dbe3e17b4f81",
+        //     UserName = "admin",
+        //     FirstName = "admin",
+        //     LastName = "admin",
+        //     Email = "admin@email.com",
+        //     Password = "Zbmw3eQRQQf84YT5nF25/SJYj+rEhpZ541XkN0bj8TPXPMJFw0EIM4Yt1yHmm90C",
+        //     IsAdmin = true,
+        //     CartoonCharacterIds = new List<string> { "69ecf6070a463dce37e16d2d" },
+        //     CharacterRatings = new Dictionary<string, int> { { "69ecf6070a463dce37e16d2d", 5 } }
+        // };
+        // 
+        // CurrentUser = adminUser;
+        // MyGlobals.CurrentUser = adminUser;
+        // ShowMainCollection();
+        // _ = InitializeDataAsync();
+        // ============================================================
+        if (IsUserLoggedIn)
+        {
+            ShowMainCollection();
+            _ = InitializeDataAsync();
+        }
+        else
+        {
+            ShowLoginPage();
+        }
     }
 
     partial void OnCurrentUserChanged(UserProfile? value)
@@ -82,9 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             IsBusy = true;
-
             await MyGlobals.InitializeAsync();
-
             BackToMain();
         }
         catch (Exception ex)
@@ -97,21 +123,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private async void OnLoginSuccess(UserProfile userProfile)
+    private void OnLoginSuccess(UserProfile userProfile)
     {
         CurrentUser = userProfile;
-
         ShowMainCollection();
-
-        // Ici on peut attendre correctement le chargement des données.
-        await InitializeDataAsync();
+        _ = InitializeDataAsync();
     }
 
     [RelayCommand]
     private void Logout()
     {
         CurrentUser = null;
-        SearchText = string.Empty;
         ShowLoginPage();
     }
 
@@ -128,13 +150,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void ShowLoginPage()
     {
-        _currentCollectionViewModel = null;
         CurrentPage = new LoginViewModel(OnLoginSuccess, ShowRegisterPage);
     }
 
     private void ShowRegisterPage()
     {
-        _currentCollectionViewModel = null;
         CurrentPage = new RegisterViewModel(OnLoginSuccess, ShowLoginPage);
     }
 
@@ -271,17 +291,15 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private Task ShowDeleteMessageAsync(string characterName)
+    private async Task ShowDeleteMessageAsync(string characterName)
     {
         PopupService.Success("Suppression réussie", $"{characterName} a été supprimé avec succès !");
-        return Task.CompletedTask;
     }
 
-    private Task OnUpdateAsync(string characterName)
+    private async Task OnUpdateAsync(string characterName)
     {
         PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
         BackToMain();
-        return Task.CompletedTask;
     }
 
     private void OnCancelUpdate()
@@ -289,11 +307,10 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private Task OnAddAsync(string characterName)
+    private async Task OnAddAsync(string characterName)
     {
         PopupService.Success("Ajout réussi", $"{characterName} a été ajouté avec succès !");
         BackToMain();
-        return Task.CompletedTask;
     }
 
     private void OnCancelAdd()

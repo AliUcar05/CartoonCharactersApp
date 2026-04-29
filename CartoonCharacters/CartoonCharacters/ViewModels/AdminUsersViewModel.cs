@@ -20,6 +20,9 @@ public partial class AdminUsersViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isBusy;
 
+    [ObservableProperty]
+    private bool _isRefreshing;
+
     public AdminUsersViewModel(MainWindowViewModel mainWindowViewModel)
     {
         _mainWindowViewModel = mainWindowViewModel;
@@ -37,7 +40,8 @@ public partial class AdminUsersViewModel : ViewModelBase
     [RelayCommand]
     private async Task Refresh()
     {
-        await LoadUsersAsync();
+        if (IsRefreshing) return;
+        await LoadUsersAsync(true);
     }
 
     [RelayCommand]
@@ -102,11 +106,14 @@ public partial class AdminUsersViewModel : ViewModelBase
         _mainWindowViewModel.BackToMain();
     }
 
-    private async Task LoadUsersAsync()
+    private async Task LoadUsersAsync(bool isRefresh = false)
     {
         try
         {
-            IsBusy = true;
+            if (isRefresh)
+                IsRefreshing = true;
+            else
+                IsBusy = true;
 
             var allUsers = await _databaseServices.GetAllUserProfilesAsync();
 
@@ -122,7 +129,10 @@ public partial class AdminUsersViewModel : ViewModelBase
         }
         finally
         {
-            IsBusy = false;
+            if (isRefresh)
+                IsRefreshing = false;
+            else
+                IsBusy = false;
         }
     }
 }
