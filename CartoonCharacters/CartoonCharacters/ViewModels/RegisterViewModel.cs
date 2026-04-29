@@ -36,6 +36,15 @@ public partial class RegisterViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isBusy;
+    
+    [ObservableProperty]
+    private bool _isPasswordVisible;
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 
     public RegisterViewModel()
     {

@@ -65,4 +65,13 @@ public partial class LoginViewModel : ViewModelBase
     {
         _goToRegister();
     }
+    
+    [ObservableProperty]
+    private bool _isPasswordVisible;
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 }

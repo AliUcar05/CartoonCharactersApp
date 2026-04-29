@@ -39,6 +39,15 @@ public partial class AdminUserEditViewModel : ViewModelBase
     private bool _isBusy;
 
     public bool IsEditMode => _isEditMode;
+    
+    [ObservableProperty]
+    private bool _isPasswordVisible;
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 
     public AdminUserEditViewModel(MainWindowViewModel mainWindowViewModel)
     {

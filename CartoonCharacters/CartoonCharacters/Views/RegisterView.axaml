@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:CartoonCharacters.ViewModels"
+             xmlns:converters="clr-namespace:CartoonCharacters.Converters"
              mc:Ignorable="d"
              d:DesignWidth="900"
              d:DesignHeight="700"
@@ -65,6 +66,19 @@
         <Style Selector="Button.OutlineBlue:pointerover">
             <Setter Property="Background" Value="#3498DB10"/>
             <Setter Property="BorderBrush" Value="#5DADE2"/>
+        </Style>
+        
+        <!-- Style pour le bouton œil -->
+        <Style Selector="Button.EyeButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+        
+        <Style Selector="Button.EyeButton:pointerover">
+            <Setter Property="Opacity" Value="0.7"/>
         </Style>
     </UserControl.Styles>
 
@@ -135,14 +149,28 @@
                                      Watermark="Entrez votre e-mail"/>
                         </StackPanel>
 
+                        <!-- Champ mot de passe avec œil -->
                         <StackPanel Spacing="6">
                             <TextBlock Text="Mot de passe"
                                        FontWeight="SemiBold"
                                        Foreground="#ECF0F1"
                                        FontSize="12"/>
-                            <TextBox Text="{Binding Password}"
-                                     Watermark="Entrez votre mot de passe"
-                                     PasswordChar="•"/>
+                            
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBox Grid.Column="0"
+                                         Text="{Binding Password}"
+                                         Watermark="Entrez votre mot de passe"
+                                         PasswordChar="{Binding IsPasswordVisible, Converter={x:Static converters:BoolToPasswordCharConverter.Instance}}"/>
+                                
+                                <Button Grid.Column="1"
+                                        Classes="EyeButton"
+                                        Command="{Binding TogglePasswordVisibilityCommand}"
+                                        VerticalAlignment="Stretch">
+                                    <TextBlock Text="{Binding IsPasswordVisible, Converter={x:Static converters:BoolToEyeIconConverter.Instance}}"
+                                               FontSize="16"
+                                               VerticalAlignment="Center"/>
+                                </Button>
+                            </Grid>
                         </StackPanel>
 
                         <Button Content="S'inscrire"
