@@ -127,16 +127,18 @@ public static class JsonDataService
 
     public static async Task<List<CartoonCharacter>> InitializeAsync(string filePath)
     {
-        var localData = await LoadFromFileAsync(filePath);
-
         var remoteData = await LoadFromServerAsync();
+
         if (remoteData.Count > 0)
         {
             await SaveToFileAsync(filePath, remoteData);
             return remoteData;
         }
-
-        return localData;
+        else
+        {
+            var localData = await LoadFromFileAsync(filePath);
+            return localData;
+        }
     }
 
     public static async Task PersistAsync(string filePath, List<CartoonCharacter> characters)

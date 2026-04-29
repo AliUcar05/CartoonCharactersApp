@@ -219,7 +219,5 @@ public partial class CollectionAddViewModel : ViewModelBase
             _scanner.SerialBuffer.Changed -= QrCodeManager;
             _scanner.ClosePort();
         }
-
-        base.Dispose();
     }
 }

@@ -45,15 +45,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _csvServices = csvServices;
 
-        if (IsUserLoggedIn)
-        {
-            ShowMainCollection();
-            _ = InitializeDataAsync();
-        }
-        else
-        {
-            ShowLoginPage();
-        }
+        // Ne pas lancer de méthode async dans le constructeur.
+        // Au démarrage, on affiche simplement la page de connexion.
+        ShowLoginPage();
     }
 
     partial void OnCurrentUserChanged(UserProfile? value)
@@ -88,7 +82,9 @@ public partial class MainWindowViewModel : ViewModelBase
         try
         {
             IsBusy = true;
+
             await MyGlobals.InitializeAsync();
+
             BackToMain();
         }
         catch (Exception ex)
@@ -101,17 +97,21 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-    private void OnLoginSuccess(UserProfile userProfile)
+    private async void OnLoginSuccess(UserProfile userProfile)
     {
         CurrentUser = userProfile;
+
         ShowMainCollection();
-        _ = InitializeDataAsync();
+
+        // Ici on peut attendre correctement le chargement des données.
+        await InitializeDataAsync();
     }
 
     [RelayCommand]
     private void Logout()
     {
         CurrentUser = null;
+        SearchText = string.Empty;
         ShowLoginPage();
     }
 
@@ -128,11 +128,13 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void ShowLoginPage()
     {
+        _currentCollectionViewModel = null;
         CurrentPage = new LoginViewModel(OnLoginSuccess, ShowRegisterPage);
     }
 
     private void ShowRegisterPage()
     {
+        _currentCollectionViewModel = null;
         CurrentPage = new RegisterViewModel(OnLoginSuccess, ShowLoginPage);
     }
 
@@ -269,15 +271,17 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private async Task ShowDeleteMessageAsync(string characterName)
+    private Task ShowDeleteMessageAsync(string characterName)
     {
         PopupService.Success("Suppression réussie", $"{characterName} a été supprimé avec succès !");
+        return Task.CompletedTask;
     }
 
-    private async Task OnUpdateAsync(string characterName)
+    private Task OnUpdateAsync(string characterName)
     {
         PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
         BackToMain();
+        return Task.CompletedTask;
     }
 
     private void OnCancelUpdate()
@@ -285,10 +289,11 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private async Task OnAddAsync(string characterName)
+    private Task OnAddAsync(string characterName)
     {
         PopupService.Success("Ajout réussi", $"{characterName} a été ajouté avec succès !");
         BackToMain();
+        return Task.CompletedTask;
     }
 
     private void OnCancelAdd()
