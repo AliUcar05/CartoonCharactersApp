@@ -13,12 +13,18 @@ public partial class LoginViewModel : ViewModelBase
     private readonly Action _goToRegister;
     private readonly DatabaseServices _databaseServices;
 
-    [ObservableProperty] private string _username = string.Empty;
+    [ObservableProperty]
+    private string _username = string.Empty;
 
-    [ObservableProperty] private string _password = string.Empty;
+    [ObservableProperty]
+    private string _password = string.Empty;
 
-    [ObservableProperty] private bool _isBusy;
-    
+    [ObservableProperty]
+    private bool _isBusy;
+
+    [ObservableProperty]
+    private bool _isPasswordVisible;
+
     public LoginViewModel(Action<UserProfile> onLoginSuccess, Action goToRegister)
     {
         _onLoginSuccess = onLoginSuccess;
@@ -29,6 +35,7 @@ public partial class LoginViewModel : ViewModelBase
     public LoginViewModel()
     {
         _onLoginSuccess = _ => { };
+        _goToRegister = () => { };
         _databaseServices = new DatabaseServices();
     }
 
@@ -65,9 +72,6 @@ public partial class LoginViewModel : ViewModelBase
     {
         _goToRegister();
     }
-    
-    [ObservableProperty]
-    private bool _isPasswordVisible;
 
     [RelayCommand]
     private void TogglePasswordVisibility()

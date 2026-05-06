@@ -45,28 +45,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _csvServices = csvServices;
 
-        // ============================================================
-        // 🔓 BYPASS AUTHENTIFICATION - À DÉCOMMENTER POUR LES TESTS
-        // ============================================================
-        // Crée un utilisateur admin factice pour bypass le login
-        // var adminUser = new UserProfile
-        // {
-        //     Id = "69ebbc53a411dbe3e17b4f81",
-        //     UserName = "admin",
-        //     FirstName = "admin",
-        //     LastName = "admin",
-        //     Email = "admin@email.com",
-        //     Password = "Zbmw3eQRQQf84YT5nF25/SJYj+rEhpZ541XkN0bj8TPXPMJFw0EIM4Yt1yHmm90C",
-        //     IsAdmin = true,
-        //     CartoonCharacterIds = new List<string> { "69ecf6070a463dce37e16d2d" },
-        //     CharacterRatings = new Dictionary<string, int> { { "69ecf6070a463dce37e16d2d", 5 } }
-        // };
-        // 
-        // CurrentUser = adminUser;
-        // MyGlobals.CurrentUser = adminUser;
-        // ShowMainCollection();
-        // _ = InitializeDataAsync();
-        // ============================================================
         if (IsUserLoggedIn)
         {
             ShowMainCollection();
@@ -291,15 +269,18 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private async Task ShowDeleteMessageAsync(string characterName)
+    private Task ShowDeleteMessageAsync(string characterName)
     {
         PopupService.Success("Suppression réussie", $"{characterName} a été supprimé avec succès !");
+        return Task.CompletedTask;
     }
 
-    private async Task OnUpdateAsync(string characterName)
+    private Task OnUpdateAsync(string characterName)
     {
         PopupService.Success("Modification réussie", $"{characterName} a été modifié avec succès !");
         BackToMain();
+
+        return Task.CompletedTask;
     }
 
     private void OnCancelUpdate()
@@ -307,10 +288,12 @@ public partial class MainWindowViewModel : ViewModelBase
         BackToMain();
     }
 
-    private async Task OnAddAsync(string characterName)
+    private Task OnAddAsync(string characterName)
     {
         PopupService.Success("Ajout réussi", $"{characterName} a été ajouté avec succès !");
         BackToMain();
+
+        return Task.CompletedTask;
     }
 
     private void OnCancelAdd()

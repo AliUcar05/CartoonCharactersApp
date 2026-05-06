@@ -8,13 +8,13 @@ using CartoonCharacters.Models;
 
 namespace CartoonCharacters.Services;
 
-public partial class DatabaseServices
+public class DatabaseServices
 {
     private readonly IMongoCollection<CartoonCharacter> _cartoonCharacters;
     private readonly IMongoCollection<UserProfile> _userProfiles;
     private readonly HashingService _hashingService = new();
 
-    private static readonly Regex EmailRegex = new Regex(
+    private static readonly Regex EmailRegex = new(
         @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
         RegexOptions.IgnoreCase
     );
@@ -32,8 +32,6 @@ public partial class DatabaseServices
 
         _cartoonCharacters = database.GetCollection<CartoonCharacter>("CartoonCharactersCollection");
         _userProfiles = database.GetCollection<UserProfile>("UserProfiles");
-
-        Console.WriteLine("MongoDB : collections initialisées");
     }
 
     public async Task<bool> TestConnectionAsync()
@@ -43,25 +41,20 @@ public partial class DatabaseServices
             await _cartoonCharacters.Database.RunCommandAsync<BsonDocument>(
                 new BsonDocument("ping", 1));
 
-            Console.WriteLine("MongoDB : connexion OK");
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : connexion KO -> {ex.Message}");
             return false;
         }
     }
 
-    public async Task<bool> ReplaceAllCharactersAsync(List<CartoonCharacter> characters)
+    public async Task<bool> ReplaceAllCharactersAsync(List<CartoonCharacter>? characters)
     {
         try
         {
             if (characters == null)
-            {
-                Console.WriteLine("MongoDB : liste null");
                 return false;
-            }
 
             foreach (var character in characters)
             {
@@ -77,25 +70,20 @@ public partial class DatabaseServices
                 await _cartoonCharacters.InsertManyAsync(characters);
             }
 
-            Console.WriteLine($"MongoDB : envoi total OK -> {characters.Count} document(s)");
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : envoi total KO -> {ex.Message}");
             return false;
         }
     }
 
-    public async Task<bool> InsertUserProfileAsync(UserProfile userProfile)
+    public async Task<bool> InsertUserProfileAsync(UserProfile? userProfile)
     {
         try
         {
             if (userProfile == null)
-            {
-                Console.WriteLine("MongoDB : userProfile null");
                 return false;
-            }
 
             if (string.IsNullOrWhiteSpace(userProfile.Id))
                 userProfile.Id = ObjectId.GenerateNewId().ToString();
@@ -106,50 +94,36 @@ public partial class DatabaseServices
             userProfile.LastName = userProfile.LastName.Trim();
 
             if (!IsValidEmail(userProfile.Email))
-            {
-                Console.WriteLine("MongoDB : email invalide");
                 return false;
-            }
 
             userProfile.Password = _hashingService.Encrypt(userProfile.Password);
 
             await _userProfiles.InsertOneAsync(userProfile);
 
-            Console.WriteLine($"MongoDB : profil utilisateur inséré -> {userProfile.UserName}");
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : insert profil KO -> {ex.Message}");
             return false;
         }
     }
 
-    public async Task<bool> UpdateUserProfileAsync(UserProfile userProfile)
+    public async Task<bool> UpdateUserProfileAsync(UserProfile? userProfile)
     {
         try
         {
             if (userProfile == null)
-            {
-                Console.WriteLine("MongoDB : userProfile null");
                 return false;
-            }
 
             if (string.IsNullOrWhiteSpace(userProfile.Id))
-            {
-                Console.WriteLine("MongoDB : userProfile.Id vide");
                 return false;
-            }
 
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userProfile.Id);
 
             var oldUser = await _userProfiles.Find(filter).FirstOrDefaultAsync();
 
             if (oldUser == null)
-            {
-                Console.WriteLine("MongoDB : utilisateur introuvable");
                 return false;
-            }
 
             userProfile.UserName = userProfile.UserName.Trim();
             userProfile.FirstName = userProfile.FirstName.Trim();
@@ -157,10 +131,7 @@ public partial class DatabaseServices
             userProfile.Email = userProfile.Email.Trim().ToLowerInvariant();
 
             if (!IsValidEmail(userProfile.Email))
-            {
-                Console.WriteLine("MongoDB : email invalide");
                 return false;
-            }
 
             if (string.IsNullOrWhiteSpace(userProfile.Password))
             {
@@ -177,13 +148,10 @@ public partial class DatabaseServices
 
             var result = await _userProfiles.ReplaceOneAsync(filter, userProfile);
 
-            Console.WriteLine($"MongoDB : profil utilisateur mis à jour -> {userProfile.UserName}");
-
             return result.IsAcknowledged;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : update profil KO -> {ex.Message}");
             return false;
         }
     }
@@ -193,20 +161,15 @@ public partial class DatabaseServices
         try
         {
             if (string.IsNullOrWhiteSpace(userId))
-            {
-                Console.WriteLine("MongoDB : userId vide");
                 return false;
-            }
 
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userId);
             var result = await _userProfiles.DeleteOneAsync(filter);
 
-            Console.WriteLine($"MongoDB : suppression profil -> {userId}");
             return result.DeletedCount > 0;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : delete profil KO -> {ex.Message}");
             return false;
         }
     }
@@ -221,9 +184,8 @@ public partial class DatabaseServices
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Id, userId);
             return await _userProfiles.Find(filter).FirstOrDefaultAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : lecture profil par id KO -> {ex.Message}");
             return null;
         }
     }
@@ -233,19 +195,15 @@ public partial class DatabaseServices
         try
         {
             if (string.IsNullOrWhiteSpace(userName))
-            {
-                Console.WriteLine("MongoDB : username vide");
                 return false;
-            }
 
             var normalizedUserName = userName.Trim();
             var filter = Builders<UserProfile>.Filter.Eq(u => u.UserName, normalizedUserName);
 
             return await _userProfiles.Find(filter).AnyAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : vérification username KO -> {ex.Message}");
             return false;
         }
     }
@@ -255,26 +213,19 @@ public partial class DatabaseServices
         try
         {
             if (string.IsNullOrWhiteSpace(email))
-            {
-                Console.WriteLine("MongoDB : email vide");
                 return false;
-            }
 
             var normalizedEmail = email.Trim().ToLowerInvariant();
 
             if (!IsValidEmail(normalizedEmail))
-            {
-                Console.WriteLine("MongoDB : email invalide");
                 return false;
-            }
 
             var filter = Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail);
 
             return await _userProfiles.Find(filter).AnyAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : vérification email KO -> {ex.Message}");
             return false;
         }
     }
@@ -295,9 +246,8 @@ public partial class DatabaseServices
 
             return await _userProfiles.Find(filter).AnyAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : vérification username autre user KO -> {ex.Message}");
             return false;
         }
     }
@@ -312,10 +262,7 @@ public partial class DatabaseServices
             var normalizedEmail = email.Trim().ToLowerInvariant();
 
             if (!IsValidEmail(normalizedEmail))
-            {
-                Console.WriteLine("MongoDB : email invalide");
                 return false;
-            }
 
             var filter = Builders<UserProfile>.Filter.And(
                 Builders<UserProfile>.Filter.Eq(u => u.Email, normalizedEmail),
@@ -324,9 +271,8 @@ public partial class DatabaseServices
 
             return await _userProfiles.Find(filter).AnyAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : vérification email autre user KO -> {ex.Message}");
             return false;
         }
     }
@@ -339,9 +285,8 @@ public partial class DatabaseServices
                 .Find(Builders<UserProfile>.Filter.Empty)
                 .ToListAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : lecture profils KO -> {ex.Message}");
             return new List<UserProfile>();
         }
     }
@@ -352,11 +297,11 @@ public partial class DatabaseServices
         {
             var filter = Builders<UserProfile>.Filter.Eq(u => u.IsAdmin, true);
             var count = await _userProfiles.CountDocumentsAsync(filter);
+
             return (int)count;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : count admins KO -> {ex.Message}");
             return 0;
         }
     }
@@ -380,20 +325,15 @@ public partial class DatabaseServices
             if (user == null)
                 return null;
 
-            string decryptedPassword = _hashingService.Decrypt(user.Password);
+            var decryptedPassword = _hashingService.Decrypt(user.Password);
 
             if (decryptedPassword == password.Trim())
-            {
-                Console.WriteLine($"MongoDB : auth OK -> {user.UserName}");
                 return user;
-            }
 
-            Console.WriteLine("MongoDB : auth KO -> mauvais mot de passe");
             return null;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : auth KO -> {ex.Message}");
             return null;
         }
     }
@@ -406,14 +346,13 @@ public partial class DatabaseServices
                 .Find(Builders<CartoonCharacter>.Filter.Empty)
                 .ToListAsync();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"MongoDB : lecture tous les personnages KO -> {ex.Message}");
             return new List<CartoonCharacter>();
         }
     }
 
-    private bool IsValidEmail(string email)
+    private static bool IsValidEmail(string email)
     {
         return EmailRegex.IsMatch(email);
     }

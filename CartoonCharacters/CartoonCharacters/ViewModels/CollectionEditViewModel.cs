@@ -28,7 +28,7 @@ public partial class CollectionEditViewModel : ViewModelBase
     private string[]? _selectedFiles;
 
     [ObservableProperty]
-    private string _id;
+    private string _id = string.Empty;
 
     private readonly Func<string, Task> _onUpdateAsync;
     private readonly Action _onCancelUpdate;
@@ -47,7 +47,7 @@ public partial class CollectionEditViewModel : ViewModelBase
         {
             Name = existingCharacter.Name;
             Description = existingCharacter.Description;
-            string? originalImagePath = existingCharacter.ImagePath;
+            var originalImagePath = existingCharacter.ImagePath;
 
             if (!string.IsNullOrEmpty(originalImagePath))
             {
@@ -65,7 +65,7 @@ public partial class CollectionEditViewModel : ViewModelBase
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur chargement image: {ex.Message}");
+                    PopupService.Error("Erreur", $"Erreur chargement image : {ex.Message}");
                 }
             }
         }
@@ -82,20 +82,20 @@ public partial class CollectionEditViewModel : ViewModelBase
         {
             Title = "Select image",
             AllowMultiple = false,
-            FileTypeFilter = new[]
-            {
+            FileTypeFilter =
+            [
                 new FilePickerFileType("Images")
                 {
-                    Patterns = new[] { "*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp" }
+                    Patterns = ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.bmp"]
                 }
-            }
+            ]
         });
 
         var path = files.FirstOrDefault()?.TryGetLocalPath();
         if (string.IsNullOrWhiteSpace(path))
             return;
 
-        SelectedFiles = new[] { path };
+        SelectedFiles = [path];
 
         await using var fs = File.OpenRead(path);
         Picture = new Bitmap(fs);

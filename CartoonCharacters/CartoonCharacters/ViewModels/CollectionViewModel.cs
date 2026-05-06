@@ -14,28 +14,27 @@ using SkiaSharp;
 
 namespace CartoonCharacters.ViewModels;
 
-// Enum pour les options de tri
 public enum SortOption
 {
-    OldestFirst,      // Plus ancien au plus récent (par ID)
-    NewestFirst,      // Plus récent au plus ancien (par ID)
-    RatingHighest,    // Note la plus haute
-    RatingLowest,     // Note la plus basse
-    NameAscending,    // Nom A → Z
-    NameDescending    // Nom Z → A
+    OldestFirst,
+    NewestFirst,
+    RatingHighest,
+    RatingLowest,
+    NameAscending,
+    NameDescending
 }
 
 public partial class CollectionViewModel : ViewModelBase
 {
     public const string AllCollectionsFilter = "Toutes les collections";
-    public const string MyCollectionsFilter = "Mes collections";
+    private const string MyCollectionsFilter = "Mes collections";
 
     public IRelayCommand<string> FromParentCommand { get; }
     public IRelayCommand<string?> EditCommand { get; }
     public IAsyncRelayCommand<string?> DeleteCommand { get; }
     public IAsyncRelayCommand ShowTop5Command { get; }
 
-    public ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
+    private ObservableCollection<CartoonCharacter> MyObservableCartoonCharacters { get; }
     public ObservableCollection<CartoonCharacter> FilteredCartoonCharacters { get; }
     public ObservableCollection<string> FilterOptions { get; }
     public ObservableCollection<SortOption> SortOptions { get; }
@@ -50,16 +49,16 @@ public partial class CollectionViewModel : ViewModelBase
     private bool _isTop5DialogOpen;
 
     [ObservableProperty]
-    private ObservableCollection<TopCharacter> _top5Characters = new();
+    private ObservableCollection<TopCharacter> _top5Characters = [];
 
     [ObservableProperty]
-    private ISeries[] _top5Series = Array.Empty<ISeries>();
+    private ISeries[] _top5Series = [];
 
     [ObservableProperty]
-    private Axis[] _top5XAxes = Array.Empty<Axis>();
+    private Axis[] _top5XAxes = [];
 
     [ObservableProperty]
-    private Axis[] _top5YAxes = Array.Empty<Axis>();
+    private Axis[] _top5YAxes = [];
 
     [ObservableProperty]
     private bool _isAdmin;
@@ -79,24 +78,24 @@ public partial class CollectionViewModel : ViewModelBase
         DeleteCommand = new AsyncRelayCommand<string?>(_ => Task.CompletedTask);
         ShowTop5Command = new AsyncRelayCommand(ShowTop5Async);
 
-        MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-        FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-        FilterOptions = new ObservableCollection<string>
-        {
+        MyObservableCartoonCharacters = [];
+        FilteredCartoonCharacters = [];
+        FilterOptions =
+        [
             AllCollectionsFilter,
             MyCollectionsFilter
-        };
-        
-        SortOptions = new ObservableCollection<SortOption>
-        {
+        ];
+
+        SortOptions =
+        [
             SortOption.OldestFirst,
             SortOption.NewestFirst,
             SortOption.RatingHighest,
             SortOption.RatingLowest,
             SortOption.NameAscending,
             SortOption.NameDescending
-        };
-        
+        ];
+
         IsAdmin = false;
     }
 
@@ -113,26 +112,25 @@ public partial class CollectionViewModel : ViewModelBase
         DeleteCommand = new AsyncRelayCommand<string?>(DeleteCartoonCharacterAsync);
         ShowTop5Command = new AsyncRelayCommand(ShowTop5Async);
 
-        MyObservableCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-        FilteredCartoonCharacters = new ObservableCollection<CartoonCharacter>();
-        Top5Characters = new ObservableCollection<TopCharacter>();
-        
-        FilterOptions = new ObservableCollection<string>
-        {
+        MyObservableCartoonCharacters = [];
+        FilteredCartoonCharacters = [];
+        Top5Characters = [];
+        FilterOptions =
+        [
             AllCollectionsFilter,
             MyCollectionsFilter
-        };
-        
-        SortOptions = new ObservableCollection<SortOption>
-        {
+        ];
+
+        SortOptions =
+        [
             SortOption.OldestFirst,
             SortOption.NewestFirst,
             SortOption.RatingHighest,
             SortOption.RatingLowest,
             SortOption.NameAscending,
             SortOption.NameDescending
-        };
-        
+        ];
+
         IsAdmin = MyGlobals.CurrentUser?.IsAdmin ?? false;
 
         UpdateList();
@@ -140,11 +138,13 @@ public partial class CollectionViewModel : ViewModelBase
 
     partial void OnSelectedFilterChanged(string value)
     {
+        _ = value;
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 
     partial void OnSelectedSortOptionChanged(SortOption value)
     {
+        _ = value;
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 
@@ -166,7 +166,6 @@ public partial class CollectionViewModel : ViewModelBase
                 c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
         }
 
-        // Appliquer le tri
         filtered = ApplySorting(filtered);
 
         foreach (var character in filtered)
@@ -175,9 +174,6 @@ public partial class CollectionViewModel : ViewModelBase
         }
     }
 
-    /// <summary>
-    /// Applique le tri selon l'option sélectionnée
-    /// </summary>
     private IEnumerable<CartoonCharacter> ApplySorting(IEnumerable<CartoonCharacter> characters)
     {
         return SelectedSortOption switch
@@ -192,33 +188,19 @@ public partial class CollectionViewModel : ViewModelBase
         };
     }
 
-    /// <summary>
-    /// Vérifie si l'utilisateur courant peut modifier/supprimer un personnage
-    /// </summary>
-    /// <param name="characterId">L'ID du personnage à vérifier</param>
-    /// <returns>True si l'utilisateur est admin OU propriétaire du personnage</returns>
     public bool CanEditOrDelete(string characterId)
     {
         if (string.IsNullOrWhiteSpace(characterId))
             return false;
 
-        // Admin peut tout modifier/supprimer
         if (IsAdmin)
             return true;
 
-        // Vérifier si l'utilisateur est le propriétaire
         var currentUser = MyGlobals.CurrentUser;
-        if (currentUser?.CartoonCharacterIds != null)
-        {
-            return currentUser.CartoonCharacterIds.Contains(characterId);
-        }
 
-        return false;
+        return currentUser?.CartoonCharacterIds.Contains(characterId) == true;
     }
 
-    /// <summary>
-    /// Retourne le nom d'affichage pour une option de tri
-    /// </summary>
     public string GetSortOptionDisplayName(SortOption option)
     {
         return option switch
@@ -236,25 +218,20 @@ public partial class CollectionViewModel : ViewModelBase
     private async Task ShowTop5Async()
     {
         var top5 = await _chartServices.GetTop5ByRatingAsync();
-        
+
         Top5Characters.Clear();
+
         foreach (var character in top5)
         {
             Top5Characters.Add(character);
         }
-        
-        // On récupère les personnages originaux depuis MyGlobals pour avoir les ID
-        var allCharacters = MyGlobals.MyCartoonCharacters;
-        
-        // On filtre les 5 meilleurs avec les données complètes (incluant l'ID)
-        var top5WithIds = allCharacters
-            .Where(c => top5.Select(t => t.Name).Contains(c.Name))
-            .OrderByDescending(c => c.Rating)   // Note la plus haute en premier
-            .ThenBy(c => c.Id)                   // En cas d'égalité, tri par ID
-            .ToList();
-        
-        // On convertit en TopCharacter après le tri
-        var top5Ordered = top5WithIds
+
+        var top5Names = top5.Select(t => t.Name).ToHashSet();
+
+        var top5Ordered = MyGlobals.MyCartoonCharacters
+            .Where(c => top5Names.Contains(c.Name))
+            .OrderByDescending(c => c.Rating)
+            .ThenBy(c => c.Id)
             .Select(c => new TopCharacter
             {
                 Name = c.Name,
@@ -262,17 +239,14 @@ public partial class CollectionViewModel : ViewModelBase
                 RatingVotes = c.RatingVotes
             })
             .ToList();
-        
-        // On inverse pour l'affichage (le meilleur en haut)
+
         var names = top5Ordered.Select(c => c.Name).Reverse().ToArray();
         var ratings = top5Ordered.Select(c => c.Rating).Reverse().ToArray();
-        
-        // Couleur selon le meilleur score
+
         var color = GetColorForRating(ratings);
-        
-        // RowSeries = barres horizontales
-        Top5Series = new ISeries[]
-        {
+
+        Top5Series =
+        [
             new RowSeries<double>
             {
                 Values = ratings,
@@ -281,15 +255,14 @@ public partial class CollectionViewModel : ViewModelBase
                 Fill = new SolidColorPaint(color),
                 Stroke = null
             }
-        };
-        
-        // Axe X (horizontal) = les notes de 0 à 5
-        Top5XAxes = new[]
-        {
+        ];
+
+        Top5XAxes =
+        [
             new Axis
             {
                 Name = "Note moyenne ( /5.0 )",
-                Labeler = (value) => $"{value:F1} ⭐",
+                Labeler = value => $"{value:F1} ⭐",
                 MinLimit = 0,
                 MaxLimit = 5,
                 LabelsPaint = new SolidColorPaint(SKColors.Black),
@@ -297,11 +270,10 @@ public partial class CollectionViewModel : ViewModelBase
                 TextSize = 13,
                 SeparatorsPaint = new SolidColorPaint(new SKColor(200, 200, 200))
             }
-        };
-        
-        // Axe Y (vertical) = les noms des personnages (meilleur en haut)
-        Top5YAxes = new[]
-        {
+        ];
+
+        Top5YAxes =
+        [
             new Axis
             {
                 Labels = names,
@@ -315,23 +287,31 @@ public partial class CollectionViewModel : ViewModelBase
                 ShowSeparatorLines = true,
                 Position = LiveChartsCore.Measure.AxisPosition.Start
             }
-        };
-        
+        ];
+
         IsTop5DialogOpen = true;
     }
 
-    private SKColor GetColorForRating(double[] ratings)
+    private static SKColor GetColorForRating(double[] ratings)
     {
-        if (ratings.Length == 0) return new SKColor(255, 107, 107);
-        
-        // Prendre la meilleure note (la dernière après inversion)
-        var bestRating = ratings[ratings.Length - 1];
-        
-        if (bestRating >= 4.8) return new SKColor(71, 200, 71);   // Vert intense
-        if (bestRating >= 4.5) return new SKColor(100, 200, 100); // Vert clair
-        if (bestRating >= 4.0) return new SKColor(255, 200, 71);  // Jaune orangé
-        if (bestRating >= 3.5) return new SKColor(255, 144, 71);  // Orange
-        return new SKColor(255, 71, 71);                           // Rouge très vif
+        if (ratings.Length == 0)
+            return new SKColor(255, 107, 107);
+
+        var bestRating = ratings[^1];
+
+        if (bestRating >= 4.8)
+            return new SKColor(71, 200, 71);
+
+        if (bestRating >= 4.5)
+            return new SKColor(100, 200, 100);
+
+        if (bestRating >= 4.0)
+            return new SKColor(255, 200, 71);
+
+        if (bestRating >= 3.5)
+            return new SKColor(255, 144, 71);
+
+        return new SKColor(255, 71, 71);
     }
 
     public void CloseTop5Dialog()
@@ -394,7 +374,7 @@ public partial class CollectionViewModel : ViewModelBase
 
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
-    
+
     public void RefreshAdminStatus()
     {
         IsAdmin = MyGlobals.CurrentUser?.IsAdmin ?? false;

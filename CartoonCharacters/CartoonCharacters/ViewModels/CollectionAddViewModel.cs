@@ -149,7 +149,6 @@ public partial class CollectionAddViewModel : ViewModelBase
             return;
 
         QrCode = _scanner.SerialBuffer.Dequeue()?.ToString() ?? string.Empty;
-        Console.WriteLine($"QR Code scanné : {QrCode}");
     }
 
     [RelayCommand]
@@ -168,7 +167,7 @@ public partial class CollectionAddViewModel : ViewModelBase
             return;
         }
 
-        string[] parties = QrCode.Split(',');
+        var parties = QrCode.Split(',');
 
         if (parties.Length < 3)
         {
@@ -176,9 +175,9 @@ public partial class CollectionAddViewModel : ViewModelBase
             return;
         }
 
-        string nom = parties[0].Trim();
-        string description = parties[1].Trim();
-        string imagePath = parties[2].Trim();
+        var nom = parties[0].Trim();
+        var description = parties[1].Trim();
+        var imagePath = parties[2].Trim();
 
         Name = nom;
         Description = description;

@@ -38,16 +38,10 @@ public partial class AdminUserEditViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isBusy;
 
-    public bool IsEditMode => _isEditMode;
-    
     [ObservableProperty]
     private bool _isPasswordVisible;
 
-    [RelayCommand]
-    private void TogglePasswordVisibility()
-    {
-        IsPasswordVisible = !IsPasswordVisible;
-    }
+    public bool IsEditMode => _isEditMode;
 
     public AdminUserEditViewModel(MainWindowViewModel mainWindowViewModel)
     {
@@ -80,6 +74,12 @@ public partial class AdminUserEditViewModel : ViewModelBase
         Title = "Modifier un utilisateur";
 
         _ = LoadUserAsync(userId);
+    }
+
+    [RelayCommand]
+    private void TogglePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
     }
 
     [RelayCommand]
@@ -162,7 +162,7 @@ public partial class AdminUserEditViewModel : ViewModelBase
                     return;
                 }
 
-                if (MyGlobals.CurrentUser != null && MyGlobals.CurrentUser.Id == existingUser.Id)
+                if (MyGlobals.CurrentUser.Id == existingUser.Id)
                 {
                     MyGlobals.CurrentUser = existingUser;
                 }

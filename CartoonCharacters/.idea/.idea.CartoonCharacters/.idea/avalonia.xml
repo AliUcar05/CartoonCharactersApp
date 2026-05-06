@@ -4,8 +4,13 @@
     <option name="projectPerEditor">
       <map>
         <entry key="CartoonCharacters/App.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/AdminUserEditView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/AdminUsersView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
         <entry key="CartoonCharacters/Views/CollectionAddView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CollectionDetailsView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CollectionEditView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
         <entry key="CartoonCharacters/Views/CollectionView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
+        <entry key="CartoonCharacters/Views/CsvExportSelectionView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
         <entry key="CartoonCharacters/Views/CsvImportPreviewView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
         <entry key="CartoonCharacters/Views/LoginView.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />
         <entry key="CartoonCharacters/Views/MainWindow.axaml" value="CartoonCharacters/CartoonCharacters.csproj" />

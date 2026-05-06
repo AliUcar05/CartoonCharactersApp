@@ -8,10 +8,9 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CartoonCharacters.Models;
-using CartoonCharacters.Services;
 using MongoDB.Bson;
 
-namespace CartoonCharacters.Helpers;
+namespace CartoonCharacters.Services;
 
 public static class JsonDataService
 {
@@ -47,28 +46,20 @@ public static class JsonDataService
 
             return characters ?? [];
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Erreur lecture JSON local : {ex.Message}");
             return GetDefaultCharacters();
         }
     }
 
     private static async Task SaveToFileAsync(string filePath, List<CartoonCharacter> characters)
     {
-        try
-        {
-            await using var stream = File.Create(filePath);
-            await JsonSerializer.SerializeAsync(stream, characters, SerializerOptions);
-            await stream.FlushAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur écriture JSON local : {ex.Message}");
-        }
+        await using var stream = File.Create(filePath);
+        await JsonSerializer.SerializeAsync(stream, characters, SerializerOptions);
+        await stream.FlushAsync();
     }
 
-    public static async Task<List<CartoonCharacter>> LoadFromServerAsync()
+    private static async Task<List<CartoonCharacter>> LoadFromServerAsync()
     {
         try
         {
@@ -77,24 +68,20 @@ public static class JsonDataService
             using var response = await Client.GetAsync(url);
 
             if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Serveur indisponible : {response.StatusCode}");
                 return [];
-            }
 
             await using var contentStream = await response.Content.ReadAsStreamAsync();
 
             return await JsonSerializer.DeserializeAsync<List<CartoonCharacter>>(contentStream, SerializerOptions)
-                ?? [];
+                   ?? [];
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Erreur lecture JSON serveur : {ex.Message}");
             return [];
         }
     }
 
-    public static async Task SaveToServerAsync(List<CartoonCharacter> characters)
+    private static async Task SaveToServerAsync(List<CartoonCharacter> characters)
     {
         await SyncLock.WaitAsync();
 
@@ -112,12 +99,6 @@ public static class JsonDataService
 
             using var response = await Client.PostAsync(BaseUrl, content);
             response.EnsureSuccessStatusCode();
-
-            Console.WriteLine($"JSON serveur : envoi OK -> {characters.Count} élément(s)");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur écriture JSON serveur : {ex.Message}");
         }
         finally
         {
@@ -144,23 +125,12 @@ public static class JsonDataService
         await SaveToFileAsync(filePath, characters);
         await SaveToServerAsync(characters);
 
-        try
-        {
-            var dbService = new DatabaseServices();
-            var connected = await dbService.TestConnectionAsync();
+        var dbService = new DatabaseServices();
+        var connected = await dbService.TestConnectionAsync();
 
-            if (connected)
-            {
-                await dbService.ReplaceAllCharactersAsync(characters);
-            }
-            else
-            {
-                Console.WriteLine("MongoDB : connexion impossible, aucun envoi effectué.");
-            }
-        }
-        catch (Exception ex)
+        if (connected)
         {
-            Console.WriteLine($"Erreur écriture MongoDB : {ex.Message}");
+            await dbService.ReplaceAllCharactersAsync(characters);
         }
     }
 
@@ -168,6 +138,7 @@ public static class JsonDataService
     {
         var list = (await LoadFromFileAsync(filePath)).ToList();
         list.RemoveAll(c => c.Id == id);
+
         await PersistAsync(filePath, list);
     }
 
