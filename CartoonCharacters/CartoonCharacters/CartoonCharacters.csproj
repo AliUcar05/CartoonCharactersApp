@@ -56,5 +56,8 @@
       <Compile Update="Views\AdminUsersEditView.axaml.cs">
         <DependentUpon>AdminUserEditView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\CsvExportSelectionView.cs">
+        <DependentUpon>CsvExportSelectionView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

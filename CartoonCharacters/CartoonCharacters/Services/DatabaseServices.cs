@@ -356,4 +356,42 @@ public class DatabaseServices
     {
         return EmailRegex.IsMatch(email);
     }
+    
+    public async Task<bool> RemoveCharacterFromAllUsersAsync(string characterId)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(characterId))
+                return false;
+
+            // Créer un filtre pour trouver tous les utilisateurs qui ont cet ID dans leur liste
+            var filter = Builders<UserProfile>.Filter.AnyEq(
+                u => u.CartoonCharacterIds, 
+                characterId
+            );
+        
+            // Créer la mise à jour : retirer l'ID de CartoonCharacterIds
+            var updatePull = Builders<UserProfile>.Update.Pull(
+                u => u.CartoonCharacterIds, 
+                characterId
+            );
+        
+            // Retirer l'entrée du dictionnaire CharacterRatings si elle existe
+            var updateUnset = Builders<UserProfile>.Update.Unset(
+                $"CharacterRatings.{characterId}"
+            );
+        
+            // Combiner les deux mises à jour
+            var update = Builders<UserProfile>.Update.Combine(updatePull, updateUnset);
+        
+            // Appliquer à tous les utilisateurs concernés
+            var result = await _userProfiles.UpdateManyAsync(filter, update);
+        
+            return result.IsAcknowledged;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
 }

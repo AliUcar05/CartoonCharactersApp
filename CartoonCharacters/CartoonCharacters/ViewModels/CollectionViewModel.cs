@@ -338,19 +338,15 @@ public partial class CollectionViewModel : ViewModelBase
 
         var deletedName = character.Name;
 
+        // 🔥 NOUVEAU : Supprimer ce personnage de TOUS les utilisateurs
+        await _databaseServices.RemoveCharacterFromAllUsersAsync(id);
+
         MyGlobals.MyCartoonCharacters.Remove(character);
 
         var observableCharacter = MyObservableCartoonCharacters.FirstOrDefault(c => c.Id == id);
         if (observableCharacter != null)
         {
             MyObservableCartoonCharacters.Remove(observableCharacter);
-        }
-
-        if (MyGlobals.CurrentUser != null &&
-            MyGlobals.CurrentUser.CartoonCharacterIds.Contains(id))
-        {
-            MyGlobals.CurrentUser.CartoonCharacterIds.Remove(id);
-            await _databaseServices.UpdateUserProfileAsync(MyGlobals.CurrentUser);
         }
 
         ApplySearchFilter(_mainWindowViewModel.SearchText);
@@ -373,10 +369,5 @@ public partial class CollectionViewModel : ViewModelBase
         }
 
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
-    }
-
-    public void RefreshAdminStatus()
-    {
-        IsAdmin = MyGlobals.CurrentUser?.IsAdmin ?? false;
     }
 }
