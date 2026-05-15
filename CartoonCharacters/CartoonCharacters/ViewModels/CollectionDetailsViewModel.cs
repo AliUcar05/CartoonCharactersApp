@@ -43,8 +43,6 @@ public partial class CollectionDetailsViewModel : ViewModelBase
 
     partial void OnCurrentUserRatingChanged(int value)
     {
-        _ = value;
-
         OnPropertyChanged(nameof(Star1Brush));
         OnPropertyChanged(nameof(Star2Brush));
         OnPropertyChanged(nameof(Star3Brush));

@@ -34,14 +34,18 @@ public partial class AdminUsersViewModel : ViewModelBase
             return;
         }
 
-        _ = LoadUsersAsync();
+        InitializeUsersLoading();
     }
 
     [RelayCommand]
     private async Task Refresh()
     {
         if (IsRefreshing) return;
-        await LoadUsersAsync(true);
+
+        var areUsersLoaded = await LoadUsersAsync(true);
+
+        if (!areUsersLoaded)
+            return;
     }
 
     [RelayCommand]
@@ -92,7 +96,10 @@ public partial class AdminUsersViewModel : ViewModelBase
         if (deleted)
         {
             PopupService.Success("Suppression réussie", $"L'utilisateur {user.UserName} a été supprimé.");
-            await LoadUsersAsync();
+            var areUsersReloaded = await LoadUsersAsync();
+
+            if (!areUsersReloaded)
+                return;
         }
         else
         {
@@ -106,7 +113,15 @@ public partial class AdminUsersViewModel : ViewModelBase
         _mainWindowViewModel.BackToMain();
     }
 
-    private async Task LoadUsersAsync(bool isRefresh = false)
+    private async void InitializeUsersLoading()
+    {
+        var areUsersLoaded = await LoadUsersAsync();
+
+        if (!areUsersLoaded)
+            return;
+    }
+
+    private async Task<bool> LoadUsersAsync(bool isRefresh = false)
     {
         try
         {
@@ -122,10 +137,13 @@ public partial class AdminUsersViewModel : ViewModelBase
                     .OrderBy(u => u.LastName)
                     .ThenBy(u => u.FirstName)
                     .ThenBy(u => u.UserName));
+
+            return true;
         }
         catch (Exception ex)
         {
             PopupService.Error("Erreur", $"Impossible de charger les utilisateurs : {ex.Message}");
+            return false;
         }
         finally
         {

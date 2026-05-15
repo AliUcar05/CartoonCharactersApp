@@ -48,7 +48,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (IsUserLoggedIn)
         {
             ShowMainCollection();
-            _ = InitializeDataAsync();
+            InitializeDataLoading();
         }
         else
         {
@@ -66,7 +66,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnCurrentPageChanged(ViewModelBase value)
     {
-        _ = value;
         OnPropertyChanged(nameof(IsAdminPage));
         OnPropertyChanged(nameof(ShowNavigationBar));
     }
@@ -83,17 +82,28 @@ public partial class MainWindowViewModel : ViewModelBase
         SearchText = string.Empty;
     }
 
-    private async Task InitializeDataAsync()
+    private async void InitializeDataLoading()
+    {
+        var isDataInitialized = await InitializeDataAsync();
+
+        if (!isDataInitialized)
+            return;
+    }
+
+    private async Task<bool> InitializeDataAsync()
     {
         try
         {
             IsBusy = true;
             await MyGlobals.InitializeAsync();
             BackToMain();
+
+            return true;
         }
         catch (Exception ex)
         {
             PopupService.Error("Erreur", $"Erreur lors du chargement des données : {ex.Message}");
+            return false;
         }
         finally
         {
@@ -105,7 +115,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentUser = userProfile;
         ShowMainCollection();
-        _ = InitializeDataAsync();
+        InitializeDataLoading();
     }
 
     [RelayCommand]
@@ -303,7 +313,6 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnCurrentPageChanging(ViewModelBase? oldValue, ViewModelBase newValue)
     {
-        _ = newValue;
         oldValue?.Dispose();
     }
 

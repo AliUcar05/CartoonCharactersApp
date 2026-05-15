@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {}
+    "/home/helb/RiderProjects/CartoonCharactersAppsssssssss/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj": {}
   },
   "projects": {
-    "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj": {
+    "/home/helb/RiderProjects/CartoonCharactersAppsssssssss/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
+        "projectUniqueName": "/home/helb/RiderProjects/CartoonCharactersAppsssssssss/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
         "projectName": "CartoonCharacters",
-        "projectPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\CartoonCharacters.csproj",
-        "packagesPath": "C:\\Users\\osman\\.nuget\\packages\\",
-        "outputPath": "C:\\Lubuntu partage\\RiderProjects\\CartoonCharacters\\CartoonCharacters\\obj\\",
+        "projectPath": "/home/helb/RiderProjects/CartoonCharactersAppsssssssss/CartoonCharacters/CartoonCharacters/CartoonCharacters.csproj",
+        "packagesPath": "/home/helb/.nuget/packages/",
+        "outputPath": "/home/helb/RiderProjects/CartoonCharactersAppsssssssss/CartoonCharacters/CartoonCharacters/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\osman\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/helb/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -111,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\osman\\.dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/home/helb/.dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

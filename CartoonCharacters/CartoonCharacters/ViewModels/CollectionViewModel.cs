@@ -73,9 +73,9 @@ public partial class CollectionViewModel : ViewModelBase
 
     public CollectionViewModel()
     {
-        FromParentCommand = new RelayCommand<string>(_ => { });
-        EditCommand = new RelayCommand<string?>(_ => { });
-        DeleteCommand = new AsyncRelayCommand<string?>(_ => Task.CompletedTask);
+        FromParentCommand = new RelayCommand<string>(unusedParameter => { });
+        EditCommand = new RelayCommand<string?>(unusedParameter => { });
+        DeleteCommand = new AsyncRelayCommand<string?>(unusedParameter => Task.CompletedTask);
         ShowTop5Command = new AsyncRelayCommand(ShowTop5Async);
 
         MyObservableCartoonCharacters = [];
@@ -138,13 +138,11 @@ public partial class CollectionViewModel : ViewModelBase
 
     partial void OnSelectedFilterChanged(string value)
     {
-        _ = value;
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 
     partial void OnSelectedSortOptionChanged(SortOption value)
     {
-        _ = value;
         ApplySearchFilter(_mainWindowViewModel?.SearchText);
     }
 
@@ -184,7 +182,7 @@ public partial class CollectionViewModel : ViewModelBase
             SortOption.RatingLowest => characters.OrderBy(c => c.Rating),
             SortOption.NameAscending => characters.OrderBy(c => c.Name, StringComparer.OrdinalIgnoreCase),
             SortOption.NameDescending => characters.OrderByDescending(c => c.Name, StringComparer.OrdinalIgnoreCase),
-            _ => characters.OrderBy(c => c.Id)
+            var fallbackSortOption => characters.OrderBy(c => c.Id)
         };
     }
 
@@ -211,7 +209,7 @@ public partial class CollectionViewModel : ViewModelBase
             SortOption.RatingLowest => "⭐ Note la plus basse",
             SortOption.NameAscending => "🔤 Nom A → Z",
             SortOption.NameDescending => "🔤 Nom Z → A",
-            _ => "📅 Plus ancien → récent"
+            var fallbackSortOption => "📅 Plus ancien → récent"
         };
     }
 

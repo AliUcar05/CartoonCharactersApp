@@ -34,7 +34,7 @@ public partial class LoginViewModel : ViewModelBase
 
     public LoginViewModel()
     {
-        _onLoginSuccess = _ => { };
+        _onLoginSuccess = unusedUser => { };
         _goToRegister = () => { };
         _databaseServices = new DatabaseServices();
     }

@@ -73,7 +73,7 @@ public partial class AdminUserEditViewModel : ViewModelBase
         _userId = userId;
         Title = "Modifier un utilisateur";
 
-        _ = LoadUserAsync(userId);
+        InitializeUserLoading(userId);
     }
 
     [RelayCommand]
@@ -223,7 +223,15 @@ public partial class AdminUserEditViewModel : ViewModelBase
         _mainWindowViewModel.BackToAdminUsers();
     }
 
-    private async Task LoadUserAsync(string userId)
+    private async void InitializeUserLoading(string userId)
+    {
+        var isUserLoaded = await LoadUserAsync(userId);
+
+        if (!isUserLoaded)
+            return;
+    }
+
+    private async Task<bool> LoadUserAsync(string userId)
     {
         try
         {
@@ -235,7 +243,7 @@ public partial class AdminUserEditViewModel : ViewModelBase
             {
                 PopupService.Error("Erreur", "Utilisateur introuvable.");
                 _mainWindowViewModel.BackToAdminUsers();
-                return;
+                return false;
             }
 
             UserName = user.UserName;
@@ -244,11 +252,14 @@ public partial class AdminUserEditViewModel : ViewModelBase
             Email = user.Email;
             Password = string.Empty;
             IsAdmin = user.IsAdmin;
+
+            return true;
         }
         catch (Exception ex)
         {
             PopupService.Error("Erreur", $"Impossible de charger l'utilisateur : {ex.Message}");
             _mainWindowViewModel.BackToAdminUsers();
+            return false;
         }
         finally
         {
